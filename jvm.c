@@ -117,18 +117,7 @@ void generalInfo(classFile* cf,FILE* file){
 	printf("----End----\n\n");
 }
 
-int main(int argc, char* argv[]){
-	//Abre arquivo passado via linha de comando
-	FILE* file;
-	file = fopen(argv[1], "rb");
-
-	//Aloca memória para a estrutura do .class
-	classFile* cf = (classFile*) malloc(sizeof(classFile));
-
-	//Le e imprime informações gerais.
-	generalInfo(cf,file);
-	
-
+void constantPool(classFile* cf,FILE* file){
 	cf->constant_pool = (cp_info*) malloc((cf->constant_pool_count-1)*sizeof(cp_info));
 	cp_info* cp;
 
@@ -179,16 +168,33 @@ int main(int argc, char* argv[]){
 				break;
 			case CONSTANT_Integer:
 				cp->info.Integer.bytes = u4Read(file);
+				printf("CONSTANT_Integer_info - bytes:%d\n",cp->info.Integer.bytes);
 				break;
 			case CONSTANT_Float:
 				cp->info.Float.bytes = u4Read(file);
+				printf("CONSTANT_Float_info - bytes:%d\n",cp->info.Float.bytes);
 				break;
 			default:
 				break;
 		}
 		i++;
 	}
-	printf("----End----\n");
+	printf("----End----\n\n");
+}
+
+int main(int argc, char* argv[]){
+	//Abre arquivo passado via linha de comando
+	FILE* file;
+	file = fopen(argv[1], "rb");
+
+	//Aloca memória para a estrutura do .class
+	classFile* cf = (classFile*) malloc(sizeof(classFile));
+
+	//Le e imprime informações gerais.
+	generalInfo(cf,file);
+
+	//Le e imprime a constant pool
+	constantPool(cf,file);
 
 	return 0;
 }

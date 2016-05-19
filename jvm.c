@@ -36,6 +36,14 @@ typedef struct field_info{
 	attribute_info* attributes;
 }field_info;
 
+typedef struct method_info{
+	uint16_t access_flags;
+	uint16_t name_index;
+	uint16_t descriptor_index;
+	uint16_t attributes_count;
+	attribute_info* attributes;
+}method_info;
+
 typedef struct cp_info{
 	uint8_t tag;
 	union{
@@ -97,6 +105,9 @@ typedef struct ClassFile{
 	uint16_t fields_count;
 	field_info* fields;
 	uint16_t methods_count;
+	method_info* methods;
+	uint16_t attributes_count;
+	attribute_info* attributes;
 }classFile;
 
 
@@ -137,7 +148,7 @@ void generalInfo(classFile* cf,FILE* file){
 	printf("Minor version: %d \n",cf->minor_version);
 	printf("Major version: %d \n",cf->major_version);
 	printf("Constant Pool Count: %d \n",cf->constant_pool_count);
-	printf("----End----\n\n");
+	printf("----End General----\n\n");
 }
 
 void constantPool(classFile* cf,FILE* file){
@@ -202,27 +213,84 @@ void constantPool(classFile* cf,FILE* file){
 		}
 		i++;
 	}
-	printf("----End----\n\n");
+	printf("----End Pool----\n\n");
+}
+
+void interfaceInfo(classFile* cf, FILE* file, uint16_t interfaces_count){
+	if(interfaces_count == 0)
+		return;
+	else{
+		// Ler estrutura de interfaces.
+	}
+}
+
+void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
+	if(fields_count == 0)
+		return;
+	else{
+		// Ler estrutura de fields.
+	}
+}
+
+void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
+	if(methods_count == 0)
+		return;
+	else{
+		cf->methods = (method_info*) malloc(methods_count*sizeof(method_info));
+		method_info* cp = cf->methods;
+		for(int i = 0; i < methods_count; cp++){
+			cp->access_flags = u2Read(file);
+			cp->name_index = u2Read(file);
+			cp->descriptor_index = u2Read(file);
+			cp->attributes_count = u2Read(file);
+			cp->attributes = (attribute_info*) malloc(cp->attributes_count*sizeof(attribute_info));
+			printf("access_flag: 0x%0x\n",cp->access_flags);
+			printf("name_index: cp info #%d\n",cp->name_index);
+			printf("descriptor_index: cp info #%d\n",cp->descriptor_index);
+			printf("attributes_count: %d\n",cp->attributes_count);
+
+			for(int j = 0; j < cp->attributes_count; cp->attributes++){
+				printf("----Attributes Info----\n");
+				cp->attributes->attribute_name_index = u2Read(file);
+				cp->attributes->attribute_length = u4Read(file);
+				printf("attribute_name_index: cp info #%d\n",cp->attributes->attribute_name_index);
+				printf("attribute_length: %d\n",cp->attributes->attribute_length);
+				//****** Ler bytecode aqui ***********
+				printf("----End Attribute----\n\n");
+				j++;
+			}
+			i++;
+			printf("----End Method----\n\n");
+		}
+	}
 }
 
 void secondGeneralInfo(classFile* cf,FILE* file){
 	cf->access_flags = u2Read(file);
 	cf->this_class = u2Read(file);
 	cf->super_class = u2Read(file);
+
 	cf->interfaces_count = u2Read(file);
-	// LER INTERFACES TODO
+	interfaceInfo(cf,file,cf->interfaces_count);
+
 	cf->fields_count = u2Read(file);
-	// LER FIELDS TODO
+	fieldInfo(cf,file,cf->fields_count);
+
 	cf->methods_count = u2Read(file);
-	// LER METHODS TODO
+
 	printf("----Second General Info----\n");
 	printf("Access Flags: 0x%0x\n",cf->access_flags);
 	printf("This Class: cp info #%d\n",cf->this_class);
 	printf("Super Class: cp info #%d\n",cf->super_class);
 	printf("interfaces_count: %d\n",cf->interfaces_count);
-	printf("Fields Count: %d\n",cf->fields_count);
+	printf("Fields Count: %d\n\n",cf->fields_count);
+
+	printf("----Method Info----\n");
+
 	printf("Methods Count: %d\n",cf->methods_count);
-	printf("----End----\n\n");
+	methodInfo(cf,file,cf->methods_count);
+
+	printf("----End Second General----\n\n");
 }
 
 int main(int argc, char* argv[]){

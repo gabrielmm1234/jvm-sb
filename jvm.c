@@ -21,6 +21,21 @@
 
 
 /*Struct de informações da constant pool*/
+
+typedef struct attribute_info{
+	uint16_t attribute_name_index;
+	uint32_t attribute_length;
+	uint8_t* info;
+}attribute_info;
+
+typedef struct field_info{
+	uint16_t access_flags;
+	uint16_t name_index;
+	uint16_t descriptor_index;
+	uint16_t attributes_count;
+	attribute_info* attributes;
+}field_info;
+
 typedef struct cp_info{
 	uint8_t tag;
 	union{
@@ -74,6 +89,14 @@ typedef struct ClassFile{
 	uint16_t major_version;
 	uint16_t constant_pool_count;
 	cp_info* constant_pool;
+	uint16_t access_flags;
+	uint16_t this_class;
+	uint16_t super_class;
+	uint16_t interfaces_count;
+	uint16_t* interfaces;
+	uint16_t fields_count;
+	field_info* fields;
+	uint16_t methods_count;
 }classFile;
 
 
@@ -130,19 +153,19 @@ void constantPool(classFile* cf,FILE* file){
 		switch(cp->tag){
 			case CONSTANT_Class:
 				cp->info.Class.name_index = u2Read(file);
-				printf("CONSTANT_Class_info - name_index:%d\n",cp->info.Class.name_index);
+				printf("CONSTANT_Class_info - name_index: cp info #%d\n",cp->info.Class.name_index);
 				break;
 			case CONSTANT_Fieldref:
 				cp->info.Fieldref.class_index = u2Read(file);
 				cp->info.Fieldref.name_and_type_index = u2Read(file);
-				printf("CONSTANT_Fieldref_info - class_index:%d\n",cp->info.Fieldref.class_index);
-				printf("CONSTANT_Fieldref_info - name_and_type_index:%d\n",cp->info.Fieldref.name_and_type_index);
+				printf("CONSTANT_Fieldref_info - class_index: cp info #%d\n",cp->info.Fieldref.class_index);
+				printf("CONSTANT_Fieldref_info - name_and_type_index: cp info #%d\n",cp->info.Fieldref.name_and_type_index);
 				break;
 			case CONSTANT_NameAndType:
 				cp->info.NameAndType.name_index = u2Read(file);
 				cp->info.NameAndType.descriptor_index = u2Read(file);
-				printf("CONSTANT_NameAndType_info - name_index:%d\n",cp->info.NameAndType.name_index);
-				printf("CONSTANT_NameAndType_info - descriptor_index:%d\n",cp->info.NameAndType.descriptor_index);
+				printf("CONSTANT_NameAndType_info - name_index:cp info #%d\n",cp->info.NameAndType.name_index);
+				printf("CONSTANT_NameAndType_info - descriptor_index: cp info #%d\n",cp->info.NameAndType.descriptor_index);
 				break;
 			case CONSTANT_Utf8:
 				cp->info.Utf8.length = u2Read(file);
@@ -155,8 +178,8 @@ void constantPool(classFile* cf,FILE* file){
 			case CONSTANT_Methodref:
 				cp->info.Methodref.class_index = u2Read(file);
 				cp->info.Methodref.name_and_type_index = u2Read(file);
-				printf("CONSTANT_Methodref_info - class_index:%d\n",cp->info.Methodref.class_index);
-				printf("CONSTANT_Methodref_info - name_and_type_index:%d\n",cp->info.Methodref.name_and_type_index);
+				printf("CONSTANT_Methodref_info - class_index: cp info #%d\n",cp->info.Methodref.class_index);
+				printf("CONSTANT_Methodref_info - name_and_type_index: cp info #%d\n",cp->info.Methodref.name_and_type_index);
 				break;
 			case CONSTANT_InterfaceMethodref:
 				cp->info.InterfaceMethodref.class_index = u2Read(file);
@@ -164,7 +187,7 @@ void constantPool(classFile* cf,FILE* file){
 				break;
 			case CONSTANT_String:
 				cp->info.String.string_index = u2Read(file);
-				printf("CONSTANT_String_info - string_index:%d\n",cp->info.String.string_index);
+				printf("CONSTANT_String_info - string_index: cp info #%d\n",cp->info.String.string_index);
 				break;
 			case CONSTANT_Integer:
 				cp->info.Integer.bytes = u4Read(file);
@@ -182,6 +205,26 @@ void constantPool(classFile* cf,FILE* file){
 	printf("----End----\n\n");
 }
 
+void secondGeneralInfo(classFile* cf,FILE* file){
+	cf->access_flags = u2Read(file);
+	cf->this_class = u2Read(file);
+	cf->super_class = u2Read(file);
+	cf->interfaces_count = u2Read(file);
+	// LER INTERFACES TODO
+	cf->fields_count = u2Read(file);
+	// LER FIELDS TODO
+	cf->methods_count = u2Read(file);
+	// LER METHODS TODO
+	printf("----Second General Info----\n");
+	printf("Access Flags: 0x%0x\n",cf->access_flags);
+	printf("This Class: cp info #%d\n",cf->this_class);
+	printf("Super Class: cp info #%d\n",cf->super_class);
+	printf("interfaces_count: %d\n",cf->interfaces_count);
+	printf("Fields Count: %d\n",cf->fields_count);
+	printf("Methods Count: %d\n",cf->methods_count);
+	printf("----End----\n\n");
+}
+
 int main(int argc, char* argv[]){
 	//Abre arquivo passado via linha de comando
 	FILE* file;
@@ -195,6 +238,9 @@ int main(int argc, char* argv[]){
 
 	//Le e imprime a constant pool
 	constantPool(cf,file);
+
+	//le e imprime informações gerais após a constant pool
+	secondGeneralInfo(cf,file);
 
 	return 0;
 }

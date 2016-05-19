@@ -1,8 +1,11 @@
+/*Includes*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
 
+
+/*Defines*/
 #define CONSTANT_Class 7
 #define CONSTANT_Fieldref 9
 #define CONSTANT_Methodref 10
@@ -15,27 +18,9 @@
 #define CONSTANT_NameAndType 12
 #define CONSTANT_Utf8 1
 
-static uint8_t u1Read(FILE* fp){
-	uint8_t retorno = getc(fp);
-	return retorno;
-}
 
 
-// Função que le 2 bytes do .class
-static uint16_t u2Read(FILE* fp){
-	uint16_t retorno = getc(fp); //le o 1 byte
-	retorno = (retorno << 8) | (getc(fp)); // le o 2 byte
-	return retorno;
-}
-
-static uint32_t u4Read(FILE* fp){
-	uint32_t retorno = getc(fp);
-	retorno = (retorno << 8) | (getc(fp));
-	retorno = (retorno << 8) | (getc(fp));
-	retorno = (retorno << 8) | (getc(fp));
-	return retorno;
-}
-
+/*Struct de informações da constant pool*/
 typedef struct cp_info{
 	uint8_t tag;
 	union{
@@ -82,6 +67,7 @@ typedef struct cp_info{
 	}info;
 }cp_info;
 
+/*Struct que representa o .class*/
 typedef struct ClassFile{
 	uint32_t magic;
 	uint16_t minor_version;
@@ -90,12 +76,34 @@ typedef struct ClassFile{
 	cp_info* constant_pool;
 }classFile;
 
-int main(int argc, char* argv[]){
-	FILE *file;
 
-	file = fopen(argv[1], "rb");
 
-	classFile* cf = (classFile*) malloc(sizeof(classFile));
+/*Funções auxiliares*/
+
+// Função que le 1 byte do arquivo
+static inline uint8_t u1Read(FILE* fp){
+	uint8_t retorno = getc(fp);
+	return retorno;
+}
+
+// Função que le 2 bytes do arquivo
+static inline uint16_t u2Read(FILE* fp){
+	uint16_t retorno = getc(fp); 
+	retorno = (retorno << 8) | (getc(fp));
+	return retorno;
+}
+
+// Função que le 4 bytes de um arquivo
+static inline uint32_t u4Read(FILE* fp){
+	uint32_t retorno = getc(fp);
+	retorno = (retorno << 8) | (getc(fp));
+	retorno = (retorno << 8) | (getc(fp));
+	retorno = (retorno << 8) | (getc(fp));
+	return retorno;
+}
+
+// Função que le informações gerais do arquivo - Antes da constant pool
+void generalInfo(classFile* cf,FILE* file){
 	cf->magic = u4Read(file);
 	cf->minor_version = u2Read(file);
 	cf->major_version = u2Read(file);
@@ -107,6 +115,19 @@ int main(int argc, char* argv[]){
 	printf("Major version: %d \n",cf->major_version);
 	printf("Constant Pool Count: %d \n",cf->constant_pool_count);
 	printf("----End----\n\n");
+}
+
+int main(int argc, char* argv[]){
+	//Abre arquivo passado via linha de comando
+	FILE* file;
+	file = fopen(argv[1], "rb");
+
+	//Aloca memória para a estrutura do .class
+	classFile* cf = (classFile*) malloc(sizeof(classFile));
+
+	//Le e imprime informações gerais.
+	generalInfo(cf,file);
+	
 
 	cf->constant_pool = (cp_info*) malloc((cf->constant_pool_count-1)*sizeof(cp_info));
 	cp_info* cp;

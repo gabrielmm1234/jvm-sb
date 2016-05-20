@@ -7,7 +7,8 @@
 #include <string.h>
 #include <stdint.h>
 
-/* Defines */
+
+/*Defines*/
 #define CONSTANT_Class 7
 #define CONSTANT_Fieldref 9
 #define CONSTANT_Methodref 10
@@ -20,15 +21,16 @@
 #define CONSTANT_NameAndType 12
 #define CONSTANT_Utf8 1
 
-/*Struct do programa */
-// struct para atributo
+
+
+/*Struct de informações da constant pool*/
+
 typedef struct attribute_info{
 	uint16_t attribute_name_index;
 	uint32_t attribute_length;
 	uint8_t* info;
 }attribute_info;
 
-// struct para campo
 typedef struct field_info{
 	uint16_t access_flags;
 	uint16_t name_index;
@@ -37,7 +39,14 @@ typedef struct field_info{
 	attribute_info* attributes;
 }field_info;
 
-// struct da constante pool - conforme sugerido em sala, usou-se uma union
+typedef struct method_info{
+	uint16_t access_flags;
+	uint16_t name_index;
+	uint16_t descriptor_index;
+	uint16_t attributes_count;
+	attribute_info* attributes;
+}method_info;
+
 typedef struct cp_info{
 	uint8_t tag;
 	union{
@@ -84,7 +93,7 @@ typedef struct cp_info{
 	}info;
 }cp_info;
 
-// struct para representar o .class
+/*Struct que representa o .class*/
 typedef struct ClassFile{
 	uint32_t magic;
 	uint16_t minor_version;
@@ -99,8 +108,10 @@ typedef struct ClassFile{
 	uint16_t fields_count;
 	field_info* fields;
 	uint16_t methods_count;
+	method_info* methods;
+	uint16_t attributes_count;
+	attribute_info* attributes;
 }classFile;
-
 /* Funcoes do programa */
 
 // funcao principal

@@ -3,7 +3,6 @@
 #define LEITOR_EXIBIDOR_C
 #include "jvm.h"
 
-
 int main(int argc, char* argv[]){
 	//Abre arquivo passado via linha de comando
 	FILE* file;
@@ -138,6 +137,7 @@ void le_interfaces(classFile* cf, FILE* file, int qtd_a_ler)
     }
 }
 
+// funcoes auxiliares
 static inline uint8_t u1Read(FILE* fp){
 	uint8_t retorno = getc(fp);
 	return retorno;
@@ -156,5 +156,4 @@ static inline uint32_t u4Read(FILE* fp){
 	retorno = (retorno << 8) | (getc(fp));
 	return retorno;
 }
-
 #endif

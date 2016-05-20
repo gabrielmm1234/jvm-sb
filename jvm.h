@@ -102,23 +102,26 @@ typedef struct ClassFile{
 }classFile;
 
 /* Funcoes do programa */
+
 // funcao principal
 int main(int argc, char* argv[]);
 
 // Função que le informações gerais do arquivo - Antes da constant pool
 void generalInfo(classFile* cf,FILE* file);
 
+// funcao para imprimir constant pool
 void constantPool(classFile* cf,FILE* file);
 
+// funcao para imprimir informacoes gerais que vem depois da constante pool 
 void secondGeneralInfo(classFile* cf,FILE* file);
 
+// funcao para ler as interfaces
 void le_interfaces(classFile* cf, FILE* file, int qtd_a_ler);
 
-// funcoes auxiliares para ler 1, 2 ou 4 bytes 
+// funcoes auxiliares
 static inline uint8_t u1Read(FILE* fp);
 static inline uint16_t u2Read(FILE* fp);
 static inline uint32_t u4Read(FILE* fp);
-
 // corpo das funcoes do programa 
 #include "jvm.c"
 #endif 

@@ -1,143 +1,28 @@
-/*Includes*/
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdint.h>
+#ifndef LEITOR_EXIBIDOR_C
+#define LEITOR_EXIBIDOR_C
+#include "jvm.h"
 
+int main(int argc, char* argv[]){
+	//Abre arquivo passado via linha de comando
+	FILE* file;
+	file = fopen(argv[1], "rb");
 
-/*Defines*/
-#define CONSTANT_Class 7
-#define CONSTANT_Fieldref 9
-#define CONSTANT_Methodref 10
-#define CONSTANT_InterfaceMethodref 11
-#define CONSTANT_String 8
-#define CONSTANT_Integer 3
-#define CONSTANT_Float 4
-#define CONSTANT_Long 5
-#define CONSTANT_Double 6
-#define CONSTANT_NameAndType 12
-#define CONSTANT_Utf8 1
+	//Aloca memória para a estrutura do .class
+	classFile* cf = (classFile*) malloc(sizeof(classFile));
 
+	//Le e imprime informações gerais.
+	generalInfo(cf,file);
 
+	//Le e imprime a constant pool
+	constantPool(cf,file);
 
-/*Struct de informações da constant pool*/
+	//le e imprime informações gerais após a constant pool
+	secondGeneralInfo(cf,file);
 
-typedef struct attribute_info{
-	uint16_t attribute_name_index;
-	uint32_t attribute_length;
-	uint8_t* info;
-}attribute_info;
-
-typedef struct field_info{
-	uint16_t access_flags;
-	uint16_t name_index;
-	uint16_t descriptor_index;
-	uint16_t attributes_count;
-	attribute_info* attributes;
-}field_info;
-
-typedef struct method_info{
-	uint16_t access_flags;
-	uint16_t name_index;
-	uint16_t descriptor_index;
-	uint16_t attributes_count;
-	attribute_info* attributes;
-}method_info;
-
-typedef struct cp_info{
-	uint8_t tag;
-	union{
-		struct {
-			uint16_t name_index;
-		}Class;
-		struct{
-			uint16_t class_index;
-			uint16_t name_and_type_index;
-		}Fieldref;
-		struct{
-			uint16_t name_index;
-			uint16_t descriptor_index;
-		}NameAndType;
-		struct{
-			uint16_t length;
-			uint8_t* bytes;
-		}Utf8;
-		struct{
-			uint16_t class_index;
-			uint16_t name_and_type_index;
-		}Methodref;
-		struct{
-			uint16_t class_index;
-			uint16_t name_and_type_index;
-		}InterfaceMethodref;
-		struct{
-			uint16_t string_index;
-		}String;
-		struct{
-			uint32_t bytes;
-		}Integer;
-		struct{
-			uint32_t bytes;
-		}Float;
-		struct{
-			uint32_t high_bytes;
-			uint32_t low_bytes;
-		}Long;
-		struct{
-			uint32_t high_bytes;
-			uint32_t low_bytes;
-		}Double;
-	}info;
-}cp_info;
-
-/*Struct que representa o .class*/
-typedef struct ClassFile{
-	uint32_t magic;
-	uint16_t minor_version;
-	uint16_t major_version;
-	uint16_t constant_pool_count;
-	cp_info* constant_pool;
-	uint16_t access_flags;
-	uint16_t this_class;
-	uint16_t super_class;
-	uint16_t interfaces_count;
-	uint16_t* interfaces;
-	uint16_t fields_count;
-	field_info* fields;
-	uint16_t methods_count;
-	method_info* methods;
-	uint16_t attributes_count;
-	attribute_info* attributes;
-}classFile;
-
-
-
-/*Funções auxiliares*/
-
-// Função que le 1 byte do arquivo
-static inline uint8_t u1Read(FILE* fp){
-	uint8_t retorno = getc(fp);
-	return retorno;
+	return 0;
 }
 
-// Função que le 2 bytes do arquivo
-static inline uint16_t u2Read(FILE* fp){
-	uint16_t retorno = getc(fp); 
-	retorno = (retorno << 8) | (getc(fp));
-	return retorno;
-}
-
-// Função que le 4 bytes de um arquivo
-static inline uint32_t u4Read(FILE* fp){
-	uint32_t retorno = getc(fp);
-	retorno = (retorno << 8) | (getc(fp));
-	retorno = (retorno << 8) | (getc(fp));
-	retorno = (retorno << 8) | (getc(fp));
-	return retorno;
-}
-
-// Função que le informações gerais do arquivo - Antes da constant pool
-void generalInfo(classFile* cf,FILE* file){
+void generalInfo(classFile* cf, FILE* file){
 	cf->magic = u4Read(file);
 	cf->minor_version = u2Read(file);
 	cf->major_version = u2Read(file);
@@ -151,7 +36,7 @@ void generalInfo(classFile* cf,FILE* file){
 	printf("----End General----\n\n");
 }
 
-void constantPool(classFile* cf,FILE* file){
+void constantPool(classFile* cf, FILE* file){
 	cf->constant_pool = (cp_info*) malloc((cf->constant_pool_count-1)*sizeof(cp_info));
 	cp_info* cp;
 
@@ -265,13 +150,16 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 	}
 }
 
-void secondGeneralInfo(classFile* cf,FILE* file){
+void secondGeneralInfo(classFile* cf, FILE* file){
 	cf->access_flags = u2Read(file);
 	cf->this_class = u2Read(file);
 	cf->super_class = u2Read(file);
 
 	cf->interfaces_count = u2Read(file);
 	interfaceInfo(cf,file,cf->interfaces_count);
+	
+    // LER INTERFACES TODO
+    le_interfaces(cf, file, cf->interfaces_count);
 
 	cf->fields_count = u2Read(file);
 	fieldInfo(cf,file,cf->fields_count);
@@ -293,22 +181,35 @@ void secondGeneralInfo(classFile* cf,FILE* file){
 	printf("----End Second General----\n\n");
 }
 
-int main(int argc, char* argv[]){
-	//Abre arquivo passado via linha de comando
-	FILE* file;
-	file = fopen(argv[1], "rb");
+void le_interfaces(classFile* cf, FILE* file, int qtd_a_ler)
+{
+    // aloca espaco apropriado
+    cf->interfaces = (uint16_t *) malloc((qtd_a_ler) * sizeof(uint16_t));
 
-	//Aloca memória para a estrutura do .class
-	classFile* cf = (classFile*) malloc(sizeof(classFile));
-
-	//Le e imprime informações gerais.
-	generalInfo(cf,file);
-
-	//Le e imprime a constant pool
-	constantPool(cf,file);
-
-	//le e imprime informações gerais após a constant pool
-	secondGeneralInfo(cf,file);
-
-	return 0;
+    // le interface, pondo no array elementos corretos
+    for (int i = 0; i < qtd_a_ler; i++)
+    {
+        cf->interfaces[i] = u2Read(file);
+    }
 }
+
+// funcoes auxiliares
+static inline uint8_t u1Read(FILE* fp){
+	uint8_t retorno = getc(fp);
+	return retorno;
+}
+
+static inline uint16_t u2Read(FILE* fp){
+	uint16_t retorno = getc(fp); 
+	retorno = (retorno << 8) | (getc(fp));
+	return retorno;
+}
+
+static inline uint32_t u4Read(FILE* fp){
+	uint32_t retorno = getc(fp);
+	retorno = (retorno << 8) | (getc(fp));
+	retorno = (retorno << 8) | (getc(fp));
+	retorno = (retorno << 8) | (getc(fp));
+	return retorno;
+}
+#endif

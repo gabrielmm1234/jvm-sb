@@ -205,12 +205,27 @@ void constantPool(classFile* cf,FILE* file){
 	printf("----End----\n\n");
 }
 
+void le_interfaces(classFile* cf, FILE* file, int qtd_a_ler)
+{
+    // aloca espaco apropriado
+    cf->interfaces = (uint16_t *) malloc((qtd_a_ler) * sizeof(uint16_t));
+
+    // le interface, pondo no array elementos corretos
+    for (int i = 0; i < qtd_a_ler; i++)
+    {
+        cf->interfaces[i] = u2Read(file);
+    }
+}
+
 void secondGeneralInfo(classFile* cf,FILE* file){
 	cf->access_flags = u2Read(file);
 	cf->this_class = u2Read(file);
 	cf->super_class = u2Read(file);
 	cf->interfaces_count = u2Read(file);
-	// LER INTERFACES TODO
+	
+    // LER INTERFACES TODO
+    le_interfaces(cf, file, cf->interfaces_count);
+
 	cf->fields_count = u2Read(file);
 	// LER FIELDS TODO
 	cf->methods_count = u2Read(file);

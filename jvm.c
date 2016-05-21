@@ -105,7 +105,20 @@ void interfaceInfo(classFile* cf, FILE* file, uint16_t interfaces_count){
 	if(interfaces_count == 0)
 		return;
 	else{
-		// Ler estrutura de interfaces.
+
+        // aloca espaco apropriado
+        cf->interfaces = (uint16_t *) malloc((interfaces_count) * sizeof(uint16_t));
+
+        printf("---- Interfaces ----\n");
+
+        // le interface, pondo no array elementos corretos
+        for (int i = 0; i < interfaces_count; i++)
+        {
+            cf->interfaces[i] = u2Read(file);
+            printf("Interface: cp info #%d\n", cf->interfaces[i]);
+        }
+
+        printf("---- End Interface ----\n");
 	}
 }
 
@@ -151,6 +164,8 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 }
 
 void secondGeneralInfo(classFile* cf, FILE* file){
+    int i;
+
 	cf->access_flags = u2Read(file);
 	cf->this_class = u2Read(file);
 	cf->super_class = u2Read(file);
@@ -158,9 +173,6 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 	cf->interfaces_count = u2Read(file);
 	interfaceInfo(cf,file,cf->interfaces_count);
 	
-    // LER INTERFACES TODO
-    le_interfaces(cf, file, cf->interfaces_count);
-
 	cf->fields_count = u2Read(file);
 	fieldInfo(cf,file,cf->fields_count);
 
@@ -179,18 +191,6 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 	methodInfo(cf,file,cf->methods_count);
 
 	printf("----End Second General----\n\n");
-}
-
-void le_interfaces(classFile* cf, FILE* file, int qtd_a_ler)
-{
-    // aloca espaco apropriado
-    cf->interfaces = (uint16_t *) malloc((qtd_a_ler) * sizeof(uint16_t));
-
-    // le interface, pondo no array elementos corretos
-    for (int i = 0; i < qtd_a_ler; i++)
-    {
-        cf->interfaces[i] = u2Read(file);
-    }
 }
 
 // funcoes auxiliares

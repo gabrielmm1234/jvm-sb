@@ -110,7 +110,7 @@ void interfaceInfo(classFile* cf, FILE* file, uint16_t interfaces_count){
 
         printf("---- Interfaces ----\n");
 
-        // le interface, pondo no array elementos corretos
+        // le interface, pondo no array de interfaces
         for (int i = 0; i < interfaces_count; i++)
         {
             cf->interfaces[i] = u2Read(file);
@@ -125,7 +125,62 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
 	if(fields_count == 0)
 		return;
 	else{
-		// Ler estrutura de fields.
+       
+        // aloca espaco apropriado
+        cf->fields = (field_info*) malloc(fields_count * sizeof(field_info)); 
+        
+        printf("----Fields----\n");
+
+        // le field information, pondo no array de field
+        for (int i = 0; i < fields_count; i++)
+        {
+            // pega bits de acesso, indice do nome e indice do descritor
+            cf->fields[i].access_flags = u2Read(file);
+            cf->fields[i].name_index = u2Read(file);
+            cf->fields[i].descriptor_index = u2Read(file);
+
+            // imprime informacoes
+            printf("Name: cp info #%d\n", cf->fields[i].name_index);
+            printf("Descriptor: cp info #%d\n", cf->fields[i].descriptor_index);
+            printf("Access Flag: cp info #0x%x\n", cf->fields[i].access_flags);
+
+            cf->fields[i].attributes_count = u2Read(file);
+
+            // aloca espaco para o array de atributos
+            cf->fields[i].attributes = (attribute_info*) malloc(cf->fields[i].attributes_count * sizeof(attribute_info));
+            
+            // vai lendo e imprimindo atributos 
+            for (int j = 0; j < cf->fields[i].attributes_count; j++)
+            {
+                printf("\t\t----Attribute Info do Field----\n");
+                
+                // pega indice do nome do atributo e comprimento do atributo
+                cf->fields[i].attributes->attribute_name_index = u2Read(file);
+                cf->fields[i].attributes->attribute_length = u4Read(file);
+
+                // imprime informacao dos atributos
+                printf("attribute_name_index: cp info #%d\n", cf->fields[i].attributes->attribute_name_index);
+                printf("attribute_length: %d\n", cf->fields[i].attributes->attribute_length);
+
+                // espaco para informacao do atributo
+                cf->fields[i].attributes->info = (uint8_t*) malloc(cf->fields[i].attributes->attribute_length * sizeof(uint8_t));
+                
+                // le informacao do atributo
+                fread(cf->fields[i].attributes->info, 1, cf->fields[i].attributes->attribute_length, file);
+
+                // imprime bytecode do atributo
+                for (int k = 0; k < cf->fields[i].attributes->attribute_length; k++)
+                {
+                    fread(&(cf->fields[i].attributes->info[k]), 1, 1, file);
+                    
+                    printf("bytecode: 0x%x\n", cf->fields[i].attributes->info[k]);
+                }
+
+                printf("\t\t----Fim da Attribute Info do Field----\n");
+            }
+        }
+
+        printf("----Fields----\n");
 	}
 }
 
@@ -202,7 +257,6 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 	cf->interfaces_count = u2Read(file);
 	interfaceInfo(cf,file,cf->interfaces_count);
 
-	//fieldInfo TODO.
 	cf->fields_count = u2Read(file);
 	fieldInfo(cf,file,cf->fields_count);
 

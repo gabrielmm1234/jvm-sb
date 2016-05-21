@@ -154,8 +154,11 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 				printf("attribute_name_index: cp info #%d\n",cp->attributes->attribute_name_index);
 				printf("attribute_length: %d\n",cp->attributes->attribute_length);
 				cp->attributes->info = (uint8_t*) malloc((cp->attributes->attribute_length)*sizeof(uint8_t));
-				fread(cp->attributes->info,1,cp->attributes->attribute_length,file);
+				for(int k = 0; k < cp->attributes->attribute_length; cp->attributes->info++){
+				fread(cp->attributes->info,1,1,file);
 				printf("bytecode: 0x%0x\n",*cp->attributes->info);
+				k++;
+				}
 				printf("----End Attribute----\n\n");
 				j++;
 			}
@@ -179,8 +182,11 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){
 			printf("attribute_name_index: cp info #%d\n",cp->attribute_name_index);
 			printf("attribute_length: %d\n",cp->attribute_length);
 			cp->info = (uint8_t*) malloc((cp->attribute_length)*sizeof(uint8_t));
-			fread(cp->info,1,cp->attribute_length,file);
+			for(int j = 0; j < cp->attribute_length; cp->info++){
+			fread(cp->info,1,1,file);
 			printf("bytecode: 0x%0x\n",*(cp->info));
+			j++;
+			}
 			i++;
 		}
 	}

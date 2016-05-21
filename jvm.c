@@ -66,7 +66,6 @@ void constantPool(classFile* cf, FILE* file){
 			case CONSTANT_Utf8:
 				cp->info.Utf8.length = u2Read(file);
 				cp->info.Utf8.bytes = (uint8_t*) malloc ((cp->info.Utf8.length)*sizeof(uint8_t));
-				char* string_aux = (char*) malloc((cp->info.Utf8.length)*sizeof(char));
 				fread(cp->info.Utf8.bytes,1,cp->info.Utf8.length,file);
 				printf("CONSTANT_Utf8_info - length:%d\n",cp->info.Utf8.length);
 				printf("CONSTANT_Utf8_info - bytes: %s\n",cp->info.Utf8.bytes);
@@ -101,14 +100,6 @@ void constantPool(classFile* cf, FILE* file){
 	printf("----End Pool----\n\n");
 }
 
-void interfaceInfo(classFile* cf, FILE* file, uint16_t interfaces_count){
-	if(interfaces_count == 0)
-		return;
-	else{
-		// Ler estrutura de interfaces.
-	}
-}
-
 void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
 	if(fields_count == 0)
 		return;
@@ -117,6 +108,7 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
 	}
 }
 
+//Função para ler estrutura e informações dos métodos.
 void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 	if(methods_count == 0)
 		return;
@@ -140,12 +132,35 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 				cp->attributes->attribute_length = u4Read(file);
 				printf("attribute_name_index: cp info #%d\n",cp->attributes->attribute_name_index);
 				printf("attribute_length: %d\n",cp->attributes->attribute_length);
-				//****** Ler bytecode aqui ***********
+				cp->attributes->info = (uint8_t*) malloc((cp->attributes->attribute_length)*sizeof(uint8_t));
+				fread(cp->attributes->info,1,cp->attributes->attribute_length,file);
+				printf("bytecode: 0x%0x\n",*cp->attributes->info);
 				printf("----End Attribute----\n\n");
 				j++;
 			}
 			i++;
 			printf("----End Method----\n\n");
+		}
+	}
+}
+
+void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){
+	if(attributes_count == 0)
+		return;
+	else{
+		cf->attributes = (attribute_info*) malloc(attributes_count*sizeof(attribute_info));
+		attribute_info* cp = cf->attributes;
+
+		for(int i = 0; i < attributes_count; cp++){
+
+			cp->attribute_name_index = u2Read(file);
+			cp->attribute_length = u4Read(file);
+			printf("attribute_name_index: cp info #%d\n",cp->attribute_name_index);
+			printf("attribute_length: %d\n",cp->attribute_length);
+			cp->info = (uint8_t*) malloc((cp->attribute_length)*sizeof(uint8_t));
+			fread(cp->info,1,cp->attribute_length,file);
+			printf("bytecode: 0x%0x\n",*(cp->info));
+			i++;
 		}
 	}
 }
@@ -156,15 +171,10 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 	cf->super_class = u2Read(file);
 
 	cf->interfaces_count = u2Read(file);
-	interfaceInfo(cf,file,cf->interfaces_count);
-	
-    // LER INTERFACES TODO
     le_interfaces(cf, file, cf->interfaces_count);
 
 	cf->fields_count = u2Read(file);
 	fieldInfo(cf,file,cf->fields_count);
-
-	cf->methods_count = u2Read(file);
 
 	printf("----Second General Info----\n");
 	printf("Access Flags: 0x%0x\n",cf->access_flags);
@@ -175,25 +185,37 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 
 	printf("----Method Info----\n");
 
+	cf->methods_count = u2Read(file);
 	printf("Methods Count: %d\n",cf->methods_count);
 	methodInfo(cf,file,cf->methods_count);
+
+	printf("----Attributes Info----\n");
+
+	cf->attributes_count = u2Read(file);
+	printf("attributes_count: %d\n",cf->attributes_count);
+	attributeInfo(cf,file,cf->attributes_count);
+	printf("----End Attributes----\n\n");
 
 	printf("----End Second General----\n\n");
 }
 
 void le_interfaces(classFile* cf, FILE* file, int qtd_a_ler)
 {
-    // aloca espaco apropriado
-    cf->interfaces = (uint16_t *) malloc((qtd_a_ler) * sizeof(uint16_t));
+	if(qtd_a_ler == 0)
+		return;
+	else{
+	    // aloca espaco apropriado
+	    cf->interfaces = (uint16_t *) malloc((qtd_a_ler) * sizeof(uint16_t));
 
-    // le interface, pondo no array elementos corretos
-    for (int i = 0; i < qtd_a_ler; i++)
-    {
-        cf->interfaces[i] = u2Read(file);
-    }
+	    // le interface, pondo no array elementos corretos
+	    for (int i = 0; i < qtd_a_ler; i++)
+	    {
+	        cf->interfaces[i] = u2Read(file);
+	    }
+	}
 }
 
-// funcoes auxiliares
+// funcoes auxiliares para leitura.
 static inline uint8_t u1Read(FILE* fp){
 	uint8_t retorno = getc(fp);
 	return retorno;

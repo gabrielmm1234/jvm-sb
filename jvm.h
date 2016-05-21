@@ -22,9 +22,6 @@
 #define CONSTANT_Utf8 1
 
 
-
-/*Struct de informações da constant pool*/
-
 typedef struct attribute_info{
 	uint16_t attribute_name_index;
 	uint32_t attribute_length;
@@ -47,6 +44,7 @@ typedef struct method_info{
 	attribute_info* attributes;
 }method_info;
 
+/*Struct de informações da constant pool*/
 typedef struct cp_info{
 	uint8_t tag;
 	union{
@@ -122,6 +120,12 @@ void generalInfo(classFile* cf,FILE* file);
 
 // funcao para imprimir constant pool
 void constantPool(classFile* cf,FILE* file);
+
+// Função para ler estrutura e informações dos métodos.
+void methodInfo(classFile* cf, FILE* file, uint16_t methods_count);
+
+// Função para ler estrutura e informações de atributos.
+void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count);
 
 // funcao para imprimir informacoes gerais que vem depois da constante pool 
 void secondGeneralInfo(classFile* cf,FILE* file);

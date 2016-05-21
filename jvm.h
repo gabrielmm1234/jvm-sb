@@ -130,9 +130,6 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count);
 // funcao para imprimir informacoes gerais que vem depois da constante pool 
 void secondGeneralInfo(classFile* cf,FILE* file);
 
-// funcao para ler as interfaces
-void le_interfaces(classFile* cf, FILE* file, int qtd_a_ler);
-
 // funcoes auxiliares
 static inline uint8_t u1Read(FILE* fp);
 static inline uint16_t u2Read(FILE* fp);

@@ -16,6 +16,6 @@ class xyz implements myinterface
     public static void main(String arg[])
     {
         myinterface obj = new xyz();
-        obj. method1();
+        obj.method1();
     }
 }

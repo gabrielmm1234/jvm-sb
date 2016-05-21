@@ -100,6 +100,27 @@ void constantPool(classFile* cf, FILE* file){
 	printf("----End Pool----\n\n");
 }
 
+void interfaceInfo(classFile* cf, FILE* file, uint16_t interfaces_count){
+	if(interfaces_count == 0)
+		return;
+	else{
+
+        // aloca espaco apropriado
+        cf->interfaces = (uint16_t *) malloc((interfaces_count) * sizeof(uint16_t));
+
+        printf("---- Interfaces ----\n");
+
+        // le interface, pondo no array elementos corretos
+        for (int i = 0; i < interfaces_count; i++)
+        {
+            cf->interfaces[i] = u2Read(file);
+            printf("Interface: cp info #%d\n", cf->interfaces[i]);
+        }
+
+        printf("---- End Interface ----\n");
+	}
+}
+
 void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
 	if(fields_count == 0)
 		return;
@@ -166,13 +187,16 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){
 }
 
 void secondGeneralInfo(classFile* cf, FILE* file){
+    int i;
+
 	cf->access_flags = u2Read(file);
 	cf->this_class = u2Read(file);
 	cf->super_class = u2Read(file);
 
 	cf->interfaces_count = u2Read(file);
-    le_interfaces(cf, file, cf->interfaces_count);
+	interfaceInfo(cf,file,cf->interfaces_count);
 
+	//fieldInfo TODO.
 	cf->fields_count = u2Read(file);
 	fieldInfo(cf,file,cf->fields_count);
 
@@ -194,26 +218,13 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 	cf->attributes_count = u2Read(file);
 	printf("attributes_count: %d\n",cf->attributes_count);
 	attributeInfo(cf,file,cf->attributes_count);
+	
 	printf("----End Attributes----\n\n");
 
 	printf("----End Second General----\n\n");
 }
 
-void le_interfaces(classFile* cf, FILE* file, int qtd_a_ler)
-{
-	if(qtd_a_ler == 0)
-		return;
-	else{
-	    // aloca espaco apropriado
-	    cf->interfaces = (uint16_t *) malloc((qtd_a_ler) * sizeof(uint16_t));
 
-	    // le interface, pondo no array elementos corretos
-	    for (int i = 0; i < qtd_a_ler; i++)
-	    {
-	        cf->interfaces[i] = u2Read(file);
-	    }
-	}
-}
 
 // funcoes auxiliares para leitura.
 static inline uint8_t u1Read(FILE* fp){

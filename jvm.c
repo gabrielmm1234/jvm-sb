@@ -209,11 +209,78 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 				printf("attribute_name_index: cp info #%d\n",cp->attributes->attribute_name_index);
 				printf("attribute_length: %d\n",cp->attributes->attribute_length);
 				cp->attributes->info = (uint8_t*) malloc((cp->attributes->attribute_length)*sizeof(uint8_t));
-				for(int k = 0; k < cp->attributes->attribute_length; cp->attributes->info++){
-				fread(cp->attributes->info,1,1,file);
-				printf("bytecode: 0x%0x\n",*cp->attributes->info);
-				k++;
+                
+                int code_length; // sera importante para saber como parar o segundo loop 
+
+                // leitura do bytecode relacionado a informacoes gerais
+				for(int k = 0; k < 8; k++)
+                {
+                    fread(&(cp->attributes->info[k]), 1, 1, file);
+
+                    // imprime profundidade maxima do stack
+                    if (k == 1) 
+                    {
+                        int max_stack_depth = 10 * cp->attributes->info[k-1] + cp->attributes->info[k]; 
+                        printf("Maximum stack depth: %d\n", max_stack_depth); 
+                    }
+
+                    // imprime numero maximo de local variables 
+                    if (k == 3)
+                    {
+                        int max_local_var = 10 * cp->attributes->info[k-1] + cp->attributes->info[k]; 
+                        printf("Maximum local variables: %d\n", max_local_var);
+                    }
+
+                    // imprime tamanho do codigo 
+                    if (k == 7)
+                    {
+                         code_length = 1000 * cp->attributes->info[k-3] + \
+                                              100 * cp->attributes->info[k-2] + \
+                                              10 * cp->attributes->info[k-1] + \
+                                              cp->attributes->info[k];
+                        printf("Code Length: %d\n", code_length);
+                    }
+
+                }
+               
+                // obtem decodificador de instrucoes 
+                decodificador dec[NUM_INSTRUCAO];
+                inicializa_decodificador(dec); 
+
+                // leitura do bytecode relacionado a instrucoes do metodo 
+				for(int k = 8; k-8 < code_length; k++)
+                {    
+                    // le opcode da instrucao atual
+                    fread(&(cp->attributes->info[k]), 1, 1, file);
+                    
+                    // imprime instrucao
+                    int indice = cp->attributes->info[k];
+                    printf("%d: %s  ", k-8, dec[indice].instrucao);
+
+                    // obtem quantos operandos a instrucao tem e vai imprimindo operandos
+                    int num_bytes = dec[indice].bytes;
+                    for (int l = 0; l < num_bytes; l++)
+                    {
+                        // atualiza valor de k 
+                        k++;
+
+                        // pega operando 
+                        fread(&(cp->attributes->info[k]), 1, 1, file);
+                        
+                        // operandos sao impressos do jeito que saem 
+                        printf("0x%0x  ", cp->attributes->info[k]);
+                    }
+                    
+                    // pula linha
+                    printf("\n"); 
 				}
+                
+                // leitura dos demais bytecodes - NAO SEI PARA QUE ISSO SERVE 
+                for (int k = 8 + code_length; k < cp->attributes->attribute_length; k++)
+                {
+                    fread(&(cp->attributes->info[k]), 1, 1, file);
+                }
+                
 				printf("----End Attribute----\n\n");
 				j++;
 			}
@@ -284,7 +351,37 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 	printf("----End Second General----\n\n");
 }
 
+void inicializa_decodificador(decodificador dec[])
+{
 
+    // adiciona instrucoes na ordem de opcode 
+
+    // ldc
+    strcpy(dec[18].instrucao, "ldc");
+    dec[18].bytes = 1;
+    
+    // aload_0
+    strcpy(dec[42].instrucao, "aload_0");
+    dec[42].bytes = 0;
+
+    // return 
+    strcpy(dec[177].instrucao, "return");
+    dec[177].bytes = 0;
+
+    //getstatic
+    strcpy(dec[178].instrucao, "getstatic");
+    dec[178].bytes = 2;
+    
+    // invokevirtual 
+    strcpy(dec[182].instrucao, "invokevirtual");
+    dec[182].bytes = 2;
+
+    // invokespecial 
+    strcpy(dec[183].instrucao, "invokespecial");
+    dec[183].bytes = 2;
+
+    
+}
 
 // funcoes auxiliares para leitura.
 static inline uint8_t u1Read(FILE* fp){

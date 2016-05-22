@@ -21,6 +21,21 @@
 #define CONSTANT_NameAndType 12
 #define CONSTANT_Utf8 1
 
+#define NOME_INSTRUCAO 30 
+#define NUM_INSTRUCAO 256
+
+
+/* Structs */
+// struct para decodificar um opcode no nome da instrucao conveniente, contem tb o numero de operandos que a instrucao le  
+typedef struct decodificador
+{
+    // nome da instrucao 
+    char instrucao[NOME_INSTRUCAO];
+
+    // numero de bytes que seguem a instrucao 
+    int bytes; 
+}
+decodificador; 
 
 typedef struct attribute_info{
 	uint16_t attribute_name_index;
@@ -129,6 +144,8 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count);
 
 // funcao para imprimir informacoes gerais que vem depois da constante pool 
 void secondGeneralInfo(classFile* cf,FILE* file);
+
+void inicializa_decodificador(decodificador dec[]);
 
 // funcoes auxiliares
 static inline uint8_t u1Read(FILE* fp);

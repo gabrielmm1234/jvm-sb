@@ -23,10 +23,10 @@ int main(int argc, char* argv[]){
 }
 
 void generalInfo(classFile* cf, FILE* file){
-	cf->magic = u4Read(file);
-	cf->minor_version = u2Read(file);
-	cf->major_version = u2Read(file);
-	cf->constant_pool_count = u2Read(file);
+	cf->magic = le4Bytes(file);
+	cf->minor_version = le2Bytes(file);
+	cf->major_version = le2Bytes(file);
+	cf->constant_pool_count = le2Bytes(file);
 
 	printf("----General Information----\n");
 	printf("CAFEBABE: 0x%0x \n",cf->magic);
@@ -44,53 +44,53 @@ void constantPool(classFile* cf, FILE* file){
 
 	int i = 0;
 	for(cp = cf->constant_pool; i < (cf->constant_pool_count-1); cp++){
-		cp->tag = u1Read(file);
+		cp->tag = le1Byte(file);
 		printf("Tag: %d\n",cp->tag);
 		switch(cp->tag){
 			case CONSTANT_Class:
-				cp->info.Class.name_index = u2Read(file);
-				printf("CONSTANT_Class_info - name_index: cp info #%d\n",cp->info.Class.name_index);
+				cp->info.Class.name_index = le2Bytes(file);
+				printf("[%d] CONSTANT_Class_info - name_index: cp info #%d\n",i+1,cp->info.Class.name_index);
 				break;
 			case CONSTANT_Fieldref:
-				cp->info.Fieldref.class_index = u2Read(file);
-				cp->info.Fieldref.name_and_type_index = u2Read(file);
-				printf("CONSTANT_Fieldref_info - class_index: cp info #%d\n",cp->info.Fieldref.class_index);
-				printf("CONSTANT_Fieldref_info - name_and_type_index: cp info #%d\n",cp->info.Fieldref.name_and_type_index);
+				cp->info.Fieldref.class_index = le2Bytes(file);
+				cp->info.Fieldref.name_and_type_index = le2Bytes(file);
+				printf("[%d] CONSTANT_Fieldref_info - class_index: cp info #%d\n",i+1,cp->info.Fieldref.class_index);
+				printf("[%d] CONSTANT_Fieldref_info - name_and_type_index: cp info #%d\n",i+1,cp->info.Fieldref.name_and_type_index);
 				break;
 			case CONSTANT_NameAndType:
-				cp->info.NameAndType.name_index = u2Read(file);
-				cp->info.NameAndType.descriptor_index = u2Read(file);
-				printf("CONSTANT_NameAndType_info - name_index:cp info #%d\n",cp->info.NameAndType.name_index);
-				printf("CONSTANT_NameAndType_info - descriptor_index: cp info #%d\n",cp->info.NameAndType.descriptor_index);
+				cp->info.NameAndType.name_index = le2Bytes(file);
+				cp->info.NameAndType.descriptor_index = le2Bytes(file);
+				printf("[%d] CONSTANT_NameAndType_info - name_index:cp info #%d\n",i+1,cp->info.NameAndType.name_index);
+				printf("[%d] CONSTANT_NameAndType_info - descriptor_index: cp info #%d\n",i+1,cp->info.NameAndType.descriptor_index);
 				break;
 			case CONSTANT_Utf8:
-				cp->info.Utf8.length = u2Read(file);
+				cp->info.Utf8.length = le2Bytes(file);
 				cp->info.Utf8.bytes = (uint8_t*) malloc ((cp->info.Utf8.length)*sizeof(uint8_t));
 				fread(cp->info.Utf8.bytes,1,cp->info.Utf8.length,file);
-				printf("CONSTANT_Utf8_info - length:%d\n",cp->info.Utf8.length);
-				printf("CONSTANT_Utf8_info - bytes: %s\n",cp->info.Utf8.bytes);
+				printf("[%d] CONSTANT_Utf8_info - length:%d\n",i+1,cp->info.Utf8.length);
+				printf("[%d] CONSTANT_Utf8_info - bytes: %s\n",i+1,cp->info.Utf8.bytes);
 				break;
 			case CONSTANT_Methodref:
-				cp->info.Methodref.class_index = u2Read(file);
-				cp->info.Methodref.name_and_type_index = u2Read(file);
-				printf("CONSTANT_Methodref_info - class_index: cp info #%d\n",cp->info.Methodref.class_index);
-				printf("CONSTANT_Methodref_info - name_and_type_index: cp info #%d\n",cp->info.Methodref.name_and_type_index);
+				cp->info.Methodref.class_index = le2Bytes(file);
+				cp->info.Methodref.name_and_type_index = le2Bytes(file);
+				printf("[%d] CONSTANT_Methodref_info - class_index: cp info #%d\n",i+1,cp->info.Methodref.class_index);
+				printf("[%d] CONSTANT_Methodref_info - name_and_type_index: cp info #%d\n",i+1,cp->info.Methodref.name_and_type_index);
 				break;
 			case CONSTANT_InterfaceMethodref:
-				cp->info.InterfaceMethodref.class_index = u2Read(file);
-				cp->info.InterfaceMethodref.name_and_type_index = u2Read(file);
+				cp->info.InterfaceMethodref.class_index = le2Bytes(file);
+				cp->info.InterfaceMethodref.name_and_type_index = le2Bytes(file);
 				break;
 			case CONSTANT_String:
-				cp->info.String.string_index = u2Read(file);
-				printf("CONSTANT_String_info - string_index: cp info #%d\n",cp->info.String.string_index);
+				cp->info.String.string_index = le2Bytes(file);
+				printf("[%d] CONSTANT_String_info - string_index: cp info #%d\n",i+1,cp->info.String.string_index);
 				break;
 			case CONSTANT_Integer:
-				cp->info.Integer.bytes = u4Read(file);
-				printf("CONSTANT_Integer_info - bytes:%d\n",cp->info.Integer.bytes);
+				cp->info.Integer.bytes = le4Bytes(file);
+				printf("[%d] CONSTANT_Integer_info - bytes:%d\n",i+1,cp->info.Integer.bytes);
 				break;
 			case CONSTANT_Float:
-				cp->info.Float.bytes = u4Read(file);
-				printf("CONSTANT_Float_info - bytes:%d\n",cp->info.Float.bytes);
+				cp->info.Float.bytes = le4Bytes(file);
+				printf("[%d] CONSTANT_Float_info - bytes:%d\n",i+1,cp->info.Float.bytes);
 				break;
 			default:
 				break;
@@ -113,7 +113,7 @@ void interfaceInfo(classFile* cf, FILE* file, uint16_t interfaces_count){
         // le interface, pondo no array de interfaces
         for (int i = 0; i < interfaces_count; i++)
         {
-            cf->interfaces[i] = u2Read(file);
+            cf->interfaces[i] = le2Bytes(file);
             printf("Interface: cp info #%d\n", cf->interfaces[i]);
         }
 
@@ -135,16 +135,16 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
         for (int i = 0; i < fields_count; i++)
         {
             // pega bits de acesso, indice do nome e indice do descritor
-            cf->fields[i].access_flags = u2Read(file);
-            cf->fields[i].name_index = u2Read(file);
-            cf->fields[i].descriptor_index = u2Read(file);
+            cf->fields[i].access_flags = le2Bytes(file);
+            cf->fields[i].name_index = le2Bytes(file);
+            cf->fields[i].descriptor_index = le2Bytes(file);
 
             // imprime informacoes
             printf("Name: cp info #%d\n", cf->fields[i].name_index);
             printf("Descriptor: cp info #%d\n", cf->fields[i].descriptor_index);
             printf("Access Flag: cp info #0x%x\n", cf->fields[i].access_flags);
 
-            cf->fields[i].attributes_count = u2Read(file);
+            cf->fields[i].attributes_count = le2Bytes(file);
 
             // aloca espaco para o array de atributos
             cf->fields[i].attributes = (attribute_info*) malloc(cf->fields[i].attributes_count * sizeof(attribute_info));
@@ -155,8 +155,8 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
                 printf("\t\t----Attribute Info do Field----\n");
                 
                 // pega indice do nome do atributo e comprimento do atributo
-                cf->fields[i].attributes->attribute_name_index = u2Read(file);
-                cf->fields[i].attributes->attribute_length = u4Read(file);
+                cf->fields[i].attributes->attribute_name_index = le2Bytes(file);
+                cf->fields[i].attributes->attribute_length = le4Bytes(file);
 
                 // imprime informacao dos atributos
                 printf("attribute_name_index: cp info #%d\n", cf->fields[i].attributes->attribute_name_index);
@@ -192,10 +192,10 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 		cf->methods = (method_info*) malloc(methods_count*sizeof(method_info));
 		method_info* cp = cf->methods;
 		for(int i = 0; i < methods_count; cp++){
-			cp->access_flags = u2Read(file);
-			cp->name_index = u2Read(file);
-			cp->descriptor_index = u2Read(file);
-			cp->attributes_count = u2Read(file);
+			cp->access_flags = le2Bytes(file);
+			cp->name_index = le2Bytes(file);
+			cp->descriptor_index = le2Bytes(file);
+			cp->attributes_count = le2Bytes(file);
 			cp->attributes = (attribute_info*) malloc(cp->attributes_count*sizeof(attribute_info));
 			printf("access_flag: 0x%0x\n",cp->access_flags);
 			printf("name_index: cp info #%d\n",cp->name_index);
@@ -204,8 +204,8 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 
 			for(int j = 0; j < cp->attributes_count; cp->attributes++){
 				printf("----Attributes Info----\n");
-				cp->attributes->attribute_name_index = u2Read(file);
-				cp->attributes->attribute_length = u4Read(file);
+				cp->attributes->attribute_name_index = le2Bytes(file);
+				cp->attributes->attribute_length = le4Bytes(file);
 				printf("attribute_name_index: cp info #%d\n",cp->attributes->attribute_name_index);
 				printf("attribute_length: %d\n",cp->attributes->attribute_length);
 				cp->attributes->info = (uint8_t*) malloc((cp->attributes->attribute_length)*sizeof(uint8_t));
@@ -299,8 +299,8 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){
 
 		for(int i = 0; i < attributes_count; cp++){
 
-			cp->attribute_name_index = u2Read(file);
-			cp->attribute_length = u4Read(file);
+			cp->attribute_name_index = le2Bytes(file);
+			cp->attribute_length = le4Bytes(file);
 			printf("attribute_name_index: cp info #%d\n",cp->attribute_name_index);
 			printf("attribute_length: %d\n",cp->attribute_length);
 			cp->info = (uint8_t*) malloc((cp->attribute_length)*sizeof(uint8_t));
@@ -317,14 +317,14 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){
 void secondGeneralInfo(classFile* cf, FILE* file){
     int i;
 
-	cf->access_flags = u2Read(file);
-	cf->this_class = u2Read(file);
-	cf->super_class = u2Read(file);
+	cf->access_flags = le2Bytes(file);
+	cf->this_class = le2Bytes(file);
+	cf->super_class = le2Bytes(file);
 
-	cf->interfaces_count = u2Read(file);
+	cf->interfaces_count = le2Bytes(file);
 	interfaceInfo(cf,file,cf->interfaces_count);
 
-	cf->fields_count = u2Read(file);
+	cf->fields_count = le2Bytes(file);
 	fieldInfo(cf,file,cf->fields_count);
 
 	printf("----Second General Info----\n");
@@ -336,13 +336,13 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 
 	printf("----Method Info----\n");
 
-	cf->methods_count = u2Read(file);
+	cf->methods_count = le2Bytes(file);
 	printf("Methods Count: %d\n",cf->methods_count);
 	methodInfo(cf,file,cf->methods_count);
 
 	printf("----Attributes Info----\n");
 
-	cf->attributes_count = u2Read(file);
+	cf->attributes_count = le2Bytes(file);
 	printf("attributes_count: %d\n",cf->attributes_count);
 	attributeInfo(cf,file,cf->attributes_count);
 	
@@ -384,18 +384,18 @@ void inicializa_decodificador(decodificador dec[])
 }
 
 // funcoes auxiliares para leitura.
-static inline uint8_t u1Read(FILE* fp){
+static inline uint8_t le1Byte(FILE* fp){
 	uint8_t retorno = getc(fp);
 	return retorno;
 }
 
-static inline uint16_t u2Read(FILE* fp){
+static inline uint16_t le2Bytes(FILE* fp){
 	uint16_t retorno = getc(fp); 
 	retorno = (retorno << 8) | (getc(fp));
 	return retorno;
 }
 
-static inline uint32_t u4Read(FILE* fp){
+static inline uint32_t le4Bytes(FILE* fp){
 	uint32_t retorno = getc(fp);
 	retorno = (retorno << 8) | (getc(fp));
 	retorno = (retorno << 8) | (getc(fp));

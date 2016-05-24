@@ -34,8 +34,7 @@ typedef struct decodificador
 
     // numero de bytes que seguem a instrucao 
     int bytes; 
-}
-decodificador; 
+}decodificador; 
 
 typedef struct attribute_info{
 	uint16_t attribute_name_index;
@@ -148,9 +147,9 @@ void secondGeneralInfo(classFile* cf,FILE* file);
 void inicializa_decodificador(decodificador dec[]);
 
 // funcoes auxiliares
-static inline uint8_t u1Read(FILE* fp);
-static inline uint16_t u2Read(FILE* fp);
-static inline uint32_t u4Read(FILE* fp);
+static inline uint8_t le1Byte(FILE* fp);
+static inline uint16_t le2Bytes(FILE* fp);
+static inline uint32_t le4Bytes(FILE* fp);
 // corpo das funcoes do programa 
 #include "jvm.c"
 #endif 

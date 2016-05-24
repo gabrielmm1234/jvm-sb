@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
 
 	//le e imprime informações gerais após a constant pool
 	secondGeneralInfo(cf,file);
-
+	
 	return 0;
 }
 
@@ -306,7 +306,7 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){
 			cp->info = (uint8_t*) malloc((cp->attribute_length)*sizeof(uint8_t));
 			for(int j = 0; j < cp->attribute_length; cp->info++){
 			fread(cp->info,1,1,file);
-			printf("bytecode: 0x%0x\n",*(cp->info));
+			printf("Source file name index: cp info #%d\n",*(cp->info));
 			j++;
 			}
 			i++;

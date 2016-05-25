@@ -485,38 +485,6 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 	printf("----End Second General----\n\n");
 }
 
-void inicializa_decodificador(decodificador dec[])
-{
-
-    // adiciona instrucoes na ordem de opcode 
-
-    // ldc
-    strcpy(dec[18].instrucao, "ldc");
-    dec[18].bytes = 1;
-    
-    // aload_0
-    strcpy(dec[42].instrucao, "aload_0");
-    dec[42].bytes = 0;
-
-    // return 
-    strcpy(dec[177].instrucao, "return");
-    dec[177].bytes = 0;
-
-    //getstatic
-    strcpy(dec[178].instrucao, "getstatic");
-    dec[178].bytes = 2;
-    
-    // invokevirtual 
-    strcpy(dec[182].instrucao, "invokevirtual");
-    dec[182].bytes = 2;
-
-    // invokespecial 
-    strcpy(dec[183].instrucao, "invokespecial");
-    dec[183].bytes = 2;
-
-}
-
-
 // funcoes auxiliares para leitura.
 static inline uint8_t le1Byte(FILE* fp){
 	uint8_t retorno = getc(fp);

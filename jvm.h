@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <stdbool.h> 
 
+#include "decodificador.h"
 
 /*Defines*/
 #define CONSTANT_Class 7
@@ -27,16 +28,6 @@
 
 
 /* Structs */
-// struct para decodificar um opcode no nome da instrucao conveniente, contem tb o numero de operandos que a instrucao le  
-typedef struct decodificador
-{
-    // nome da instrucao 
-    char instrucao[NOME_INSTRUCAO];
-
-    // numero de bytes que seguem a instrucao 
-    int bytes; 
-}decodificador; 
-
 typedef struct attribute_info{
 	uint16_t attribute_name_index;
 	uint32_t attribute_length;
@@ -144,9 +135,6 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count);
 
 // funcao para imprimir informacoes gerais que vem depois da constante pool 
 void secondGeneralInfo(classFile* cf,FILE* file);
-
-// funcao que coloca o nome das strings no decodificador, juntamente com a qtd em bytes 
-void inicializa_decodificador(decodificador dec[]);
 
 /*
  * a funcao recebe uma referencia para a constant pool e a posicao em que estamos na constant_pool 

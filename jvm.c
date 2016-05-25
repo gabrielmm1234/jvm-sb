@@ -40,41 +40,31 @@ void constantPool(classFile* cf, FILE* file){
 	cf->constant_pool = (cp_info*) malloc((cf->constant_pool_count-1)*sizeof(cp_info));
 	cp_info* cp;
 
-	printf("----Constant Pool----\n");
 
+    // loop q simplesmente faz a leitura da constant pool 
 	int i = 0;
 	for(cp = cf->constant_pool; i < (cf->constant_pool_count-1); cp++){
 		cp->tag = le1Byte(file);
-		printf("Tag: %d\n",cp->tag);
 		switch(cp->tag){
 			case CONSTANT_Class:
 				cp->info.Class.name_index = le2Bytes(file);
-				printf("[%d] CONSTANT_Class_info - name_index: cp info #%d\n",i+1,cp->info.Class.name_index);
 				break;
 			case CONSTANT_Fieldref:
 				cp->info.Fieldref.class_index = le2Bytes(file);
 				cp->info.Fieldref.name_and_type_index = le2Bytes(file);
-				printf("[%d] CONSTANT_Fieldref_info - class_index: cp info #%d\n",i+1,cp->info.Fieldref.class_index);
-				printf("[%d] CONSTANT_Fieldref_info - name_and_type_index: cp info #%d\n",i+1,cp->info.Fieldref.name_and_type_index);
 				break;
 			case CONSTANT_NameAndType:
 				cp->info.NameAndType.name_index = le2Bytes(file);
 				cp->info.NameAndType.descriptor_index = le2Bytes(file);
-				printf("[%d] CONSTANT_NameAndType_info - name_index:cp info #%d\n",i+1,cp->info.NameAndType.name_index);
-				printf("[%d] CONSTANT_NameAndType_info - descriptor_index: cp info #%d\n",i+1,cp->info.NameAndType.descriptor_index);
 				break;
 			case CONSTANT_Utf8:
 				cp->info.Utf8.length = le2Bytes(file);
 				cp->info.Utf8.bytes = (uint8_t*) malloc ((cp->info.Utf8.length)*sizeof(uint8_t));
 				fread(cp->info.Utf8.bytes,1,cp->info.Utf8.length,file);
-				printf("[%d] CONSTANT_Utf8_info - length:%d\n",i+1,cp->info.Utf8.length);
-				printf("[%d] CONSTANT_Utf8_info - bytes: %s\n",i+1,cp->info.Utf8.bytes);
 				break;
 			case CONSTANT_Methodref:
 				cp->info.Methodref.class_index = le2Bytes(file);
 				cp->info.Methodref.name_and_type_index = le2Bytes(file);
-				printf("[%d] CONSTANT_Methodref_info - class_index: cp info #%d\n",i+1,cp->info.Methodref.class_index);
-				printf("[%d] CONSTANT_Methodref_info - name_and_type_index: cp info #%d\n",i+1,cp->info.Methodref.name_and_type_index);
 				break;
 			case CONSTANT_InterfaceMethodref:
 				cp->info.InterfaceMethodref.class_index = le2Bytes(file);
@@ -82,24 +72,168 @@ void constantPool(classFile* cf, FILE* file){
 				break;
 			case CONSTANT_String:
 				cp->info.String.string_index = le2Bytes(file);
-				printf("[%d] CONSTANT_String_info - string_index: cp info #%d\n",i+1,cp->info.String.string_index);
 				break;
 			case CONSTANT_Integer:
 				cp->info.Integer.bytes = le4Bytes(file);
-				printf("[%d] CONSTANT_Integer_info - bytes:%d\n",i+1,cp->info.Integer.bytes);
-				break;
 			case CONSTANT_Float:
 				cp->info.Float.bytes = le4Bytes(file);
-				printf("[%d] CONSTANT_Float_info - bytes:%d\n",i+1,cp->info.Float.bytes);
 				break;
 			default:
 				break;
 		}
 		i++;
 	}
+    
+
+    // agora imprime-se a cte pool 
+	printf("----Constant Pool----\n");
+
+    // itera pela constante pool de novo, dessa vez para mostrar informacao 
+    for (int i = 0; i < cf->constant_pool_count - 1; i++)
+    {
+        // pega tag
+        int tag = cf->constant_pool[i].tag; 
+
+        // de acordo com a tag em que estamos, decide o que fazer   
+        switch (tag)
+        {
+			case CONSTANT_Class:
+				printf("[%d] CONSTANT_Class_info - name_index: cp info #%d ", i+1, cf->constant_pool[i].info.Class.name_index);
+                imprime_string_pool(cf->constant_pool, cf->constant_pool[i].info.Class.name_index - 1);
+                printf("\n");
+
+				break;
+
+			case CONSTANT_Fieldref:
+				printf("[%d] CONSTANT_Fieldref_info - class_index: cp info #%d ", i+1, cf->constant_pool[i].info.Fieldref.class_index);
+                imprime_string_pool(cf->constant_pool, cf->constant_pool[i].info.Fieldref.class_index - 1);
+                printf("\n");
+
+				printf("[%d] CONSTANT_Fieldref_info - name_and_type_index: cp info #%d ", i+1, cf->constant_pool[i].info.Fieldref.name_and_type_index);
+                imprime_string_pool(cf->constant_pool, cf->constant_pool[i].info.Fieldref.name_and_type_index - 1);
+                printf("\n");
+
+				break;
+
+			case CONSTANT_NameAndType:
+				printf("[%d] CONSTANT_NameAndType_info - name_index: cp info info #%d ", i+1, cf->constant_pool[i].info.NameAndType.name_index);
+                imprime_string_pool(cf->constant_pool, cf->constant_pool[i].info.NameAndType.name_index - 1);
+                printf("\n");
+
+				printf("[%d] CONSTANT_NameAndType_info - descriptor_index: cp info #%d ", i+1, cf->constant_pool[i].info.NameAndType.descriptor_index);
+                imprime_string_pool(cf->constant_pool, cf->constant_pool[i].info.NameAndType.descriptor_index - 1 );
+                printf("\n");
+
+				break;
+
+			case CONSTANT_Utf8:
+				printf("[%d] CONSTANT_Utf8_info - length:%d\n",i+1,cf->constant_pool[i].info.Utf8.length);
+				printf("[%d] CONSTANT_Utf8_info - bytes: %s\n",i+1,cf->constant_pool[i].info.Utf8.bytes);
+				break;
+
+			case CONSTANT_Methodref:
+				printf("[%d] CONSTANT_Methodref_info - class_index: cp info #%d ",i+1,cf->constant_pool[i].info.Methodref.class_index);
+                imprime_string_pool(cf->constant_pool, cf->constant_pool[i].info.Methodref.class_index - 1);
+                printf("\n");
+
+				printf("[%d] CONSTANT_Methodref_info - name_and_type_index: cp info #%d ",i+1,cf->constant_pool[i].info.Methodref.name_and_type_index);
+                imprime_string_pool(cf->constant_pool, cf->constant_pool[i].info.Methodref.name_and_type_index - 1);
+                printf("\n");
+
+				break;
+
+			case CONSTANT_InterfaceMethodref:
+				printf("[%d] CONSTANT_InterfaceMethodref_info - class_index: cp info #%d ",i+1,cf->constant_pool[i].info.InterfaceMethodref.class_index);
+                imprime_string_pool(cf->constant_pool, cf->constant_pool[i].info.Methodref.class_index - 1);
+                printf("\n");
+
+				printf("[%d] CONSTANT_InterfaceMethodref_info - name_and_type_index: cp info #%d ",i+1,cf->constant_pool[i].info.InterfaceMethodref.name_and_type_index);
+                imprime_string_pool(cf->constant_pool, cf->constant_pool[i].info.Methodref.name_and_type_index - 1);
+                printf("\n");
+
+				break;
+
+			case CONSTANT_String:
+				printf("[%d] CONSTANT_String_info - string_index: cp info #%d ",i+1,cf->constant_pool[i].info.String.string_index);
+                imprime_string_pool(cf->constant_pool, cf->constant_pool[i].info.String.string_index - 1);
+                printf("\n");
+				break;
+
+			case CONSTANT_Integer:
+				printf("[%d] CONSTANT_Integer_info - bytes:%d\n",i+1,cf->constant_pool[i].info.Integer.bytes);
+				break;
+
+			case CONSTANT_Float:
+				printf("[%d] CONSTANT_Float_info - bytes:%d\n",i+1,cf->constant_pool[i].info.Float.bytes);
+				break;
+
+			default:
+				break;
+        }
+    }
+
 	printf("----End Pool----\n\n");
 }
 
+void imprime_string_pool(cp_info* cp, int pos_pool)
+{
+    int tag;
+
+    // pega tag 
+    tag = cp[pos_pool].tag;
+
+    // se a tag for o de um class info 
+    if (tag == CONSTANT_Utf8)
+    {
+        // imprime informacao e sai
+        printf("%s  ", cp[pos_pool].info.Utf8.bytes);
+        return;
+    }
+
+    // senao, de acordo com a tag, decide qual sera a proxima posicao da cte pool que iremos olhar
+    switch(tag)
+    {
+        case CONSTANT_Class:
+            imprime_string_pool(cp, cp[pos_pool].info.Class.name_index - 1);
+            break;
+
+        case CONSTANT_Fieldref:
+            imprime_string_pool(cp, cp[pos_pool].info.Fieldref.class_index - 1); 
+            imprime_string_pool(cp, cp[pos_pool].info.Fieldref.name_and_type_index - 1); 
+            break;
+
+        case CONSTANT_NameAndType:
+            imprime_string_pool(cp, cp[pos_pool].info.NameAndType.name_index - 1 ); 
+            imprime_string_pool(cp, cp[pos_pool].info.NameAndType.descriptor_index - 1); 
+            break;
+
+        case CONSTANT_Methodref:
+            imprime_string_pool(cp, cp[pos_pool].info.Methodref.class_index - 1); 
+            imprime_string_pool(cp, cp[pos_pool].info.Methodref.name_and_type_index - 1); 
+            break;
+            
+        case CONSTANT_InterfaceMethodref:
+            imprime_string_pool(cp, cp[pos_pool].info.InterfaceMethodref.class_index - 1); 
+            imprime_string_pool(cp, cp[pos_pool].info.InterfaceMethodref.name_and_type_index - 1); 
+            break;
+            
+        case CONSTANT_String:
+            imprime_string_pool(cp, cp[pos_pool].info.String.string_index - 1); 
+            break;
+
+        case CONSTANT_Integer:
+            // nunca cairemos aqui
+            break;
+
+        case CONSTANT_Float:
+            // nunca cairemos aqui
+            break;
+
+        default:
+            break;
+    }
+
+}
 void interfaceInfo(classFile* cf, FILE* file, uint16_t interfaces_count){
 	if(interfaces_count == 0)
 		return;
@@ -380,8 +514,8 @@ void inicializa_decodificador(decodificador dec[])
     strcpy(dec[183].instrucao, "invokespecial");
     dec[183].bytes = 2;
 
-    
 }
+
 
 // funcoes auxiliares para leitura.
 static inline uint8_t le1Byte(FILE* fp){

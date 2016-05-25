@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdbool.h> 
 
 
 /*Defines*/
@@ -144,7 +145,14 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count);
 // funcao para imprimir informacoes gerais que vem depois da constante pool 
 void secondGeneralInfo(classFile* cf,FILE* file);
 
+// funcao que coloca o nome das strings no decodificador, juntamente com a qtd em bytes 
 void inicializa_decodificador(decodificador dec[]);
+
+/*
+ * a funcao recebe uma referencia para a constant pool e a posicao em que estamos na constant_pool 
+ * a funcao imprime a UTF8 associada a essa posicao da tabela
+ */
+void imprime_string_pool(cp_info* cp, int pos_pool);
 
 // funcoes auxiliares
 static inline uint8_t le1Byte(FILE* fp);

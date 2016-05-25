@@ -1,5 +1,5 @@
 http://www.cubrid.org/blog/dev-platform/understanding-jvm-internals/
-
+https://www.youtube.com/watch?v=ZBJ0u9MaKtM
 
 - Características:
 

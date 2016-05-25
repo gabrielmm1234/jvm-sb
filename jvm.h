@@ -23,7 +23,6 @@
 #define CONSTANT_NameAndType 12
 #define CONSTANT_Utf8 1
 
-#define NOME_INSTRUCAO 30 
 #define NUM_INSTRUCAO 256
 
 

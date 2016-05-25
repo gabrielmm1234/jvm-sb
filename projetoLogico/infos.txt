@@ -1,0 +1,62 @@
+http://www.cubrid.org/blog/dev-platform/understanding-jvm-internals/
+
+
+- Características:
+
+Java Virtual Machine (JVM) analyzes and executes Java byte code.
+
+Stack-based virtual machine: The most popular computer architectures such as Intel x86 Architecture and ARM Architecture run based on a register. However, JVM runs based on a stack.
+
+Symbolic reference: All types (class and interface) except for primitive data types are referred to through symbolic reference, instead of through explicit memory address-based reference. 
+
+Guarantees platform independence by clearly defining the primitive data type: A traditional language such as C/C++ has different int type size according to the platform. The JVM clearly defines the primitive data type to maintain its compatibility and guarantee platform independence.
+
+Network byte order: The Java class file uses the network byte order. To maintain platform independence between the little endian used by Intel x86 Architecture and the big endian used by the RISC Series Architecture, a fixed byte order must be kept. Therefore, JVM uses the network byte order, which is used for network transfer. The network byte order is the big endian.
+
+- Estrutura:
+
+ - Class loader:
+	A class loader loads the compiled Java Bytecode to the Runtime Data Areas, and the execution engine executes the Java Bytecode.
+
+	Java provides a dynamic load feature; it loads and links the class when it refers to a class for the first time at runtime, not compile time. JVM's class loader executes the dynamic load.
+
+	If a class loader finds an unloaded class, the class is loaded and linked.
+
+	Each stage is described as follows.
+
+    Loading: A class is obtained from a file and loaded to the JVM memory.
+
+    Verifying: Check whether or not the read class is configured as described in the Java Language Specification and JVM specifications. This is the most complicated test process of the class load processes, and takes the longest time. Most cases of the JVM TCK test cases are to test whether or not a verification error occurs by loading wrong classes.
+
+    Preparing: Prepare a data structure that assigns the memory required by classes and indicates the fields, methods, and interfaces defined in the class.
+
+    Resolving: Change all symbolic references in the constant pool of the class to direct references.
+    Initializing: Initialize the class variables to proper values. Execute the static initializers and initialize the static fields to the configured values.
+
+	The JVM specification defines the tasks. However, it allows flexible application of the execution time.
+
+ - Runtime Data Areas:
+
+ 	Runtime Data Areas are the memory areas assigned when the JVM program runs on the OS. The runtime data areas can be divided into 6 areas. Of the six, one PC Register, JVM Stack, and Native Method Stack are created for one thread. Heap, Method Area, and Runtime Constant Pool are shared by all threads.
+
+	 - PC register: One PC (Program Counter) register exists for one thread, and is created when the thread starts. PC register has the address of a JVM instruction being executed now.
+
+     - JVM stack: One JVM stack exists for one thread, and is created when the thread starts. It is a stack that saves the struct (Stack Frame). The JVM just pushes or pops the stack frame to the JVM stack. If any exception occurs, each line of the stack trace shown as a method such as printStackTrace() expresses one stack frame.
+
+      - Stack frame: One stack frame is created whenever a method is executed in the JVM, and the stack frame is added to the JVM stack of the thread. When the method is ended, the stack frame is removed. Each stack frame has the reference for local variable array, Operand stack, and runtime constant pool of a class where the method being executed belongs. The size of local variable array and Operand stack is determined while compiling. Therefore, the size of stack frame is fixed according to the method.
+
+       - Local variable array: It has an index starting from 0. 0 is the reference of a class instance where the method belongs. From 1, the parameters sent to the method are saved. After the method parameters, the local variables of the method are saved.
+
+       - Operand stack: An actual workspace of a method. Each method exchanges data between the Operand stack and the local variable array, and pushes or pops other method invoke results. The necessary size of the Operand stack space can be determined during compiling. Therefore, the size of the Operand stack can also be determined during compiling.
+
+     - Native method stack: A stack for native code written in a language other than Java. In other words, it is a stack used to execute C/C++ codes invoked through JNI (Java Native Interface). According to the language, a C stack or C++ stack is created.
+
+     - Method area: The method area is shared by all threads, created when the JVM starts. It stores runtime constant pool, field and method information, static variable, and method bytecode for each of the classes and interfaces read by the JVM. The method area can be implemented in various formats by JVM vendor. Oracle Hotspot JVM calls it Permanent Area or Permanent Generation (PermGen). The garbage collection for the method area is optional for each JVM vendor.
+
+     - Runtime constant pool: An area that corresponds to the constant_pool table in the class file format. This area is included in the method area; however, it plays the most core role in JVM operation. Therefore, the JVM specification separately describes its importance. As well as the constant of each class and interface, it contains all references for methods and fields. In short, when a method or field is referred to, the JVM searches the actual address of the method or field on the memory by using the runtime constant pool.
+
+     - Heap: A space that stores instances or objects, and is a target of garbage collection. This space is most frequently mentioned when discussing issues such as JVM performance. JVM vendors can determine how to configure the heap or not to collect garbage.
+    
+
+
+

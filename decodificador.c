@@ -117,6 +117,21 @@ void inicializa_decodificador(decodificador dec[])
     strcpy(dec[187].instrucao, "new");
     dec[187].bytes = 0;
 
-    // 
+    strcpy(dec[200].instrucao, "goto_w");
+    dec[200].bytes = 4;
+
+    strcpy(dec[201].instrucao, "jsr_w");
+    dec[201].bytes = 4;
+
+    //codigos reservados
+    strcpy(dec[202].instrucao, "breakpoint");
+    dec[202].bytes = 0;
+
+    strcpy(dec[254].instrucao, "impdep1");
+    dec[254].bytes = 0;
+
+    strcpy(dec[255].instrucao, "impdep2");
+    dec[255].bytes = 0;
+
 }
 #endif

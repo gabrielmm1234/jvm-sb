@@ -3,6 +3,9 @@
 
 #include <string.h> 
 
+#define NOME_INSTRUCAO 30 
+
+
 // struct para decodificar um opcode no nome da instrucao conveniente, contem tb o numero de operandos que a instrucao le  
 typedef struct decodificador
 {

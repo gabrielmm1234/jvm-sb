@@ -354,24 +354,25 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                     // imprime profundidade maxima do stack
                     if (k == 1) 
                     {
-                        int max_stack_depth = 10 * cp->attributes->info[k-1] + cp->attributes->info[k]; 
+                        int max_stack_depth =  (cp->attributes->info[k-1] << 4) + cp->attributes->info[k]; 
                         printf("Maximum stack depth: %d\n", max_stack_depth); 
                     }
 
                     // imprime numero maximo de local variables 
                     if (k == 3)
                     {
-                        int max_local_var = 10 * cp->attributes->info[k-1] + cp->attributes->info[k]; 
+                        int max_local_var = (cp->attributes->info[k-1] << 4) + cp->attributes->info[k]; 
                         printf("Maximum local variables: %d\n", max_local_var);
                     }
 
                     // imprime tamanho do codigo 
                     if (k == 7)
                     {
-                         code_length = 1000 * cp->attributes->info[k-3] + \
-                                              100 * cp->attributes->info[k-2] + \
-                                              10 * cp->attributes->info[k-1] + \
-                                              cp->attributes->info[k];
+                         code_length = 0;
+                         code_length += (cp->attributes->info[k-3] << 12);
+                         code_length += (cp->attributes->info[k-2] << 8);
+                         code_length += (cp->attributes->info[k-1] << 4);
+                         code_length += cp->attributes->info[k];
                         printf("Code Length: %d\n", code_length);
                     }
 

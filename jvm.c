@@ -9,7 +9,7 @@ int main(int argc, char* argv[]){
 
 	//Aloca memória para a estrutura do .class
 	classFile* cf = (classFile*) malloc(sizeof(classFile));
-	
+
 	//Le e imprime informações gerais.
 	generalInfo(cf,file);
 
@@ -19,6 +19,7 @@ int main(int argc, char* argv[]){
 	//le e imprime informações gerais após a constant pool
 	secondGeneralInfo(cf,file);
 
+	//Se passa 1 na linha de comando imprime no prompt
 	if(*argv[2] == '1')
 		imprimePrompt(cf);
 	
@@ -339,7 +340,7 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
             }
         }
 
-        printf("----Fields----\n");
+        printf("----End Fields----\n");
 	}
 }
 

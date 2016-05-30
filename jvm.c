@@ -78,6 +78,12 @@ void constantPool(classFile* cf, FILE* file){
 			case CONSTANT_Float:
 				cp->info.Float.bytes = le4Bytes(file);
 				break;
+			case CONSTANT_Double:
+				cp->info.Double.high_bytes = le4Bytes(file);
+				cp->info.Double.low_bytes = le4Bytes(file);
+				cp++;
+				i++;
+				break;
 			default:
 				break;
 		}
@@ -166,7 +172,10 @@ void constantPool(classFile* cf, FILE* file){
 			case CONSTANT_Float:
 				printf("[%d] CONSTANT_Float_info - bytes:%d\n",i+1,cf->constant_pool[i].info.Float.bytes);
 				break;
-
+			case CONSTANT_Double:
+				printf("[%d] CONSTANT_Double_info - high-bytes:%d\n",i+1,cf->constant_pool[i].info.Double.high_bytes);
+				printf("[%d] CONSTANT_Double_info - low-bytes:%d\n",i+1,cf->constant_pool[i].info.Double.low_bytes);
+				break;
 			default:
 				break;
         }

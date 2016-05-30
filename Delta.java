@@ -5,7 +5,7 @@
         Scanner read = new Scanner(System.in);  
       
         int a, b, c;  
-        double delta, x1, x2;  
+        float delta, x1, x2;  
       
         public Delta() {  
             deltaCalculo();  
@@ -33,8 +33,8 @@
       
         private void calculaX() {  
       
-            x1 = (double) ((-(b) + Math.sqrt(delta)) / 2 * a);  
-            x2 = (double) ((-(b) - Math.sqrt(delta)) / 2 * a);  
+            x1 = (float) ((-(b) + Math.sqrt(delta)) / 2 * a);  
+            x2 = (float) ((-(b) - Math.sqrt(delta)) / 2 * a);  
       
             System.out.println("x1 = " + x1);  
             System.out.println("x2 = " + x2);  

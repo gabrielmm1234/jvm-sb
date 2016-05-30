@@ -248,7 +248,9 @@ void interfaceInfo(classFile* cf, FILE* file, uint16_t interfaces_count){
         for (int i = 0; i < interfaces_count; i++)
         {
             cf->interfaces[i] = le2Bytes(file);
-            printf("Interface: cp info #%d\n", cf->interfaces[i]);
+            printf("Interface: cp info #%d ", cf->interfaces[i]);
+            imprime_string_pool(cf->constant_pool, cf->interfaces[i] - 1);
+    		printf("\n");
         }
 
         printf("---- End Interface ----\n");
@@ -449,10 +451,11 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){
 			cp->info = (uint8_t*) malloc((cp->attribute_length)*sizeof(uint8_t));
 			for(int j = 0; j < cp->attribute_length; cp->info++){
 			fread(cp->info,1,1,file);
-			printf("Source file name index: cp info #%d ",*(cp->info));
-			if(*(cp->info) != 0)
+			if(*(cp->info) != 0){
+				printf("Source file name index: cp info #%d ",*(cp->info));
 				imprime_string_pool(cf->constant_pool, *(cp->info) - 1);
-	    	printf("\n");
+		    	printf("\n");
+		    }
 			j++;
 			}
 			i++;

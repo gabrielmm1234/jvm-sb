@@ -265,7 +265,7 @@ void inicializa_decodificador(decodificador dec[])
 
     // new 
     strcpy(dec[187].instrucao, "new");
-    dec[187].bytes = 0;
+    dec[187].bytes = 2;
 
     strcpy(dec[200].instrucao, "goto_w");
     dec[200].bytes = 4;

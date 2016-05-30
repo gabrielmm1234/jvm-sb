@@ -46,8 +46,7 @@ typedef struct exception_table
     uint16_t start_pc;
     uint16_t end_pc;
     uint16_t catch_type; 
-}
-exception_table;
+}exception_table;
 
 // struct para atributos do tipo codigo
 typedef struct code_attribute 
@@ -62,8 +61,7 @@ typedef struct code_attribute
     exception_table* exception_table; 
     uint16_t attributes_count;
     attribute_info* attributes; 
-}
-code_attribute;
+}code_attribute;
 
 // struct para atributos do tipo exceptions
 typedef struct exceptions_attribute
@@ -72,8 +70,7 @@ typedef struct exceptions_attribute
     uint32_t attribute_length; 
     uint16_t number_of_exceptions;
     uint16_t* exception_index_table; 
-}
-exceptions_attribute; 
+}exceptions_attribute; 
 
 typedef struct field_info{
 	uint16_t access_flags;

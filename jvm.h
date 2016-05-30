@@ -33,11 +33,47 @@ typedef struct attribute_info{
 	uint8_t* info;
 }attribute_info;
 
+/* structs que representam os atributos do programa*/
 typedef struct ConstantValue_attribute {
 	uint16_t attribute_name_index;
 	uint32_t attribute_length;
 	uint16_t constantvalue_index;
 }CV_info;
+
+// struct da tabela de excecoes, util para a struct dos atributos do codigo 
+typedef struct exception_table
+{
+    uint16_t start_pc;
+    uint16_t end_pc;
+    uint16_t catch_type; 
+}
+exception_table;
+
+// struct para atributos do tipo codigo
+typedef struct code_attribute 
+{
+    uint16_t attribute_name_index;
+    uint32_t attribute_length; 
+    uint16_t max_stack;
+    uint16_t max_locals;
+    uint32_t code_length;
+    uint8_t* code;
+    uint16_t exception_table_length; 
+    exception_table* exception_table; 
+    uint16_t attributes_count;
+    attribute_info* attributes; 
+}
+code_attribute;
+
+// struct para atributos do tipo exceptions
+typedef struct exceptions_attribute
+{
+    uint16_t attribute_name_index;
+    uint32_t attribute_length; 
+    uint16_t number_of_exceptions;
+    uint16_t* exception_index_table; 
+}
+exceptions_attribute; 
 
 typedef struct field_info{
 	uint16_t access_flags;

@@ -332,15 +332,21 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 			cp->attributes_count = le2Bytes(file);
 			cp->attributes = (attribute_info*) malloc(cp->attributes_count*sizeof(attribute_info));
 			printf("access_flag: 0x%0x\n",cp->access_flags);
-			printf("name_index: cp info #%d\n",cp->name_index);
-			printf("descriptor_index: cp info #%d\n",cp->descriptor_index);
+			printf("name_index: cp info #%d ",cp->name_index);
+			imprime_string_pool(cf->constant_pool, cp->name_index - 1);
+    		printf("\n");
+			printf("descriptor_index: cp info #%d ",cp->descriptor_index);
+			imprime_string_pool(cf->constant_pool, cp->descriptor_index - 1);
+    		printf("\n");
 			printf("attributes_count: %d\n",cp->attributes_count);
 
 			for(int j = 0; j < cp->attributes_count; cp->attributes++){
 				printf("----Attributes Info----\n");
 				cp->attributes->attribute_name_index = le2Bytes(file);
 				cp->attributes->attribute_length = le4Bytes(file);
-				printf("attribute_name_index: cp info #%d\n",cp->attributes->attribute_name_index);
+				printf("attribute_name_index: cp info #%d ",cp->attributes->attribute_name_index);
+				imprime_string_pool(cf->constant_pool, cp->attributes->attribute_name_index - 1);
+    			printf("\n");
 				printf("attribute_length: %d\n",cp->attributes->attribute_length);
 				cp->attributes->info = (uint8_t*) malloc((cp->attributes->attribute_length)*sizeof(uint8_t));
                 
@@ -436,12 +442,17 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){
 
 			cp->attribute_name_index = le2Bytes(file);
 			cp->attribute_length = le4Bytes(file);
-			printf("attribute_name_index: cp info #%d\n",cp->attribute_name_index);
+			printf("attribute_name_index: cp info #%d ",cp->attribute_name_index);
+			imprime_string_pool(cf->constant_pool, cp->attribute_name_index - 1);
+    		printf("\n");
 			printf("attribute_length: %d\n",cp->attribute_length);
 			cp->info = (uint8_t*) malloc((cp->attribute_length)*sizeof(uint8_t));
 			for(int j = 0; j < cp->attribute_length; cp->info++){
 			fread(cp->info,1,1,file);
-			printf("Source file name index: cp info #%d\n",*(cp->info));
+			printf("Source file name index: cp info #%d ",*(cp->info));
+			if(*(cp->info) != 0)
+				imprime_string_pool(cf->constant_pool, *(cp->info) - 1);
+	    	printf("\n");
 			j++;
 			}
 			i++;
@@ -464,8 +475,12 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 
 	printf("----Second General Info----\n");
 	printf("Access Flags: 0x%0x\n",cf->access_flags);
-	printf("This Class: cp info #%d\n",cf->this_class);
-	printf("Super Class: cp info #%d\n",cf->super_class);
+	printf("This Class: cp info #%d ",cf->this_class);
+	imprime_string_pool(cf->constant_pool, cf->this_class - 1);
+    printf("\n");
+	printf("Super Class: cp info #%d ",cf->super_class);
+	imprime_string_pool(cf->constant_pool, cf->super_class - 1);
+    printf("\n");
 	printf("interfaces_count: %d\n",cf->interfaces_count);
 	printf("Fields Count: %d\n\n",cf->fields_count);
 

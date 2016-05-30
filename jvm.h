@@ -33,6 +33,12 @@ typedef struct attribute_info{
 	uint8_t* info;
 }attribute_info;
 
+typedef struct ConstantValue_attribute {
+	uint16_t attribute_name_index;
+	uint32_t attribute_length;
+	uint16_t constantvalue_index;
+}CV_info;
+
 typedef struct field_info{
 	uint16_t access_flags;
 	uint16_t name_index;
@@ -115,6 +121,7 @@ typedef struct ClassFile{
 	uint16_t attributes_count;
 	attribute_info* attributes;
 }classFile;
+
 /* Funcoes do programa */
 
 // funcao principal

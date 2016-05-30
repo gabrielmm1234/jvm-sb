@@ -175,6 +175,8 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count);
 // funcao para imprimir informacoes gerais que vem depois da constante pool 
 void secondGeneralInfo(classFile* cf,FILE* file);
 
+void imprimePrompt(classFile* cf);
+
 /*
  * a funcao recebe uma referencia para a constant pool e a posicao em que estamos na constant_pool 
  * a funcao imprime a UTF8 associada a essa posicao da tabela

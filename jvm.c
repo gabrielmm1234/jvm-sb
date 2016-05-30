@@ -9,7 +9,7 @@ int main(int argc, char* argv[]){
 
 	//Aloca memória para a estrutura do .class
 	classFile* cf = (classFile*) malloc(sizeof(classFile));
-
+	
 	//Le e imprime informações gerais.
 	generalInfo(cf,file);
 
@@ -18,8 +18,15 @@ int main(int argc, char* argv[]){
 
 	//le e imprime informações gerais após a constant pool
 	secondGeneralInfo(cf,file);
+
+	if(*argv[2] == '1')
+		imprimePrompt(cf);
 	
 	return 0;
+}
+
+void imprimePrompt(classFile* cf){
+//printa as coisas aqui
 }
 
 void generalInfo(classFile* cf, FILE* file){
@@ -31,7 +38,6 @@ void generalInfo(classFile* cf, FILE* file){
 	cf->minor_version = le2Bytes(file);
 	cf->major_version = le2Bytes(file);
 	cf->constant_pool_count = le2Bytes(file);
-
 	printf("----General Information----\n");
 	printf("CAFEBABE: 0x%0x \n",cf->magic);
 	printf("Minor version: %d \n",cf->minor_version);
@@ -417,6 +423,7 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                     int indice = cp->attributes->info[k];
                     printf("%d: %s  ", k-8, dec[indice].instrucao);
 
+
                     // obtem quantos operandos a instrucao tem e vai imprimindo operandos
                     int num_bytes = dec[indice].bytes;
                     for (int l = 0; l < num_bytes; l++)
@@ -428,7 +435,9 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                         fread(&(cp->attributes->info[k]), 1, 1, file);
                         
                         // operandos sao impressos do jeito que saem 
-                        printf("0x%0x  ", cp->attributes->info[k]);
+                        printf("%d  ", cp->attributes->info[k]);
+                        if(cp->attributes->info[k] != 0)
+                        	imprime_string_pool(cf->constant_pool, cp->attributes->info[k] - 1);
                     }
                     
                     // pula linha

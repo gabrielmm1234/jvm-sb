@@ -24,6 +24,10 @@ int main(int argc, char* argv[]){
 
 void generalInfo(classFile* cf, FILE* file){
 	cf->magic = le4Bytes(file);
+	if(cf->magic != 0xCAFEBABE){
+		printf("Arquivo .class inválido!!\n\n");
+		exit(0);
+	}
 	cf->minor_version = le2Bytes(file);
 	cf->major_version = le2Bytes(file);
 	cf->constant_pool_count = le2Bytes(file);

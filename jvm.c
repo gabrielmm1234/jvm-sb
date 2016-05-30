@@ -173,8 +173,8 @@ void constantPool(classFile* cf, FILE* file){
 				printf("[%d] CONSTANT_Float_info - bytes:%d\n",i+1,cf->constant_pool[i].info.Float.bytes);
 				break;
 			case CONSTANT_Double:
-				printf("[%d] CONSTANT_Double_info - high-bytes:%d\n",i+1,cf->constant_pool[i].info.Double.high_bytes);
-				printf("[%d] CONSTANT_Double_info - low-bytes:%d\n",i+1,cf->constant_pool[i].info.Double.low_bytes);
+				printf("[%d] CONSTANT_Double_info - high-bytes: 0x%0x\n",i+1,cf->constant_pool[i].info.Double.high_bytes);
+				printf("[%d] CONSTANT_Double_info - low-bytes: 0x%0x\n",i+1,cf->constant_pool[i].info.Double.low_bytes);
 				break;
 			default:
 				break;
@@ -285,9 +285,13 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
             cf->fields[i].descriptor_index = le2Bytes(file);
 
             // imprime informacoes
-            printf("Name: cp info #%d\n", cf->fields[i].name_index);
-            printf("Descriptor: cp info #%d\n", cf->fields[i].descriptor_index);
-            printf("Access Flag: cp info #0x%x\n", cf->fields[i].access_flags);
+            printf("Name: cp info #%d ", cf->fields[i].name_index);
+            imprime_string_pool(cf->constant_pool, cf->fields[i].name_index - 1);
+    		printf("\n");
+            printf("Descriptor: cp info #%d ", cf->fields[i].descriptor_index);
+            imprime_string_pool(cf->constant_pool, cf->fields[i].descriptor_index - 1);
+    		printf("\n");
+            printf("Access Flag: 0x%x\n", cf->fields[i].access_flags);
 
             cf->fields[i].attributes_count = le2Bytes(file);
 

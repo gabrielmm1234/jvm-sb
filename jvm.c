@@ -28,6 +28,8 @@ int main(int argc, char* argv[]){
 
 void imprimePrompt(classFile* cf){
 //printa as coisas aqui
+    int i; 
+    return; 
 }
 
 void generalInfo(classFile* cf, FILE* file){
@@ -366,34 +368,34 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
     		printf("\n");
 			printf("attributes_count: %d\n",cp->attributes_count);
 
-			for(int j = 0; j < cp->attributes_count; cp->attributes++){
+			for(int j = 0; j < cp->attributes_count; j++){
 				printf("----Attributes Info----\n");
-				cp->attributes->attribute_name_index = le2Bytes(file);
-				cp->attributes->attribute_length = le4Bytes(file);
-				printf("attribute_name_index: cp info #%d ",cp->attributes->attribute_name_index);
-				imprime_string_pool(cf->constant_pool, cp->attributes->attribute_name_index - 1);
+				cp->attributes[j].attribute_name_index = le2Bytes(file);
+				cp->attributes[j].attribute_length = le4Bytes(file);
+				printf("attribute_name_index: cp info #%d ",cp->attributes[j].attribute_name_index);
+				imprime_string_pool(cf->constant_pool, cp->attributes[j].attribute_name_index - 1);
     			printf("\n");
-				printf("attribute_length: %d\n",cp->attributes->attribute_length);
-				cp->attributes->info = (uint8_t*) malloc((cp->attributes->attribute_length)*sizeof(uint8_t));
+				printf("attribute_length: %d\n",cp->attributes[j].attribute_length);
+				cp->attributes[j].info = (uint8_t*) malloc((cp->attributes[j].attribute_length)*sizeof(uint8_t));
                 
                 int code_length; // sera importante para saber como parar o segundo loop 
 
                 // leitura do bytecode relacionado a informacoes gerais
 				for(int k = 0; k < 8; k++)
                 {
-                    fread(&(cp->attributes->info[k]), 1, 1, file);
+                    fread(&(cp->attributes[j].info[k]), 1, 1, file);
 
                     // imprime profundidade maxima do stack
                     if (k == 1) 
                     {
-                        int max_stack_depth =  (cp->attributes->info[k-1] << 4) + cp->attributes->info[k]; 
+                        int max_stack_depth =  (cp->attributes[j].info[k-1] << 4) + cp->attributes[j].info[k]; 
                         printf("Maximum stack depth: %d\n", max_stack_depth); 
                     }
 
                     // imprime numero maximo de local variables 
                     if (k == 3)
                     {
-                        int max_local_var = (cp->attributes->info[k-1] << 4) + cp->attributes->info[k]; 
+                        int max_local_var = (cp->attributes[j].info[k-1] << 4) + cp->attributes[j].info[k]; 
                         printf("Maximum local variables: %d\n", max_local_var);
                     }
 
@@ -401,10 +403,10 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                     if (k == 7)
                     {
                          code_length = 0;
-                         code_length += (cp->attributes->info[k-3] << 12);
-                         code_length += (cp->attributes->info[k-2] << 8);
-                         code_length += (cp->attributes->info[k-1] << 4);
-                         code_length += cp->attributes->info[k];
+                         code_length += (cp->attributes[j].info[k-3] << 12);
+                         code_length += (cp->attributes[j].info[k-2] << 8);
+                         code_length += (cp->attributes[j].info[k-1] << 4);
+                         code_length += cp->attributes[j].info[k];
                         printf("Code Length: %d\n", code_length);
                     }
 
@@ -418,10 +420,10 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 				for(int k = 8; k-8 < code_length; k++)
                 {    
                     // le opcode da instrucao atual
-                    fread(&(cp->attributes->info[k]), 1, 1, file);
+                    fread(&(cp->attributes[j].info[k]), 1, 1, file);
                     
                     // imprime instrucao
-                    int indice = cp->attributes->info[k];
+                    int indice = cp->attributes[j].info[k];
                     printf("%d: %s  ", k-8, dec[indice].instrucao);
 
 
@@ -433,12 +435,12 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                         k++;
 
                         // pega operando 
-                        fread(&(cp->attributes->info[k]), 1, 1, file);
+                        fread(&(cp->attributes[j].info[k]), 1, 1, file);
                         
                         // operandos sao impressos do jeito que saem 
-                        printf("%d  ", cp->attributes->info[k]);
-                        if(cp->attributes->info[k] != 0)
-                        	imprime_string_pool(cf->constant_pool, cp->attributes->info[k] - 1);
+                        printf("%d  ", cp->attributes[j].info[k]);
+                        if(cp->attributes[j].info[k] != 0)
+                        	imprime_string_pool(cf->constant_pool, cp->attributes[j].info[k] - 1);
                     }
                     
                     // pula linha
@@ -446,13 +448,12 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 				}
                 
                 // leitura dos demais bytecodes - NAO SEI PARA QUE ISSO SERVE 
-                for (int k = 8 + code_length; k < cp->attributes->attribute_length; k++)
+                for (int k = 8 + code_length; k < cp->attributes[j].attribute_length; k++)
                 {
-                    fread(&(cp->attributes->info[k]), 1, 1, file);
+                    fread(&(cp->attributes[j].info[k]), 1, 1, file);
                 }
                 
 				printf("----End Attribute----\n\n");
-				j++;
 			}
 			i++;
 			printf("----End Method----\n\n");

@@ -291,157 +291,157 @@ void inicializa_decodificador(decodificador dec[])
     strcpy(dec[85].instrucao, "castore");
     dec[85].bytes = 0;
 
-    strcpy(dec[86].instrucao, "sastore"
+    strcpy(dec[86].instrucao, "sastore");
 	dec[86].bytes = 0;
 
 	// STACK
 
-	strcpy(dec[87].instrucao, "pop"
+	strcpy(dec[87].instrucao, "pop");
 	dec[87].bytes = 0;
 
-	strcpy(dec[88].instrucao, "pop2"
+	strcpy(dec[88].instrucao, "pop2");
 	dec[88].bytes = 0;
 
-	strcpy(dec[89].instrucao, "dup"
+	strcpy(dec[89].instrucao, "dup");
 	dec[89].bytes = 0;
 
-	strcpy(dec[90].instrucao, "dup_x1"
+	strcpy(dec[90].instrucao, "dup_x1");
 	dec[90].bytes = 0;
 
-	strcpy(dec[91].instrucao, "dup_x2"
+	strcpy(dec[91].instrucao, "dup_x2");
 	dec[91].bytes = 0;
 
-	strcpy(dec[92].instrucao, "dup2"
+	strcpy(dec[92].instrucao, "dup2");
 	dec[92].bytes = 0;
 
-	strcpy(dec[93].instrucao, "dup2_x1"
+	strcpy(dec[93].instrucao, "dup2_x1");
 	dec[93].bytes = 0;
 
-	strcpy(dec[94].instrucao, "dup2_x2"
+	strcpy(dec[94].instrucao, "dup2_x2");
 	dec[94].bytes = 0;
 
-	strcpy(dec[95].instrucao, "swap"
+	strcpy(dec[95].instrucao, "swap");
 	dec[95].bytes = 0;
 
 	// MATH
 
-	strcpy(dec[96].instrucao, "iadd"
+	strcpy(dec[96].instrucao, "iadd");
 	dec[96].bytes = 0;
 
-	strcpy(dec[97].instrucao, "ladd"
+	strcpy(dec[97].instrucao, "ladd");
 	dec[97].bytes = 0;
 
-	strcpy(dec[98].instrucao, "fadd"
+	strcpy(dec[98].instrucao, "fadd");
 	dec[98].bytes = 0;
 
-	strcpy(dec[99].instrucao, "dadd"
+	strcpy(dec[99].instrucao, "dadd");
 	dec[99].bytes = 0;
 
-	strcpy(dec[100].instrucao, "isub"
+	strcpy(dec[100].instrucao, "isub");
 	dec[100].bytes = 0;
 
-	strcpy(dec[101].instrucao, "lsub"
+	strcpy(dec[101].instrucao, "lsub");
 	dec[101].bytes = 0;
 
-	strcpy(dec[102].instrucao, "fsub"
+	strcpy(dec[102].instrucao, "fsub");
 	dec[102].bytes = 0;
 
-	strcpy(dec[103].instrucao, "dsub"
+	strcpy(dec[103].instrucao, "dsub");
 	dec[103].bytes = 0;
 
-	strcpy(dec[104].instrucao, "imul"
+	strcpy(dec[104].instrucao, "imul");
 	dec[104].bytes = 0;
 
-	strcpy(dec[105].instrucao, "lmul"
+	strcpy(dec[105].instrucao, "lmul");
 	dec[105].bytes = 0;
 
-	strcpy(dec[106].instrucao, "fmul"
+	strcpy(dec[106].instrucao, "fmul");
 	dec[106].bytes = 0;
 
-	strcpy(dec[107].instrucao, "dmul"
+	strcpy(dec[107].instrucao, "dmul");
 	dec[107].bytes = 0;
 
-	strcpy(dec[108].instrucao, "idiv"
+	strcpy(dec[108].instrucao, "idiv");
 	dec[108].bytes = 0;
 
-	strcpy(dec[109].instrucao, "ldiv"
+	strcpy(dec[109].instrucao, "ldiv");
 	dec[109].bytes = 0;
 
-	strcpy(dec[110].instrucao, "fdiv"
+	strcpy(dec[110].instrucao, "fdiv");
 	dec[110].bytes = 0;
 
-	strcpy(dec[111].instrucao, "ddiv"
+	strcpy(dec[111].instrucao, "ddiv");
 	dec[111].bytes = 0;
 
-	strcpy(dec[112].instrucao, "irem"
+	strcpy(dec[112].instrucao, "irem");
 	dec[112].bytes = 0;
 
-	strcpy(dec[113].instrucao, "lrem"
+	strcpy(dec[113].instrucao, "lrem");
 	dec[113].bytes = 0;
 
-	strcpy(dec[114].instrucao, "frem"
+	strcpy(dec[114].instrucao, "frem");
 	dec[114].bytes = 0;
 
-	strcpy(dec[115].instrucao, "drem"
+	strcpy(dec[115].instrucao, "drem");
 	dec[115].bytes = 0;
 
-	strcpy(dec[116].instrucao, "ineg"
+	strcpy(dec[116].instrucao, "ineg");
 	dec[116].bytes = 0;
 
-	strcpy(dec[117].instrucao, "lneg"
+	strcpy(dec[117].instrucao, "lneg");
 	dec[117].bytes = 0;
 
-	strcpy(dec[118].instrucao, "fneg"
+	strcpy(dec[118].instrucao, "fneg");
 	dec[118].bytes = 0;
 
-	strcpy(dec[119].instrucao, "dneg"
+	strcpy(dec[119].instrucao, "dneg");
 	dec[119].bytes = 0;
 
-	strcpy(dec[120].instrucao, "ishl"
+	strcpy(dec[120].instrucao, "ishl");
 	dec[120].bytes = 0;
 
-	strcpy(dec[121].instrucao, "lshl"
+	strcpy(dec[121].instrucao, "lshl");
 	dec[121].bytes = 0;
 
-	strcpy(dec[122].instrucao, "ishr"
+	strcpy(dec[122].instrucao, "ishr");
 	dec[122].bytes = 0;
 
-	strcpy(dec[123].instrucao, "lshr"
+	strcpy(dec[123].instrucao, "lshr");
 	dec[123].bytes = 0;
 
-	strcpy(dec[124].instrucao, "iushr"
+	strcpy(dec[124].instrucao, "iushr");
 	dec[124].bytes = 0;
 
-	strcpy(dec[125].instrucao, "lushr"
+	strcpy(dec[125].instrucao, "lushr");
 	dec[125].bytes = 0;
 
-	strcpy(dec[126].instrucao, "iand"
+	strcpy(dec[126].instrucao, "iand");
 	dec[126].bytes = 0;
 
-	strcpy(dec[127].instrucao, "land"
+	strcpy(dec[127].instrucao, "land");
 	dec[127].bytes = 0;
 
-	strcpy(dec[128].instrucao, "ior"
+	strcpy(dec[128].instrucao, "ior");
 	dec[128].bytes = 0;
 
-	strcpy(dec[129].instrucao, "lor"
+	strcpy(dec[129].instrucao, "lor");
 	dec[129].bytes = 0;
 
-	strcpy(dec[130].instrucao, "ixor"
+	strcpy(dec[130].instrucao, "ixor");
 	dec[130].bytes = 0;
 
-	strcpy(dec[131].instrucao, "lxor"
+	strcpy(dec[131].instrucao, "lxor");
 	dec[131].bytes = 0;
 
-	strcpy(dec[132].instrucao, "iinc"
+	strcpy(dec[132].instrucao, "iinc");
 	dec[132].bytes = 0;
 
 	// CONVERSIONS
 
-	strcpy(dec[133].instrucao, "i2l"
+	strcpy(dec[133].instrucao, "i2l");
 	dec[133].bytes = 0;
 
-	strcpy(dec[134].instrucao, "i2f"
+	strcpy(dec[134].instrucao, "i2f");
 	dec[134].bytes = 0;
 
     // return 

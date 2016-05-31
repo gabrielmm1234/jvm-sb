@@ -667,6 +667,5 @@ void inicializa_decodificador(decodificador dec[])
 
     strcpy(dec[255].instrucao, "impdep2");
     dec[255].bytes = 0;
-
 }
 #endif  

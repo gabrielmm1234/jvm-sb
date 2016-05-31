@@ -23,9 +23,6 @@ int main(int argc, char* argv[]){
 	//Se passa 1 na linha de comando imprime no prompt
 	if(*argv[2] == '1')
 		imprimePrompt(cf);
-
-	//Imprime em arquivo de saída.
-	imprimeArq(cf);
 	
 	//liberando ponteiros.
 	free(file);
@@ -231,24 +228,10 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 			cp->descriptor_index = le2Bytes(file);
 			cp->attributes_count = le2Bytes(file);
 			cp->attributes = (code_attribute*) malloc(cp->attributes_count*sizeof(code_attribute));
-			printf("access_flag: 0x%0x\n",cp->access_flags);
-			printf("name_index: cp info #%d ",cp->name_index);
-			imprime_string_pool(cf->constant_pool, cp->name_index - 1);
-    		printf("\n");
-			printf("descriptor_index: cp info #%d ",cp->descriptor_index);
-			imprime_string_pool(cf->constant_pool, cp->descriptor_index - 1);
-    		printf("\n");
-			printf("attributes_count: %d\n",cp->attributes_count);
-            
 
 			for(int j = 0; j < cp->attributes_count; j++){
-				printf("----Code Info----\n");
 				cp->attributes[j].attribute_name_index = le2Bytes(file);
 				cp->attributes[j].attribute_length = le4Bytes(file);
-				printf("attribute_name_index: cp info #%d ",cp->attributes[j].attribute_name_index);
-				imprime_string_pool(cf->constant_pool, cp->attributes[j].attribute_name_index - 1);
-    			printf("\n");
-				printf("attribute_length: %d\n",cp->attributes[j].attribute_length);
 
                 // posicao do ponteiro
                 int posicao_inicial = ftell(file);
@@ -275,7 +258,6 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                     
                     // imprime instrucao
                     int indice = cp->attributes[j].code[k];
-                    printf("%d: %s  ", k, dec[indice].instrucao);
 
 
                     // obtem quantos operandos a instrucao tem e vai imprimindo operandos
@@ -287,15 +269,7 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 
                         // pega operando 
                         fread(&(cp->attributes[j].code[k]), 1, 1, file);
-                        
-                        // operandos sao impressos do jeito que saem 
-                        printf("%d  ", cp->attributes[j].code[k]);
-                        if(cp->attributes[j].code[k] != 0)
-                            imprime_string_pool(cf->constant_pool, cp->attributes[j].code[k] - 1);
                     }
-                    
-                    // pula linha
-                    printf("\n"); 
                 }
 
                 // pega tamanho da tabela de excecoes
@@ -327,10 +301,8 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                     le1Byte(file);
                 }
                 
-				printf("----End Code----\n\n");
 			}
 			i++;
-			printf("----End Method----\n\n");
 		}
 	}
 }

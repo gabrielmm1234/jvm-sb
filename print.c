@@ -1,3 +1,8 @@
+#ifndef PRINT_C
+#define PRINT_C
+
+#include "print.h"
+#include "jvm.h"
 
 void imprimePrompt(classFile* cf){
 	printf("----General Information----\n");
@@ -212,7 +217,8 @@ void imprimePrompt(classFile* cf){
 			}
 			i++;
 			printf("----End Method----\n\n");
-	}
+	    }
+    }
 
 	printf("attributes_count: %d\n",cf->attributes_count);
 	if(cf->attributes_count != 0){
@@ -237,3 +243,5 @@ void imprimePrompt(classFile* cf){
 	}
 	printf("----End Second General----\n\n");
 }
+
+#endif

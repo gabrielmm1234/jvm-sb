@@ -1,6 +1,3 @@
-void imprimeArq(classFile* cf){
-	
-}
 
 void imprimePrompt(classFile* cf){
 	printf("----General Information----\n");
@@ -162,7 +159,6 @@ void imprimePrompt(classFile* cf){
 	if(cf->methods_count != 0){
 		method_info* cp = cf->methods;
 		for(int i = 0; i < cf->methods_count; cp++){
-			printf("----Method Info----\n");
 			printf("access_flag: 0x%0x\n",cp->access_flags);
 			printf("name_index: cp info #%d ",cp->name_index);
 			imprime_string_pool(cf->constant_pool, cp->name_index - 1);
@@ -171,56 +167,28 @@ void imprimePrompt(classFile* cf){
 			imprime_string_pool(cf->constant_pool, cp->descriptor_index - 1);
     		printf("\n");
 			printf("attributes_count: %d\n",cp->attributes_count);
+            
 
 			for(int j = 0; j < cp->attributes_count; j++){
-				printf("----Attributes Info----\n");
+				printf("----Code Info----\n");
 				printf("attribute_name_index: cp info #%d ",cp->attributes[j].attribute_name_index);
 				imprime_string_pool(cf->constant_pool, cp->attributes[j].attribute_name_index - 1);
     			printf("\n");
 				printf("attribute_length: %d\n",cp->attributes[j].attribute_length);
-				
-                int code_length; // sera importante para saber como parar o segundo loop 
 
-                // leitura do bytecode relacionado a informacoes gerais
-				for(int k = 0; k < 8; k++)
-                {
-                    // imprime profundidade maxima do stack
-                    if (k == 1) 
-                    {
-                        int max_stack_depth =  (cp->attributes[j].info[k-1] << 4) + cp->attributes[j].info[k]; 
-                        printf("Maximum stack depth: %d\n", max_stack_depth); 
-                    }
-
-                    // imprime numero maximo de local variables 
-                    if (k == 3)
-                    {
-                        int max_local_var = (cp->attributes[j].info[k-1] << 4) + cp->attributes[j].info[k]; 
-                        printf("Maximum local variables: %d\n", max_local_var);
-                    }
-
-                    // imprime tamanho do codigo 
-                    if (k == 7)
-                    {
-                         code_length = 0;
-                         code_length += (cp->attributes[j].info[k-3] << 12);
-                         code_length += (cp->attributes[j].info[k-2] << 8);
-                         code_length += (cp->attributes[j].info[k-1] << 4);
-                         code_length += cp->attributes[j].info[k];
-                        printf("Code Length: %d\n", code_length);
-                    }
-
-                }
-               
                 // obtem decodificador de instrucoes 
                 decodificador dec[NUM_INSTRUCAO];
                 inicializa_decodificador(dec); 
 
                 // leitura do bytecode relacionado a instrucoes do metodo 
-				for(int k = 8; k-8 < code_length; k++)
+                // aloca espaco conveniente
+
+                // poe valor no espacos corretos
+                for(int k = 0; k < cp->attributes[j].code_length; k++)
                 {    
                     // imprime instrucao
-                    int indice = cp->attributes[j].info[k];
-                    printf("%d: %s  ", k-8, dec[indice].instrucao);
+                    int indice = cp->attributes[j].code[k];
+                    printf("%d: %s  ", k, dec[indice].instrucao);
 
 
                     // obtem quantos operandos a instrucao tem e vai imprimindo operandos
@@ -231,20 +199,19 @@ void imprimePrompt(classFile* cf){
                         k++;
 
                         // operandos sao impressos do jeito que saem 
-                        printf("%d  ", cp->attributes[j].info[k]);
-                        if(cp->attributes[j].info[k] != 0)
-                        	imprime_string_pool(cf->constant_pool, cp->attributes[j].info[k] - 1);
+                        printf("%d  ", cp->attributes[j].code[k]);
+                        if(cp->attributes[j].code[k] != 0)
+                            imprime_string_pool(cf->constant_pool, cp->attributes[j].code[k] - 1);
                     }
                     
                     // pula linha
                     printf("\n"); 
-				}
-                
-				printf("----End Attribute----\n\n");
+                }
+
+				printf("----End Code----\n\n");
 			}
 			i++;
 			printf("----End Method----\n\n");
-		}
 	}
 
 	printf("attributes_count: %d\n",cf->attributes_count);

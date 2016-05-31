@@ -85,7 +85,7 @@ typedef struct method_info{
 	uint16_t name_index;
 	uint16_t descriptor_index;
 	uint16_t attributes_count;
-	attribute_info* attributes;
+	code_attribute* attributes;
 }method_info;
 
 /*Struct de informações da constant pool*/

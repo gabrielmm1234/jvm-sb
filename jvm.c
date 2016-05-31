@@ -230,33 +230,53 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 			cp->name_index = le2Bytes(file);
 			cp->descriptor_index = le2Bytes(file);
 			cp->attributes_count = le2Bytes(file);
-			cp->attributes = (attribute_info*) malloc(cp->attributes_count*sizeof(attribute_info));
-			
+			cp->attributes = (code_attribute*) malloc(cp->attributes_count*sizeof(code_attribute));
+			printf("access_flag: 0x%0x\n",cp->access_flags);
+			printf("name_index: cp info #%d ",cp->name_index);
+			imprime_string_pool(cf->constant_pool, cp->name_index - 1);
+    		printf("\n");
+			printf("descriptor_index: cp info #%d ",cp->descriptor_index);
+			imprime_string_pool(cf->constant_pool, cp->descriptor_index - 1);
+    		printf("\n");
+			printf("attributes_count: %d\n",cp->attributes_count);
+            
+
 			for(int j = 0; j < cp->attributes_count; j++){
+				printf("----Code Info----\n");
 				cp->attributes[j].attribute_name_index = le2Bytes(file);
 				cp->attributes[j].attribute_length = le4Bytes(file);
-				cp->attributes[j].info = (uint8_t*) malloc((cp->attributes[j].attribute_length)*sizeof(uint8_t));
-                
-                int code_length; // sera importante para saber como parar o segundo loop 
+				printf("attribute_name_index: cp info #%d ",cp->attributes[j].attribute_name_index);
+				imprime_string_pool(cf->constant_pool, cp->attributes[j].attribute_name_index - 1);
+    			printf("\n");
+				printf("attribute_length: %d\n",cp->attributes[j].attribute_length);
+
+                // posicao do ponteiro
+                int posicao_inicial = ftell(file);
 
                 // leitura do bytecode relacionado a informacoes gerais
-				for(int k = 0; k < 8; k++)
-                {
-                    fread(&(cp->attributes[j].info[k]), 1, 1, file);
-                }
-               
+                cp->attributes[j].max_stack = le2Bytes(file);
+                cp->attributes[j].max_locals = le2Bytes(file);
+                cp->attributes[j].code_length = le4Bytes(file);
+                
                 // obtem decodificador de instrucoes 
                 decodificador dec[NUM_INSTRUCAO];
                 inicializa_decodificador(dec); 
 
                 // leitura do bytecode relacionado a instrucoes do metodo 
-				for(int k = 8; k-8 < code_length; k++)
+                // aloca espaco conveniente
+                cp->attributes[j].code = (uint8_t*) malloc(cp->attributes[j].code_length * \
+                        sizeof(uint8_t));
+
+                // poe valor no espacos corretos
+                for(int k = 0; k < cp->attributes[j].code_length; k++)
                 {    
                     // le opcode da instrucao atual
-                    fread(&(cp->attributes[j].info[k]), 1, 1, file);
+                    fread(&(cp->attributes[j].code[k]), 1, 1, file);
                     
                     // imprime instrucao
-                    int indice = cp->attributes[j].info[k];
+                    int indice = cp->attributes[j].code[k];
+                    printf("%d: %s  ", k, dec[indice].instrucao);
+
 
                     // obtem quantos operandos a instrucao tem e vai imprimindo operandos
                     int num_bytes = dec[indice].bytes;
@@ -266,16 +286,51 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                         k++;
 
                         // pega operando 
-                        fread(&(cp->attributes[j].info[k]), 1, 1, file);
-                    } 
-				}
-                // leitura dos demais bytecodes - NAO SEI PARA QUE ISSO SERVE 
-                for (int k = 8 + code_length; k < cp->attributes[j].attribute_length; k++)
-                {
-                    fread(&(cp->attributes[j].info[k]), 1, 1, file);
+                        fread(&(cp->attributes[j].code[k]), 1, 1, file);
+                        
+                        // operandos sao impressos do jeito que saem 
+                        printf("%d  ", cp->attributes[j].code[k]);
+                        if(cp->attributes[j].code[k] != 0)
+                            imprime_string_pool(cf->constant_pool, cp->attributes[j].code[k] - 1);
+                    }
+                    
+                    // pula linha
+                    printf("\n"); 
                 }
+
+                // pega tamanho da tabela de excecoes
+                cp->attributes[j].exception_table_length = le2Bytes(file);
+
+                // aloca espaco apropriado
+                cp->attributes[j].exception_table = (exception_table*) malloc( \
+                        cp->attributes[j].exception_table_length * sizeof(exception_table));
+
+                // le dados da tabela de excecoes
+                for (int k = 0; k < cp->attributes[j].exception_table_length; k++)
+                {
+                    cp->attributes[j].exception_table[k].start_pc = le2Bytes(file);
+                    cp->attributes[j].exception_table[k].end_pc = le2Bytes(file);
+                    cp->attributes[j].exception_table[k].catch_type = le2Bytes(file);
+                }
+
+                // pega numero de atributos
+                cp->attributes[j].attributes_count = le2Bytes(file);
+                
+                // aloca espaco apropriado
+                cp->attributes[j].attributes = (attribute_info*) malloc ( \
+                        cp->attributes[j].attributes_count * sizeof(attribute_info));
+
+                // le atributos opcionais de debug
+                // nao precisa preocupar muito com isso 
+                while (ftell(file) - posicao_inicial < cp->attributes[j].attribute_length) 
+                {
+                    le1Byte(file);
+                }
+                
+				printf("----End Code----\n\n");
 			}
 			i++;
+			printf("----End Method----\n\n");
 		}
 	}
 }

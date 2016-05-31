@@ -28,6 +28,7 @@ void inicializa_decodificador(decodificador dec[])
     strcpy(dec[4].instrucao, "iconst_1");
     dec[4].bytes = 0;
 
+    // iconst_2
 	strcpy(dec[5].instrucao, "iconst_2");
 	dec[5].bytes = 0;
 
@@ -76,32 +77,32 @@ void inicializa_decodificador(decodificador dec[])
     dec[16].bytes = 1;
 
     strcpy(dec[17].instrucao, "sipush");
-    dec[17].bytes = 1;
+    dec[17].bytes = 2;
 
     // ldc
     strcpy(dec[18].instrucao, "ldc");
     dec[18].bytes = 1;
     
     strcpy(dec[19].instrucao, "ldc_w");
-    dec[19].bytes = 1;
+    dec[19].bytes = 2;
 
     strcpy(dec[20].instrucao, "ldc2_w");
-    dec[20].bytes = 0;
+    dec[20].bytes = 2;
 
     strcpy(dec[21].instrucao, "iload");
-    dec[21].bytes = 0;
+    dec[21].bytes = 1;
 
     strcpy(dec[22].instrucao, "lload");
-    dec[22].bytes = 0;
+    dec[22].bytes = 1;
 
     strcpy(dec[23].instrucao, "fload");
-    dec[23].bytes = 0;
+    dec[23].bytes = 1;
 
     strcpy(dec[24].instrucao, "dload");
-    dec[24].bytes = 0;
+    dec[24].bytes = 1;
 
     strcpy(dec[25].instrucao, "aload");
-    dec[25].bytes = 0;
+    dec[25].bytes = 1;
 
     strcpy(dec[26].instrucao, "iload_0");
     dec[26].bytes = 0;
@@ -193,19 +194,19 @@ void inicializa_decodificador(decodificador dec[])
     // STORES
 
     strcpy(dec[54].instrucao, "istore");
-    dec[54].bytes = 0;
+    dec[54].bytes = 1;
 
     strcpy(dec[55].instrucao, "lstore");
-    dec[55].bytes = 0;
+    dec[55].bytes = 1;
 
     strcpy(dec[56].instrucao, "fstore");
-    dec[56].bytes = 0;
+    dec[56].bytes = 1;
 
     strcpy(dec[57].instrucao, "dstore");
-    dec[57].bytes = 0;
+    dec[57].bytes = 1;
 
     strcpy(dec[58].instrucao, "astore");
-    dec[58].bytes = 0;
+    dec[58].bytes = 1;
 
     strcpy(dec[59].instrucao, "istore_0");
     dec[59].bytes = 0;
@@ -434,23 +435,164 @@ void inicializa_decodificador(decodificador dec[])
 	dec[131].bytes = 0;
 
 	strcpy(dec[132].instrucao, "iinc");
-	dec[132].bytes = 0;
+	dec[132].bytes = 2;
 
 	// CONVERSIONS
 
 	strcpy(dec[133].instrucao, "i2l");
 	dec[133].bytes = 0;
 
-	strcpy(dec[134].instrucao, "i2f");
-	dec[134].bytes = 0;
+    strcpy(dec[134].instrucao, "i2f");
+    dec[134].bytes = 0;
+
+    strcpy(dec[135].instrucao, "i2d");
+    dec[135].bytes = 0;
+
+    strcpy(dec[136].instrucao, "l2i");
+    dec[136].bytes = 0;
+
+    strcpy(dec[137].instrucao, "l2f");
+    dec[137].bytes = 0;
+
+    strcpy(dec[138].instrucao, "l2d");
+    dec[138].bytes = 0;
+
+    strcpy(dec[139].instrucao, "f2i");
+    dec[139].bytes = 0;
+
+    strcpy(dec[140].instrucao, "f2l");
+    dec[140].bytes = 0;
+
+    strcpy(dec[141].instrucao, "f2d");
+    dec[141].bytes = 0;
+
+    strcpy(dec[142].instrucao, "d2i");
+    dec[142].bytes = 0;
+
+    strcpy(dec[143].instrucao, "d2l");
+    dec[143].bytes = 0;
+
+    strcpy(dec[144].instrucao, "d2f");
+    dec[144].bytes = 0;
+
+    strcpy(dec[145].instrucao, "i2b");
+    dec[145].bytes = 0;
+
+    strcpy(dec[146].instrucao, "i2c");
+    dec[146].bytes = 0;
+
+    strcpy(dec[147].instrucao, "i2s");
+    dec[147].bytes = 0;
+
+    // COMPARISONS
+
+    strcpy(dec[148].instrucao, "lcmp");
+    dec[148].bytes = 0;
+
+    strcpy(dec[149].instrucao, "fcmpl");
+    dec[149].bytes = 0;
+
+    strcpy(dec[150].instrucao, "fcmpg");
+    dec[150].bytes = 0;
+
+    strcpy(dec[151].instrucao, "dcmpl");
+    dec[151].bytes = 0;
+
+    strcpy(dec[152].instrucao, "dcmpg");
+    dec[152].bytes = 0;
+
+    strcpy(dec[153].instrucao, "ifeq");
+    dec[153].bytes = 2;
+
+    strcpy(dec[154].instrucao, "ifne");
+    dec[154].bytes = 2;
+
+    strcpy(dec[155].instrucao, "iflt");
+    dec[155].bytes = 2;
+
+    strcpy(dec[156].instrucao, "ifge");
+    dec[156].bytes = 2;
+
+    strcpy(dec[157].instrucao, "ifgt");
+    dec[157].bytes = 2;
+
+    strcpy(dec[158].instrucao, "ifle");
+    dec[158].bytes = 2;
+
+    strcpy(dec[159].instrucao, "if_icmpeq");
+    dec[159].bytes = 2;
+
+    strcpy(dec[160].instrucao, "if_icmpne");
+    dec[160].bytes = 2;
+
+    strcpy(dec[161].instrucao, "if_icmplt");
+    dec[161].bytes = 2;
+
+    strcpy(dec[162].instrucao, "if_icmpge");
+    dec[162].bytes = 2;
+
+    strcpy(dec[163].instrucao, "if_icmpgt");
+    dec[163].bytes = 2;
+
+    strcpy(dec[164].instrucao, "if_icmple");
+    dec[164].bytes = 2;
+
+    strcpy(dec[165].instrucao, "if_acmpeq");
+    dec[165].bytes = 2;
+
+    strcpy(dec[166].instrucao, "if_acmpne");
+    dec[166].bytes = 2;
+
+    // CONTROL
+
+    strcpy(dec[167].instrucao, "goto");
+    dec[167].bytes = 2;
+
+    strcpy(dec[168].instrucao, "jsr");
+    dec[168].bytes = 2;
+
+    strcpy(dec[169].instrucao, "ret");
+    dec[169].bytes = 1;
+
+    strcpy(dec[170].instrucao, "tableswitch");
+    dec[170].bytes = 4;
+
+    strcpy(dec[171].instrucao, "lookupswitch");
+    dec[171].bytes = 4;
+
+    strcpy(dec[172].instrucao, "ireturn");
+    dec[172].bytes = 0;
+
+    strcpy(dec[173].instrucao, "lreturn");
+    dec[173].bytes = 0;
+
+    strcpy(dec[174].instrucao, "freturn");
+    dec[174].bytes = 0;
+
+    strcpy(dec[175].instrucao, "dreturn");
+    dec[176].bytes = 0;
+
+    strcpy(dec[176].instrucao, "areturn");
+    dec[176].bytes = 0;
 
     // return 
     strcpy(dec[177].instrucao, "return");
     dec[177].bytes = 0;
 
+    // REFERENCES
+
     //getstatic
     strcpy(dec[178].instrucao, "getstatic");
     dec[178].bytes = 2;
+
+    strcpy(dec[179].instrucao, "putstatic");
+    dec[179].bytes = 2;
+
+    strcpy(dec[180].instrucao, "getfield");
+    dec[180].bytes = 2;
+
+    strcpy(dec[181].instrucao, "putfield");
+    dec[181].bytes = 2;
     
     // invokevirtual 
     strcpy(dec[182].instrucao, "invokevirtual");
@@ -460,13 +602,55 @@ void inicializa_decodificador(decodificador dec[])
     strcpy(dec[183].instrucao, "invokespecial");
     dec[183].bytes = 2;
 
+    strcpy(dec[184].instrucao, "invokestatic");
+    dec[184].bytes = 2;
+
     // invokeinterface 
     strcpy(dec[185].instrucao, "invokeinterface");
     dec[185].bytes = 4;
 
+    strcpy(dec[186].instrucao, "invokedynamic");
+    dec[186].bytes = 4;
+
     // new 
     strcpy(dec[187].instrucao, "new");
     dec[187].bytes = 2;
+
+    strcpy(dec[188].instrucao, "newarray");
+    dec[188].bytes = 2;
+
+    strcpy(dec[189].instrucao, "anewarray");
+    dec[189].bytes = 1;
+
+    strcpy(dec[190].instrucao, "arraylength");
+    dec[190].bytes = 0;
+
+    strcpy(dec[191].instrucao, "athrow");
+    dec[191].bytes = 0;
+
+    strcpy(dec[192].instrucao, "checkcast");
+    dec[192].bytes = 2;
+
+    strcpy(dec[193].instrucao, "instanceof");
+    dec[193].bytes = 2;
+
+    strcpy(dec[194].instrucao, "monitorenter");
+    dec[194].bytes = 0;
+
+    strcpy(dec[195].instrucao, "monitorexit");
+    dec[195].bytes = 0;
+
+    strcpy(dec[196].instrucao, "wide");
+    dec[196].bytes = 5;
+
+    strcpy(dec[197].instrucao, "multianewarray");
+    dec[197].bytes = 3;
+
+    strcpy(dec[198].instrucao, "ifnull");
+    dec[198].bytes = 2;
+
+    strcpy(dec[199].instrucao, "ifnonnull");
+    dec[199].bytes = 2;
 
     strcpy(dec[200].instrucao, "goto_w");
     dec[200].bytes = 4;
@@ -485,4 +669,4 @@ void inicializa_decodificador(decodificador dec[])
     dec[255].bytes = 0;
 
 }
-#endif
+#endif  

@@ -27,84 +27,14 @@ int main(int argc, char* argv[]){
 }
 
 void imprimePrompt(classFile* cf){
-//printa as coisas aqui
-    int i; 
-    return; 
-}
-
-void generalInfo(classFile* cf, FILE* file){
-	cf->magic = le4Bytes(file);
-	if(cf->magic != 0xCAFEBABE){
-		printf("Arquivo .class inválido!!\n\n");
-		exit(0);
-	}
-	cf->minor_version = le2Bytes(file);
-	cf->major_version = le2Bytes(file);
-	cf->constant_pool_count = le2Bytes(file);
 	printf("----General Information----\n");
 	printf("CAFEBABE: 0x%0x \n",cf->magic);
 	printf("Minor version: %d \n",cf->minor_version);
 	printf("Major version: %d \n",cf->major_version);
 	printf("Constant Pool Count: %d \n",cf->constant_pool_count);
 	printf("----End General----\n\n");
-}
 
-void constantPool(classFile* cf, FILE* file){
-	cf->constant_pool = (cp_info*) malloc((cf->constant_pool_count-1)*sizeof(cp_info));
-	cp_info* cp;
-
-
-    // loop q simplesmente faz a leitura da constant pool 
-	int i = 0;
-	for(cp = cf->constant_pool; i < (cf->constant_pool_count-1); cp++){
-		cp->tag = le1Byte(file);
-		switch(cp->tag){
-			case CONSTANT_Class:
-				cp->info.Class.name_index = le2Bytes(file);
-				break;
-			case CONSTANT_Fieldref:
-				cp->info.Fieldref.class_index = le2Bytes(file);
-				cp->info.Fieldref.name_and_type_index = le2Bytes(file);
-				break;
-			case CONSTANT_NameAndType:
-				cp->info.NameAndType.name_index = le2Bytes(file);
-				cp->info.NameAndType.descriptor_index = le2Bytes(file);
-				break;
-			case CONSTANT_Utf8:
-				cp->info.Utf8.length = le2Bytes(file);
-				cp->info.Utf8.bytes = (uint8_t*) malloc ((cp->info.Utf8.length)*sizeof(uint8_t));
-				fread(cp->info.Utf8.bytes,1,cp->info.Utf8.length,file);
-				break;
-			case CONSTANT_Methodref:
-				cp->info.Methodref.class_index = le2Bytes(file);
-				cp->info.Methodref.name_and_type_index = le2Bytes(file);
-				break;
-			case CONSTANT_InterfaceMethodref:
-				cp->info.InterfaceMethodref.class_index = le2Bytes(file);
-				cp->info.InterfaceMethodref.name_and_type_index = le2Bytes(file);
-				break;
-			case CONSTANT_String:
-				cp->info.String.string_index = le2Bytes(file);
-				break;
-			case CONSTANT_Integer:
-				cp->info.Integer.bytes = le4Bytes(file);
-			case CONSTANT_Float:
-				cp->info.Float.bytes = le4Bytes(file);
-				break;
-			case CONSTANT_Double:
-				cp->info.Double.high_bytes = le4Bytes(file);
-				cp->info.Double.low_bytes = le4Bytes(file);
-				cp++;
-				i++;
-				break;
-			default:
-				break;
-		}
-		i++;
-	}
-    
-
-    // agora imprime-se a cte pool 
+	// agora imprime-se a cte pool 
 	printf("----Constant Pool----\n");
 
     // itera pela constante pool de novo, dessa vez para mostrar informacao 
@@ -193,8 +123,242 @@ void constantPool(classFile* cf, FILE* file){
 				break;
         }
     }
-
 	printf("----End Pool----\n\n");
+
+	printf("----Second General Info----\n");
+	printf("Access Flags: 0x%0x\n",cf->access_flags);
+	printf("This Class: cp info #%d ",cf->this_class);
+	imprime_string_pool(cf->constant_pool, cf->this_class - 1);
+    printf("\n");
+	printf("Super Class: cp info #%d ",cf->super_class);
+	imprime_string_pool(cf->constant_pool, cf->super_class - 1);
+    printf("\n");
+	printf("interfaces_count: %d\n",cf->interfaces_count);
+	if(cf->interfaces_count != 0){
+		printf("---- Interfaces ----\n");
+        // le interface, pondo no array de interfaces
+        for (int i = 0; i < cf->interfaces_count; i++)
+        {
+            printf("Interface: cp info #%d ", cf->interfaces[i]);
+            imprime_string_pool(cf->constant_pool, cf->interfaces[i] - 1);
+    		printf("\n");
+        }
+
+    	printf("---- End Interface ----\n");
+	}
+	printf("Fields Count: %d\n",cf->fields_count);
+	if(cf->fields_count != 0){
+		printf("----Fields----\n");
+        for (int i = 0; i < cf->fields_count; i++)
+        {
+
+            // imprime informacoes
+            printf("Name: cp info #%d ", cf->fields[i].name_index);
+            imprime_string_pool(cf->constant_pool, cf->fields[i].name_index - 1);
+    		printf("\n");
+            printf("Descriptor: cp info #%d ", cf->fields[i].descriptor_index);
+            imprime_string_pool(cf->constant_pool, cf->fields[i].descriptor_index - 1);
+    		printf("\n");
+            printf("Access Flag: 0x%x\n", cf->fields[i].access_flags);
+ 
+            for (int j = 0; j < cf->fields[i].attributes_count; j++)
+            {
+                printf("\t\t----Attribute Info do Field----\n");
+                
+                // imprime informacao dos atributos
+                printf("attribute_name_index: cp info #%d\n", cf->fields[i].attributes->attribute_name_index);
+                printf("attribute_length: %d\n", cf->fields[i].attributes->attribute_length);
+
+                // imprime bytecode do atributo
+                for (int k = 0; k < cf->fields[i].attributes->attribute_length; k++)
+                {
+                    printf("bytecode: 0x%x\n", cf->fields[i].attributes->info[k]);
+                }
+
+                printf("\t\t----Fim da Attribute Info do Field----\n");
+            }
+        }
+
+        printf("----End Fields----\n");
+	}
+
+	printf("Methods Count: %d\n",cf->methods_count);
+	if(cf->methods_count != 0){
+		method_info* cp = cf->methods;
+		for(int i = 0; i < cf->methods_count; cp++){
+			printf("----Method Info----\n");
+			printf("access_flag: 0x%0x\n",cp->access_flags);
+			printf("name_index: cp info #%d ",cp->name_index);
+			imprime_string_pool(cf->constant_pool, cp->name_index - 1);
+    		printf("\n");
+			printf("descriptor_index: cp info #%d ",cp->descriptor_index);
+			imprime_string_pool(cf->constant_pool, cp->descriptor_index - 1);
+    		printf("\n");
+			printf("attributes_count: %d\n",cp->attributes_count);
+
+			for(int j = 0; j < cp->attributes_count; j++){
+				printf("----Attributes Info----\n");
+				printf("attribute_name_index: cp info #%d ",cp->attributes[j].attribute_name_index);
+				imprime_string_pool(cf->constant_pool, cp->attributes[j].attribute_name_index - 1);
+    			printf("\n");
+				printf("attribute_length: %d\n",cp->attributes[j].attribute_length);
+				
+                int code_length; // sera importante para saber como parar o segundo loop 
+
+                // leitura do bytecode relacionado a informacoes gerais
+				for(int k = 0; k < 8; k++)
+                {
+                    // imprime profundidade maxima do stack
+                    if (k == 1) 
+                    {
+                        int max_stack_depth =  (cp->attributes[j].info[k-1] << 4) + cp->attributes[j].info[k]; 
+                        printf("Maximum stack depth: %d\n", max_stack_depth); 
+                    }
+
+                    // imprime numero maximo de local variables 
+                    if (k == 3)
+                    {
+                        int max_local_var = (cp->attributes[j].info[k-1] << 4) + cp->attributes[j].info[k]; 
+                        printf("Maximum local variables: %d\n", max_local_var);
+                    }
+
+                    // imprime tamanho do codigo 
+                    if (k == 7)
+                    {
+                         code_length = 0;
+                         code_length += (cp->attributes[j].info[k-3] << 12);
+                         code_length += (cp->attributes[j].info[k-2] << 8);
+                         code_length += (cp->attributes[j].info[k-1] << 4);
+                         code_length += cp->attributes[j].info[k];
+                        printf("Code Length: %d\n", code_length);
+                    }
+
+                }
+               
+                // obtem decodificador de instrucoes 
+                decodificador dec[NUM_INSTRUCAO];
+                inicializa_decodificador(dec); 
+
+                // leitura do bytecode relacionado a instrucoes do metodo 
+				for(int k = 8; k-8 < code_length; k++)
+                {    
+                    // imprime instrucao
+                    int indice = cp->attributes[j].info[k];
+                    printf("%d: %s  ", k-8, dec[indice].instrucao);
+
+
+                    // obtem quantos operandos a instrucao tem e vai imprimindo operandos
+                    int num_bytes = dec[indice].bytes;
+                    for (int l = 0; l < num_bytes; l++)
+                    {
+                        // atualiza valor de k 
+                        k++;
+
+                        // operandos sao impressos do jeito que saem 
+                        printf("%d  ", cp->attributes[j].info[k]);
+                        if(cp->attributes[j].info[k] != 0)
+                        	imprime_string_pool(cf->constant_pool, cp->attributes[j].info[k] - 1);
+                    }
+                    
+                    // pula linha
+                    printf("\n"); 
+				}
+                
+				printf("----End Attribute----\n\n");
+			}
+			i++;
+			printf("----End Method----\n\n");
+		}
+	}
+
+	printf("attributes_count: %d\n",cf->attributes_count);
+	if(cf->attributes_count != 0){
+		attribute_info* cp = cf->attributes;
+		for(int i = 0; i < cf->attributes_count; cp++){
+			printf("----Attributes Info----\n");
+			printf("attribute_name_index: cp info #%d ",cp->attribute_name_index);
+			imprime_string_pool(cf->constant_pool, cp->attribute_name_index - 1);
+    		printf("\n");
+			printf("attribute_length: %d\n",cp->attribute_length);
+			for(int j = 0; j < cp->attribute_length; cp->info++){
+				if(*(cp->info) != 0){
+					printf("Source file name index: cp info #%d ",*(cp->info));
+					imprime_string_pool(cf->constant_pool, *(cp->info) - 1);
+			    	printf("\n");
+			    }
+				j++;
+			}
+			printf("----End Attributes----\n\n");
+			i++;
+		}
+	}
+	printf("----End Second General----\n\n");
+}
+
+void generalInfo(classFile* cf, FILE* file){
+	cf->magic = le4Bytes(file);
+	if(cf->magic != 0xCAFEBABE){
+		printf("Arquivo .class inválido!!\n\n");
+		exit(0);
+	}
+	cf->minor_version = le2Bytes(file);
+	cf->major_version = le2Bytes(file);
+	cf->constant_pool_count = le2Bytes(file);
+}
+
+void constantPool(classFile* cf, FILE* file){
+	cf->constant_pool = (cp_info*) malloc((cf->constant_pool_count-1)*sizeof(cp_info));
+	cp_info* cp;
+
+
+    // loop q simplesmente faz a leitura da constant pool 
+	int i = 0;
+	for(cp = cf->constant_pool; i < (cf->constant_pool_count-1); cp++){
+		cp->tag = le1Byte(file);
+		switch(cp->tag){
+			case CONSTANT_Class:
+				cp->info.Class.name_index = le2Bytes(file);
+				break;
+			case CONSTANT_Fieldref:
+				cp->info.Fieldref.class_index = le2Bytes(file);
+				cp->info.Fieldref.name_and_type_index = le2Bytes(file);
+				break;
+			case CONSTANT_NameAndType:
+				cp->info.NameAndType.name_index = le2Bytes(file);
+				cp->info.NameAndType.descriptor_index = le2Bytes(file);
+				break;
+			case CONSTANT_Utf8:
+				cp->info.Utf8.length = le2Bytes(file);
+				cp->info.Utf8.bytes = (uint8_t*) malloc ((cp->info.Utf8.length)*sizeof(uint8_t));
+				fread(cp->info.Utf8.bytes,1,cp->info.Utf8.length,file);
+				break;
+			case CONSTANT_Methodref:
+				cp->info.Methodref.class_index = le2Bytes(file);
+				cp->info.Methodref.name_and_type_index = le2Bytes(file);
+				break;
+			case CONSTANT_InterfaceMethodref:
+				cp->info.InterfaceMethodref.class_index = le2Bytes(file);
+				cp->info.InterfaceMethodref.name_and_type_index = le2Bytes(file);
+				break;
+			case CONSTANT_String:
+				cp->info.String.string_index = le2Bytes(file);
+				break;
+			case CONSTANT_Integer:
+				cp->info.Integer.bytes = le4Bytes(file);
+			case CONSTANT_Float:
+				cp->info.Float.bytes = le4Bytes(file);
+				break;
+			case CONSTANT_Double:
+				cp->info.Double.high_bytes = le4Bytes(file);
+				cp->info.Double.low_bytes = le4Bytes(file);
+				cp++;
+				i++;
+				break;
+			default:
+				break;
+		}
+		i++;
+	}
 }
 
 void imprime_string_pool(cp_info* cp, int pos_pool)
@@ -264,18 +428,11 @@ void interfaceInfo(classFile* cf, FILE* file, uint16_t interfaces_count){
         // aloca espaco apropriado
         cf->interfaces = (uint16_t *) malloc((interfaces_count) * sizeof(uint16_t));
 
-        printf("---- Interfaces ----\n");
-
         // le interface, pondo no array de interfaces
         for (int i = 0; i < interfaces_count; i++)
         {
             cf->interfaces[i] = le2Bytes(file);
-            printf("Interface: cp info #%d ", cf->interfaces[i]);
-            imprime_string_pool(cf->constant_pool, cf->interfaces[i] - 1);
-    		printf("\n");
         }
-
-        printf("---- End Interface ----\n");
 	}
 }
 
@@ -287,8 +444,6 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
         // aloca espaco apropriado
         cf->fields = (field_info*) malloc(fields_count * sizeof(field_info)); 
         
-        printf("----Fields----\n");
-
         // le field information, pondo no array de field
         for (int i = 0; i < fields_count; i++)
         {
@@ -296,15 +451,6 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
             cf->fields[i].access_flags = le2Bytes(file);
             cf->fields[i].name_index = le2Bytes(file);
             cf->fields[i].descriptor_index = le2Bytes(file);
-
-            // imprime informacoes
-            printf("Name: cp info #%d ", cf->fields[i].name_index);
-            imprime_string_pool(cf->constant_pool, cf->fields[i].name_index - 1);
-    		printf("\n");
-            printf("Descriptor: cp info #%d ", cf->fields[i].descriptor_index);
-            imprime_string_pool(cf->constant_pool, cf->fields[i].descriptor_index - 1);
-    		printf("\n");
-            printf("Access Flag: 0x%x\n", cf->fields[i].access_flags);
 
             cf->fields[i].attributes_count = le2Bytes(file);
 
@@ -314,15 +460,10 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
             // vai lendo e imprimindo atributos 
             for (int j = 0; j < cf->fields[i].attributes_count; j++)
             {
-                printf("\t\t----Attribute Info do Field----\n");
-                
+                 
                 // pega indice do nome do atributo e comprimento do atributo
                 cf->fields[i].attributes->attribute_name_index = le2Bytes(file);
                 cf->fields[i].attributes->attribute_length = le4Bytes(file);
-
-                // imprime informacao dos atributos
-                printf("attribute_name_index: cp info #%d\n", cf->fields[i].attributes->attribute_name_index);
-                printf("attribute_length: %d\n", cf->fields[i].attributes->attribute_length);
 
                 // espaco para informacao do atributo
                 cf->fields[i].attributes->info = (uint8_t*) malloc(cf->fields[i].attributes->attribute_length * sizeof(uint8_t));
@@ -333,16 +474,11 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
                 // imprime bytecode do atributo
                 for (int k = 0; k < cf->fields[i].attributes->attribute_length; k++)
                 {
-                    fread(&(cf->fields[i].attributes->info[k]), 1, 1, file);
-                    
-                    printf("bytecode: 0x%x\n", cf->fields[i].attributes->info[k]);
+                    fread(&(cf->fields[i].attributes->info[k]), 1, 1, file);   
                 }
 
-                printf("\t\t----Fim da Attribute Info do Field----\n");
             }
         }
-
-        printf("----End Fields----\n");
 	}
 }
 
@@ -359,23 +495,10 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 			cp->descriptor_index = le2Bytes(file);
 			cp->attributes_count = le2Bytes(file);
 			cp->attributes = (attribute_info*) malloc(cp->attributes_count*sizeof(attribute_info));
-			printf("access_flag: 0x%0x\n",cp->access_flags);
-			printf("name_index: cp info #%d ",cp->name_index);
-			imprime_string_pool(cf->constant_pool, cp->name_index - 1);
-    		printf("\n");
-			printf("descriptor_index: cp info #%d ",cp->descriptor_index);
-			imprime_string_pool(cf->constant_pool, cp->descriptor_index - 1);
-    		printf("\n");
-			printf("attributes_count: %d\n",cp->attributes_count);
-
+			
 			for(int j = 0; j < cp->attributes_count; j++){
-				printf("----Attributes Info----\n");
 				cp->attributes[j].attribute_name_index = le2Bytes(file);
 				cp->attributes[j].attribute_length = le4Bytes(file);
-				printf("attribute_name_index: cp info #%d ",cp->attributes[j].attribute_name_index);
-				imprime_string_pool(cf->constant_pool, cp->attributes[j].attribute_name_index - 1);
-    			printf("\n");
-				printf("attribute_length: %d\n",cp->attributes[j].attribute_length);
 				cp->attributes[j].info = (uint8_t*) malloc((cp->attributes[j].attribute_length)*sizeof(uint8_t));
                 
                 int code_length; // sera importante para saber como parar o segundo loop 
@@ -384,32 +507,6 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 				for(int k = 0; k < 8; k++)
                 {
                     fread(&(cp->attributes[j].info[k]), 1, 1, file);
-
-                    // imprime profundidade maxima do stack
-                    if (k == 1) 
-                    {
-                        int max_stack_depth =  (cp->attributes[j].info[k-1] << 4) + cp->attributes[j].info[k]; 
-                        printf("Maximum stack depth: %d\n", max_stack_depth); 
-                    }
-
-                    // imprime numero maximo de local variables 
-                    if (k == 3)
-                    {
-                        int max_local_var = (cp->attributes[j].info[k-1] << 4) + cp->attributes[j].info[k]; 
-                        printf("Maximum local variables: %d\n", max_local_var);
-                    }
-
-                    // imprime tamanho do codigo 
-                    if (k == 7)
-                    {
-                         code_length = 0;
-                         code_length += (cp->attributes[j].info[k-3] << 12);
-                         code_length += (cp->attributes[j].info[k-2] << 8);
-                         code_length += (cp->attributes[j].info[k-1] << 4);
-                         code_length += cp->attributes[j].info[k];
-                        printf("Code Length: %d\n", code_length);
-                    }
-
                 }
                
                 // obtem decodificador de instrucoes 
@@ -424,8 +521,6 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                     
                     // imprime instrucao
                     int indice = cp->attributes[j].info[k];
-                    printf("%d: %s  ", k-8, dec[indice].instrucao);
-
 
                     // obtem quantos operandos a instrucao tem e vai imprimindo operandos
                     int num_bytes = dec[indice].bytes;
@@ -437,14 +532,8 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                         // pega operando 
                         fread(&(cp->attributes[j].info[k]), 1, 1, file);
                         
-                        // operandos sao impressos do jeito que saem 
-                        printf("%d  ", cp->attributes[j].info[k]);
-                        if(cp->attributes[j].info[k] != 0)
-                        	imprime_string_pool(cf->constant_pool, cp->attributes[j].info[k] - 1);
                     }
-                    
-                    // pula linha
-                    printf("\n"); 
+                     
 				}
                 
                 // leitura dos demais bytecodes - NAO SEI PARA QUE ISSO SERVE 
@@ -453,10 +542,8 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                     fread(&(cp->attributes[j].info[k]), 1, 1, file);
                 }
                 
-				printf("----End Attribute----\n\n");
 			}
 			i++;
-			printf("----End Method----\n\n");
 		}
 	}
 }
@@ -472,19 +559,9 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){
 
 			cp->attribute_name_index = le2Bytes(file);
 			cp->attribute_length = le4Bytes(file);
-			printf("attribute_name_index: cp info #%d ",cp->attribute_name_index);
-			imprime_string_pool(cf->constant_pool, cp->attribute_name_index - 1);
-    		printf("\n");
-			printf("attribute_length: %d\n",cp->attribute_length);
 			cp->info = (uint8_t*) malloc((cp->attribute_length)*sizeof(uint8_t));
-			for(int j = 0; j < cp->attribute_length; cp->info++){
-			fread(cp->info,1,1,file);
-			if(*(cp->info) != 0){
-				printf("Source file name index: cp info #%d ",*(cp->info));
-				imprime_string_pool(cf->constant_pool, *(cp->info) - 1);
-		    	printf("\n");
-		    }
-			j++;
+			for(int j = 0; j < cp->attribute_length; j++){
+				fread(&cp->info[j],1,1,file);
 			}
 			i++;
 		}
@@ -504,32 +581,11 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 	cf->fields_count = le2Bytes(file);
 	fieldInfo(cf,file,cf->fields_count);
 
-	printf("----Second General Info----\n");
-	printf("Access Flags: 0x%0x\n",cf->access_flags);
-	printf("This Class: cp info #%d ",cf->this_class);
-	imprime_string_pool(cf->constant_pool, cf->this_class - 1);
-    printf("\n");
-	printf("Super Class: cp info #%d ",cf->super_class);
-	imprime_string_pool(cf->constant_pool, cf->super_class - 1);
-    printf("\n");
-	printf("interfaces_count: %d\n",cf->interfaces_count);
-	printf("Fields Count: %d\n\n",cf->fields_count);
-
-	printf("----Method Info----\n");
-
 	cf->methods_count = le2Bytes(file);
-	printf("Methods Count: %d\n",cf->methods_count);
 	methodInfo(cf,file,cf->methods_count);
 
-	printf("----Attributes Info----\n");
-
 	cf->attributes_count = le2Bytes(file);
-	printf("attributes_count: %d\n",cf->attributes_count);
 	attributeInfo(cf,file,cf->attributes_count);
-	
-	printf("----End Attributes----\n\n");
-
-	printf("----End Second General----\n\n");
 }
 
 // funcoes auxiliares para leitura.

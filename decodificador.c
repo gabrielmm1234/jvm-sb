@@ -190,6 +190,8 @@ void inicializa_decodificador(decodificador dec[])
     strcpy(dec[53].instrucao, "saload");
     dec[53].bytes = 0;
 
+    // STORES
+
     strcpy(dec[54].instrucao, "istore");
     dec[54].bytes = 0;
 
@@ -229,19 +231,218 @@ void inicializa_decodificador(decodificador dec[])
     strcpy(dec[66].instrucao, "lstore_3");
     dec[66].bytes = 0;
 
+    // fstore
     strcpy(dec[67].instrucao, "fstore_0");
     dec[67].bytes = 0;
 
     strcpy(dec[68].instrucao, "fstore_1");
     dec[68].bytes = 0;
 
-    // a_store1 
-    strcpy(dec[76].instrucao, "a_store1");
+    strcpy(dec[69].instrucao, "fstore_2");
+    dec[69].bytes = 0;
+
+    strcpy(dec[70].instrucao, "fstore_3");
+    dec[70].bytes = 0;
+
+    // dstore
+    strcpy(dec[71].instrucao, "dstore_0");
+    dec[71].bytes = 0;
+
+    strcpy(dec[72].instrucao, "dstore_1");
+    dec[72].bytes = 0;
+
+    strcpy(dec[73].instrucao, "dstore_2");
+    dec[73].bytes = 0;
+
+    strcpy(dec[74].instrucao, "dstore_3");
+    dec[74].bytes = 0;
+
+    // astore
+    strcpy(dec[75].instrucao, "astore_0");
+    dec[75].bytes = 0;
+
+    strcpy(dec[76].instrucao, "astore_1");
     dec[76].bytes = 0;
 
-    // dup 
-    strcpy(dec[89].instrucao, "dup");
-    dec[89].bytes = 0;
+    strcpy(dec[77].instrucao, "astore_2");
+    dec[77].bytes = 0;
+
+    strcpy(dec[78].instrucao, "astore_3");
+    dec[78].bytes = 0;
+
+    strcpy(dec[79].instrucao, "iastore");
+    dec[79].bytes = 0;
+
+    strcpy(dec[80].instrucao, "lastore");
+    dec[80].bytes = 0;
+
+    strcpy(dec[81].instrucao, "fastore");
+    dec[81].bytes = 0;
+
+    strcpy(dec[82].instrucao, "dastore");
+    dec[82].bytes = 0;
+
+    strcpy(dec[83].instrucao, "aastore");
+    dec[83].bytes = 0;
+
+    strcpy(dec[84].instrucao, "bastore");
+    dec[84].bytes = 0;
+
+    strcpy(dec[85].instrucao, "castore");
+    dec[85].bytes = 0;
+
+    strcpy(dec[86].instrucao, "sastore"
+	dec[86].bytes = 0;
+
+	// STACK
+
+	strcpy(dec[87].instrucao, "pop"
+	dec[87].bytes = 0;
+
+	strcpy(dec[88].instrucao, "pop2"
+	dec[88].bytes = 0;
+
+	strcpy(dec[89].instrucao, "dup"
+	dec[89].bytes = 0;
+
+	strcpy(dec[90].instrucao, "dup_x1"
+	dec[90].bytes = 0;
+
+	strcpy(dec[91].instrucao, "dup_x2"
+	dec[91].bytes = 0;
+
+	strcpy(dec[92].instrucao, "dup2"
+	dec[92].bytes = 0;
+
+	strcpy(dec[93].instrucao, "dup2_x1"
+	dec[93].bytes = 0;
+
+	strcpy(dec[94].instrucao, "dup2_x2"
+	dec[94].bytes = 0;
+
+	strcpy(dec[95].instrucao, "swap"
+	dec[95].bytes = 0;
+
+	// MATH
+
+	strcpy(dec[96].instrucao, "iadd"
+	dec[96].bytes = 0;
+
+	strcpy(dec[97].instrucao, "ladd"
+	dec[97].bytes = 0;
+
+	strcpy(dec[98].instrucao, "fadd"
+	dec[98].bytes = 0;
+
+	strcpy(dec[99].instrucao, "dadd"
+	dec[99].bytes = 0;
+
+	strcpy(dec[100].instrucao, "isub"
+	dec[100].bytes = 0;
+
+	strcpy(dec[101].instrucao, "lsub"
+	dec[101].bytes = 0;
+
+	strcpy(dec[102].instrucao, "fsub"
+	dec[102].bytes = 0;
+
+	strcpy(dec[103].instrucao, "dsub"
+	dec[103].bytes = 0;
+
+	strcpy(dec[104].instrucao, "imul"
+	dec[104].bytes = 0;
+
+	strcpy(dec[105].instrucao, "lmul"
+	dec[105].bytes = 0;
+
+	strcpy(dec[106].instrucao, "fmul"
+	dec[106].bytes = 0;
+
+	strcpy(dec[107].instrucao, "dmul"
+	dec[107].bytes = 0;
+
+	strcpy(dec[108].instrucao, "idiv"
+	dec[108].bytes = 0;
+
+	strcpy(dec[109].instrucao, "ldiv"
+	dec[109].bytes = 0;
+
+	strcpy(dec[110].instrucao, "fdiv"
+	dec[110].bytes = 0;
+
+	strcpy(dec[111].instrucao, "ddiv"
+	dec[111].bytes = 0;
+
+	strcpy(dec[112].instrucao, "irem"
+	dec[112].bytes = 0;
+
+	strcpy(dec[113].instrucao, "lrem"
+	dec[113].bytes = 0;
+
+	strcpy(dec[114].instrucao, "frem"
+	dec[114].bytes = 0;
+
+	strcpy(dec[115].instrucao, "drem"
+	dec[115].bytes = 0;
+
+	strcpy(dec[116].instrucao, "ineg"
+	dec[116].bytes = 0;
+
+	strcpy(dec[117].instrucao, "lneg"
+	dec[117].bytes = 0;
+
+	strcpy(dec[118].instrucao, "fneg"
+	dec[118].bytes = 0;
+
+	strcpy(dec[119].instrucao, "dneg"
+	dec[119].bytes = 0;
+
+	strcpy(dec[120].instrucao, "ishl"
+	dec[120].bytes = 0;
+
+	strcpy(dec[121].instrucao, "lshl"
+	dec[121].bytes = 0;
+
+	strcpy(dec[122].instrucao, "ishr"
+	dec[122].bytes = 0;
+
+	strcpy(dec[123].instrucao, "lshr"
+	dec[123].bytes = 0;
+
+	strcpy(dec[124].instrucao, "iushr"
+	dec[124].bytes = 0;
+
+	strcpy(dec[125].instrucao, "lushr"
+	dec[125].bytes = 0;
+
+	strcpy(dec[126].instrucao, "iand"
+	dec[126].bytes = 0;
+
+	strcpy(dec[127].instrucao, "land"
+	dec[127].bytes = 0;
+
+	strcpy(dec[128].instrucao, "ior"
+	dec[128].bytes = 0;
+
+	strcpy(dec[129].instrucao, "lor"
+	dec[129].bytes = 0;
+
+	strcpy(dec[130].instrucao, "ixor"
+	dec[130].bytes = 0;
+
+	strcpy(dec[131].instrucao, "lxor"
+	dec[131].bytes = 0;
+
+	strcpy(dec[132].instrucao, "iinc"
+	dec[132].bytes = 0;
+
+	// CONVERSIONS
+
+	strcpy(dec[133].instrucao, "i2l"
+	dec[133].bytes = 0;
+
+	strcpy(dec[134].instrucao, "i2f"
+	dec[134].bytes = 0;
 
     // return 
     strcpy(dec[177].instrucao, "return");

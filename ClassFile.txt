@@ -1,0 +1,221 @@
+----General Information----
+CAFEBABE: 0xcafebabe 
+Minor version: 0 
+Major version: 46 
+Constant Pool Count: 112 
+----End General----
+
+----Constant Pool----
+[1] CONSTANT_Methodref_info - class_index: cp info #34 
+[1] CONSTANT_Methodref_info - name_and_type_index: cp info #55 
+[2] CONSTANT_Class_info - name_index: cp info #56 java/util/Scanner  
+[3] CONSTANT_Fieldref_info - class_index: cp info #57 
+[3] CONSTANT_Fieldref_info - name_and_type_index: cp info #58 
+[4] CONSTANT_Methodref_info - class_index: cp info #2 
+[4] CONSTANT_Methodref_info - name_and_type_index: cp info #59 
+[5] CONSTANT_Fieldref_info - class_index: cp info #32 
+[5] CONSTANT_Fieldref_info - name_and_type_index: cp info #60 
+[6] CONSTANT_Methodref_info - class_index: cp info #32 
+[6] CONSTANT_Methodref_info - name_and_type_index: cp info #61 
+[7] CONSTANT_Fieldref_info - class_index: cp info #57 
+[7] CONSTANT_Fieldref_info - name_and_type_index: cp info #62 
+[8] CONSTANT_String_info - string_index: cp info #63 Digite o valor de A, B e C respectivamente: !  
+[9] CONSTANT_Methodref_info - class_index: cp info #64 
+[9] CONSTANT_Methodref_info - name_and_type_index: cp info #65 
+[10] CONSTANT_Methodref_info - class_index: cp info #2 
+[10] CONSTANT_Methodref_info - name_and_type_index: cp info #66 
+[11] CONSTANT_Methodref_info - class_index: cp info #67 
+[11] CONSTANT_Methodref_info - name_and_type_index: cp info #68 
+[12] CONSTANT_Fieldref_info - class_index: cp info #32 
+[12] CONSTANT_Fieldref_info - name_and_type_index: cp info #69 
+[13] CONSTANT_Fieldref_info - class_index: cp info #32 
+[13] CONSTANT_Fieldref_info - name_and_type_index: cp info #70 
+[14] CONSTANT_Fieldref_info - class_index: cp info #32 
+[14] CONSTANT_Fieldref_info - name_and_type_index: cp info #71 
+[15] CONSTANT_Fieldref_info - class_index: cp info #32 
+[15] CONSTANT_Fieldref_info - name_and_type_index: cp info #72 
+[16] CONSTANT_Class_info - name_index: cp info #73 java/lang/StringBuffer  
+[17] CONSTANT_Methodref_info - class_index: cp info #16 
+[17] CONSTANT_Methodref_info - name_and_type_index: cp info #55 
+[18] CONSTANT_String_info - string_index: cp info #74 Delta:   
+[19] CONSTANT_Methodref_info - class_index: cp info #16 
+[19] CONSTANT_Methodref_info - name_and_type_index: cp info #75 
+[20] CONSTANT_Methodref_info - class_index: cp info #16 
+[20] CONSTANT_Methodref_info - name_and_type_index: cp info #76 
+[21] CONSTANT_Methodref_info - class_index: cp info #16 
+[21] CONSTANT_Methodref_info - name_and_type_index: cp info #77 
+[22] CONSTANT_Methodref_info - class_index: cp info #32 
+[22] CONSTANT_Methodref_info - name_and_type_index: cp info #78 
+[23] CONSTANT_String_info - string_index: cp info #79 Delta não possui raiz!  
+[24] CONSTANT_Methodref_info - class_index: cp info #57 
+[24] CONSTANT_Methodref_info - name_and_type_index: cp info #80 
+[25] CONSTANT_Methodref_info - class_index: cp info #81 
+[25] CONSTANT_Methodref_info - name_and_type_index: cp info #82 
+[26] CONSTANT_Double_info - high-bytes: 0x40000000
+[26] CONSTANT_Double_info - low-bytes: 0x0
+[28] CONSTANT_Fieldref_info - class_index: cp info #32 
+[28] CONSTANT_Fieldref_info - name_and_type_index: cp info #83 
+[29] CONSTANT_Fieldref_info - class_index: cp info #32 
+[29] CONSTANT_Fieldref_info - name_and_type_index: cp info #84 
+[30] CONSTANT_String_info - string_index: cp info #85 x1 =   
+[31] CONSTANT_String_info - string_index: cp info #86 x2 =   
+[32] CONSTANT_Class_info - name_index: cp info #87 Delta  
+[33] CONSTANT_Methodref_info - class_index: cp info #32 
+[33] CONSTANT_Methodref_info - name_and_type_index: cp info #55 
+[34] CONSTANT_Class_info - name_index: cp info #88 java/lang/Object  
+[35] CONSTANT_Utf8_info - length:4
+[35] CONSTANT_Utf8_info - bytes: read
+[36] CONSTANT_Utf8_info - length:19
+[36] CONSTANT_Utf8_info - bytes: Ljava/util/Scanner;
+[37] CONSTANT_Utf8_info - length:1
+[37] CONSTANT_Utf8_info - bytes: a
+[38] CONSTANT_Utf8_info - length:1
+[38] CONSTANT_Utf8_info - bytes: I
+[39] CONSTANT_Utf8_info - length:1
+[39] CONSTANT_Utf8_info - bytes: b
+[40] CONSTANT_Utf8_info - length:1
+[40] CONSTANT_Utf8_info - bytes: c
+[41] CONSTANT_Utf8_info - length:5
+[41] CONSTANT_Utf8_info - bytes: delta
+[42] CONSTANT_Utf8_info - length:1
+[42] CONSTANT_Utf8_info - bytes: F
+[43] CONSTANT_Utf8_info - length:2
+[43] CONSTANT_Utf8_info - bytes: x1
+[44] CONSTANT_Utf8_info - length:2
+[44] CONSTANT_Utf8_info - bytes: x2
+[45] CONSTANT_Utf8_info - length:6
+[45] CONSTANT_Utf8_info - bytes: <init>
+[46] CONSTANT_Utf8_info - length:3
+[46] CONSTANT_Utf8_info - bytes: ()V
+[47] CONSTANT_Utf8_info - length:4
+[47] CONSTANT_Utf8_info - bytes: Code
+[48] CONSTANT_Utf8_info - length:15
+[48] CONSTANT_Utf8_info - bytes: LineNumberTable
+[49] CONSTANT_Utf8_info - length:12
+[49] CONSTANT_Utf8_info - bytes: deltaCalculo
+[50] CONSTANT_Utf8_info - length:8
+[50] CONSTANT_Utf8_info - bytes: calculaX
+[51] CONSTANT_Utf8_info - length:4
+[51] CONSTANT_Utf8_info - bytes: main
+[52] CONSTANT_Utf8_info - length:22
+[52] CONSTANT_Utf8_info - bytes: ([Ljava/lang/String;)V
+[53] CONSTANT_Utf8_info - length:10
+[53] CONSTANT_Utf8_info - bytes: SourceFile
+[54] CONSTANT_Utf8_info - length:10
+[54] CONSTANT_Utf8_info - bytes: Delta.java
+[55] CONSTANT_NameAndType_info - name_index: cp info info #45 <init>  
+[55] CONSTANT_NameAndType_info - descriptor_index: cp info #46 ()V  
+[56] CONSTANT_Utf8_info - length:17
+[56] CONSTANT_Utf8_info - bytes: java/util/Scanner
+[57] CONSTANT_Class_info - name_index: cp info #89 java/lang/System  
+[58] CONSTANT_NameAndType_info - name_index: cp info info #90 in  
+[58] CONSTANT_NameAndType_info - descriptor_index: cp info #91 Ljava/io/InputStream;  
+[59] CONSTANT_NameAndType_info - name_index: cp info info #45 <init>  
+[59] CONSTANT_NameAndType_info - descriptor_index: cp info #92 (Ljava/io/InputStream;)V  
+[60] CONSTANT_NameAndType_info - name_index: cp info info #35 read  
+[60] CONSTANT_NameAndType_info - descriptor_index: cp info #36 Ljava/util/Scanner;  
+[61] CONSTANT_NameAndType_info - name_index: cp info info #49 deltaCalculo  
+[61] CONSTANT_NameAndType_info - descriptor_index: cp info #46 ()V  
+[62] CONSTANT_NameAndType_info - name_index: cp info info #93 out  
+[62] CONSTANT_NameAndType_info - descriptor_index: cp info #94 Ljava/io/PrintStream;  
+[63] CONSTANT_Utf8_info - length:44
+[63] CONSTANT_Utf8_info - bytes: Digite o valor de A, B e C respectivamente: !
+[64] CONSTANT_Class_info - name_index: cp info #95 java/io/PrintStream  
+[65] CONSTANT_NameAndType_info - name_index: cp info info #96 println  
+[65] CONSTANT_NameAndType_info - descriptor_index: cp info #97 (Ljava/lang/String;)V  
+[66] CONSTANT_NameAndType_info - name_index: cp info info #98 next  
+[66] CONSTANT_NameAndType_info - descriptor_index: cp info #99 ()Ljava/lang/String;  
+[67] CONSTANT_Class_info - name_index: cp info #100 java/lang/Integer  
+[68] CONSTANT_NameAndType_info - name_index: cp info info #101 parseInt  
+[68] CONSTANT_NameAndType_info - descriptor_index: cp info #102 (Ljava/lang/String;)I  
+[69] CONSTANT_NameAndType_info - name_index: cp info info #37 a  
+[69] CONSTANT_NameAndType_info - descriptor_index: cp info #38 I  
+[70] CONSTANT_NameAndType_info - name_index: cp info info #39 b  
+[70] CONSTANT_NameAndType_info - descriptor_index: cp info #38 I  
+[71] CONSTANT_NameAndType_info - name_index: cp info info #40 c  
+[71] CONSTANT_NameAndType_info - descriptor_index: cp info #38 I  
+[72] CONSTANT_NameAndType_info - name_index: cp info info #41 delta  
+[72] CONSTANT_NameAndType_info - descriptor_index: cp info #42 F  
+[73] CONSTANT_Utf8_info - length:22
+[73] CONSTANT_Utf8_info - bytes: java/lang/StringBuffer
+[74] CONSTANT_Utf8_info - length:7
+[74] CONSTANT_Utf8_info - bytes: Delta: 
+[75] CONSTANT_NameAndType_info - name_index: cp info info #103 append  
+[75] CONSTANT_NameAndType_info - descriptor_index: cp info #104 (Ljava/lang/String;)Ljava/lang/StringBuffer;!  
+[76] CONSTANT_NameAndType_info - name_index: cp info info #103 append  
+[76] CONSTANT_NameAndType_info - descriptor_index: cp info #105 (F)Ljava/lang/StringBuffer;  
+[77] CONSTANT_NameAndType_info - name_index: cp info info #106 toString  
+[77] CONSTANT_NameAndType_info - descriptor_index: cp info #99 ()Ljava/lang/String;  
+[78] CONSTANT_NameAndType_info - name_index: cp info info #50 calculaX  
+[78] CONSTANT_NameAndType_info - descriptor_index: cp info #46 ()V  
+[79] CONSTANT_Utf8_info - length:23
+[79] CONSTANT_Utf8_info - bytes: Delta não possui raiz!
+[80] CONSTANT_NameAndType_info - name_index: cp info info #107 exit  
+[80] CONSTANT_NameAndType_info - descriptor_index: cp info #108 (I)V  
+[81] CONSTANT_Class_info - name_index: cp info #109 java/lang/Math  
+[82] CONSTANT_NameAndType_info - name_index: cp info info #110 sqrt  
+[82] CONSTANT_NameAndType_info - descriptor_index: cp info #111 (D)D  
+[83] CONSTANT_NameAndType_info - name_index: cp info info #43 x1  
+[83] CONSTANT_NameAndType_info - descriptor_index: cp info #42 F  
+[84] CONSTANT_NameAndType_info - name_index: cp info info #44 x2  
+[84] CONSTANT_NameAndType_info - descriptor_index: cp info #42 F  
+[85] CONSTANT_Utf8_info - length:5
+[85] CONSTANT_Utf8_info - bytes: x1 = 
+[86] CONSTANT_Utf8_info - length:5
+[86] CONSTANT_Utf8_info - bytes: x2 = 
+[87] CONSTANT_Utf8_info - length:5
+[87] CONSTANT_Utf8_info - bytes: Delta
+[88] CONSTANT_Utf8_info - length:16
+[88] CONSTANT_Utf8_info - bytes: java/lang/Object
+[89] CONSTANT_Utf8_info - length:16
+[89] CONSTANT_Utf8_info - bytes: java/lang/System
+[90] CONSTANT_Utf8_info - length:2
+[90] CONSTANT_Utf8_info - bytes: in
+[91] CONSTANT_Utf8_info - length:21
+[91] CONSTANT_Utf8_info - bytes: Ljava/io/InputStream;
+[92] CONSTANT_Utf8_info - length:24
+[92] CONSTANT_Utf8_info - bytes: (Ljava/io/InputStream;)V
+[93] CONSTANT_Utf8_info - length:3
+[93] CONSTANT_Utf8_info - bytes: out
+[94] CONSTANT_Utf8_info - length:21
+[94] CONSTANT_Utf8_info - bytes: Ljava/io/PrintStream;
+[95] CONSTANT_Utf8_info - length:19
+[95] CONSTANT_Utf8_info - bytes: java/io/PrintStream
+[96] CONSTANT_Utf8_info - length:7
+[96] CONSTANT_Utf8_info - bytes: println
+[97] CONSTANT_Utf8_info - length:21
+[97] CONSTANT_Utf8_info - bytes: (Ljava/lang/String;)V
+[98] CONSTANT_Utf8_info - length:4
+[98] CONSTANT_Utf8_info - bytes: next
+[99] CONSTANT_Utf8_info - length:20
+[99] CONSTANT_Utf8_info - bytes: ()Ljava/lang/String;
+[100] CONSTANT_Utf8_info - length:17
+[100] CONSTANT_Utf8_info - bytes: java/lang/Integer
+[101] CONSTANT_Utf8_info - length:8
+[101] CONSTANT_Utf8_info - bytes: parseInt
+[102] CONSTANT_Utf8_info - length:21
+[102] CONSTANT_Utf8_info - bytes: (Ljava/lang/String;)I
+[103] CONSTANT_Utf8_info - length:6
+[103] CONSTANT_Utf8_info - bytes: append
+[104] CONSTANT_Utf8_info - length:44
+[104] CONSTANT_Utf8_info - bytes: (Ljava/lang/String;)Ljava/lang/StringBuffer;!
+[105] CONSTANT_Utf8_info - length:27
+[105] CONSTANT_Utf8_info - bytes: (F)Ljava/lang/StringBuffer;
+[106] CONSTANT_Utf8_info - length:8
+[106] CONSTANT_Utf8_info - bytes: toString
+[107] CONSTANT_Utf8_info - length:4
+[107] CONSTANT_Utf8_info - bytes: exit
+[108] CONSTANT_Utf8_info - length:4
+[108] CONSTANT_Utf8_info - bytes: (I)V
+[109] CONSTANT_Utf8_info - length:14
+[109] CONSTANT_Utf8_info - bytes: java/lang/Math
+[110] CONSTANT_Utf8_info - length:4
+[110] CONSTANT_Utf8_info - bytes: sqrt
+[111] CONSTANT_Utf8_info - length:4
+[111] CONSTANT_Utf8_info - bytes: (D)D
+----End Pool----
+
+----Second General Info----
+Access Flags: 0x21
+This Class: cp info #32 
+Super Class: cp info #34 

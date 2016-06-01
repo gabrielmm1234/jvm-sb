@@ -181,12 +181,15 @@ void imprimePrompt(classFile* cf){
     			printf("\n");
 				printf("attribute_length: %d\n",cp->attributes[j].attribute_length);
 
+                // imprime informacoes do stack
+                printf("Tamanho maximo do Stack: %d\n", cp->attributes[j].max_stack);
+                printf("Numero maximo de variaveis locais: %d\n",cp->attributes[j].max_locals);
+                printf("Tamanho do codigo: %d\n", cp->attributes[j].code_length);
+
                 // obtem decodificador de instrucoes 
                 decodificador dec[NUM_INSTRUCAO];
                 inicializa_decodificador(dec); 
 
-                // leitura do bytecode relacionado a instrucoes do metodo 
-                // aloca espaco conveniente
 
                 // poe valor no espacos corretos
                 for(int k = 0; k < cp->attributes[j].code_length; k++)

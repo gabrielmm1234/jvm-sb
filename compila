@@ -10,7 +10,7 @@ gcc -std=c99 -g -pedantic jvm.c -o exe # mude o nome de exe para o que vc deseja
 
 # Hello World
 #javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar programas_java/HelloWorld.java
-./exe 'programas_java/HelloWorld.class' 
+#./exe 'programas_java/HelloWorld.class' 
 
 # interface
 #javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar programas_java/interface.java

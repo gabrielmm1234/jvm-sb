@@ -526,16 +526,16 @@ void inicializa_decodificador(decodificador dec[])
     dec[160].bytes = 2;
 
     strcpy(dec[161].instrucao, "if_icmplt");
-    dec[161].bytes = 2;
+    dec[161].bytes = 0;
 
     strcpy(dec[162].instrucao, "if_icmpge");
-    dec[162].bytes = 2;
+    dec[162].bytes = 0;
 
     strcpy(dec[163].instrucao, "if_icmpgt");
-    dec[163].bytes = 2;
+    dec[163].bytes = 0;
 
     strcpy(dec[164].instrucao, "if_icmple");
-    dec[164].bytes = 2;
+    dec[164].bytes = 0;
 
     strcpy(dec[165].instrucao, "if_acmpeq");
     dec[165].bytes = 2;
@@ -554,11 +554,11 @@ void inicializa_decodificador(decodificador dec[])
     strcpy(dec[169].instrucao, "ret");
     dec[169].bytes = 1;
 
-    strcpy(dec[170].instrucao, "tableswitch");
-    dec[170].bytes = 4;
+    strcpy(dec[170].instrucao, "tableswitch"); // TODO: VERIFICAR A QUANTIDADE DE BYTES
+    dec[170].bytes = 14;
 
-    strcpy(dec[171].instrucao, "lookupswitch");
-    dec[171].bytes = 4;
+    strcpy(dec[171].instrucao, "lookupswitch"); // TODO: VERIFICAR A QUANTIDADE DE BYTES
+    dec[171].bytes = 10;
 
     strcpy(dec[172].instrucao, "ireturn");
     dec[172].bytes = 0;
@@ -617,10 +617,10 @@ void inicializa_decodificador(decodificador dec[])
     dec[187].bytes = 2;
 
     strcpy(dec[188].instrucao, "newarray");
-    dec[188].bytes = 2;
+    dec[188].bytes = 1;
 
     strcpy(dec[189].instrucao, "anewarray");
-    dec[189].bytes = 1;
+    dec[189].bytes = 2;
 
     strcpy(dec[190].instrucao, "arraylength");
     dec[190].bytes = 0;
@@ -640,8 +640,8 @@ void inicializa_decodificador(decodificador dec[])
     strcpy(dec[195].instrucao, "monitorexit");
     dec[195].bytes = 0;
 
-    strcpy(dec[196].instrucao, "wide");
-    dec[196].bytes = 5;
+    strcpy(dec[196].instrucao, "wide"); // TODO: VERIFICAR A QUANTIDADE DE BYTES
+    dec[196].bytes = 3;
 
     strcpy(dec[197].instrucao, "multianewarray");
     dec[197].bytes = 3;

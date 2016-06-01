@@ -23,9 +23,6 @@ int main(int argc, char* argv[]){
 	//Se passa 1 na linha de comando imprime no prompt
 	if(*argv[2] == '1')
 		imprimePrompt(cf);
-
-	//Imprime em arquivo de saída.
-	imprimeArq(cf);
 	
 	//liberando ponteiros.
 	free(file);
@@ -171,33 +168,38 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 			cp->name_index = le2Bytes(file);
 			cp->descriptor_index = le2Bytes(file);
 			cp->attributes_count = le2Bytes(file);
-			cp->attributes = (attribute_info*) malloc(cp->attributes_count*sizeof(attribute_info));
-			
+			cp->attributes = (code_attribute*) malloc(cp->attributes_count*sizeof(code_attribute));
+
 			for(int j = 0; j < cp->attributes_count; j++){
 				cp->attributes[j].attribute_name_index = le2Bytes(file);
 				cp->attributes[j].attribute_length = le4Bytes(file);
-				cp->attributes[j].info = (uint8_t*) malloc((cp->attributes[j].attribute_length)*sizeof(uint8_t));
-                
-                int code_length; // sera importante para saber como parar o segundo loop 
+
+                // posicao do ponteiro
+                int posicao_inicial = ftell(file);
 
                 // leitura do bytecode relacionado a informacoes gerais
-				for(int k = 0; k < 8; k++)
-                {
-                    fread(&(cp->attributes[j].info[k]), 1, 1, file);
-                }
-               
+                cp->attributes[j].max_stack = le2Bytes(file);
+                cp->attributes[j].max_locals = le2Bytes(file);
+                cp->attributes[j].code_length = le4Bytes(file);
+                
                 // obtem decodificador de instrucoes 
                 decodificador dec[NUM_INSTRUCAO];
                 inicializa_decodificador(dec); 
 
                 // leitura do bytecode relacionado a instrucoes do metodo 
-				for(int k = 8; k-8 < code_length; k++)
+                // aloca espaco conveniente
+                cp->attributes[j].code = (uint8_t*) malloc(cp->attributes[j].code_length * \
+                        sizeof(uint8_t));
+
+                // poe valor no espacos corretos
+                for(int k = 0; k < cp->attributes[j].code_length; k++)
                 {    
                     // le opcode da instrucao atual
-                    fread(&(cp->attributes[j].info[k]), 1, 1, file);
+                    fread(&(cp->attributes[j].code[k]), 1, 1, file);
                     
                     // imprime instrucao
-                    int indice = cp->attributes[j].info[k];
+                    int indice = cp->attributes[j].code[k];
+
 
                     // obtem quantos operandos a instrucao tem e vai imprimindo operandos
                     int num_bytes = dec[indice].bytes;
@@ -207,14 +209,39 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                         k++;
 
                         // pega operando 
-                        fread(&(cp->attributes[j].info[k]), 1, 1, file);
-                    } 
-				}
-                // leitura dos demais bytecodes - NAO SEI PARA QUE ISSO SERVE 
-                for (int k = 8 + code_length; k < cp->attributes[j].attribute_length; k++)
-                {
-                    fread(&(cp->attributes[j].info[k]), 1, 1, file);
+                        fread(&(cp->attributes[j].code[k]), 1, 1, file);
+                    }
                 }
+
+                // pega tamanho da tabela de excecoes
+                cp->attributes[j].exception_table_length = le2Bytes(file);
+
+                // aloca espaco apropriado
+                cp->attributes[j].exception_table = (exception_table*) malloc( \
+                        cp->attributes[j].exception_table_length * sizeof(exception_table));
+
+                // le dados da tabela de excecoes
+                for (int k = 0; k < cp->attributes[j].exception_table_length; k++)
+                {
+                    cp->attributes[j].exception_table[k].start_pc = le2Bytes(file);
+                    cp->attributes[j].exception_table[k].end_pc = le2Bytes(file);
+                    cp->attributes[j].exception_table[k].catch_type = le2Bytes(file);
+                }
+
+                // pega numero de atributos
+                cp->attributes[j].attributes_count = le2Bytes(file);
+                
+                // aloca espaco apropriado
+                cp->attributes[j].attributes = (attribute_info*) malloc ( \
+                        cp->attributes[j].attributes_count * sizeof(attribute_info));
+
+                // le atributos opcionais de debug
+                // nao precisa preocupar muito com isso 
+                while (ftell(file) - posicao_inicial < cp->attributes[j].attribute_length) 
+                {
+                    le1Byte(file);
+                }
+                
 			}
 			i++;
 		}
@@ -240,6 +267,67 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){
 		}
 	}
 }
+
+void imprime_string_pool(cp_info* cp, int pos_pool)
+{
+    int tag;
+
+    // pega tag 
+    tag = cp[pos_pool].tag;
+
+    // se a tag for o de um class info 
+    if (tag == CONSTANT_Utf8)
+    {
+        // imprime informacao e sai
+        printf("%s  ", cp[pos_pool].info.Utf8.bytes);
+        return;
+    }
+
+    // senao, de acordo com a tag, decide qual sera a proxima posicao da cte pool que iremos olhar
+    switch(tag)
+    {
+        case CONSTANT_Class:
+            imprime_string_pool(cp, cp[pos_pool].info.Class.name_index - 1);
+            break;
+
+        case CONSTANT_Fieldref:
+            imprime_string_pool(cp, cp[pos_pool].info.Fieldref.class_index - 1); 
+            imprime_string_pool(cp, cp[pos_pool].info.Fieldref.name_and_type_index - 1); 
+            break;
+
+        case CONSTANT_NameAndType:
+            imprime_string_pool(cp, cp[pos_pool].info.NameAndType.name_index - 1 ); 
+            imprime_string_pool(cp, cp[pos_pool].info.NameAndType.descriptor_index - 1); 
+            break;
+
+        case CONSTANT_Methodref:
+            imprime_string_pool(cp, cp[pos_pool].info.Methodref.class_index - 1); 
+            imprime_string_pool(cp, cp[pos_pool].info.Methodref.name_and_type_index - 1); 
+            break;
+            
+        case CONSTANT_InterfaceMethodref:
+            imprime_string_pool(cp, cp[pos_pool].info.InterfaceMethodref.class_index - 1); 
+            imprime_string_pool(cp, cp[pos_pool].info.InterfaceMethodref.name_and_type_index - 1); 
+            break;
+            
+        case CONSTANT_String:
+            imprime_string_pool(cp, cp[pos_pool].info.String.string_index - 1); 
+            break;
+
+        case CONSTANT_Integer:
+            // nunca cairemos aqui
+            break;
+
+        case CONSTANT_Float:
+            // nunca cairemos aqui
+            break;
+
+        default:
+            break;
+    }
+
+}
+
 
 void secondGeneralInfo(classFile* cf, FILE* file){
 	cf->access_flags = le2Bytes(file);

@@ -1,8 +1,8 @@
 #ifndef PRINT_C
 #define PRINT_C
 
-#include "print.h"
-#include "jvm.h"
+#include "exibidor.h"
+#include "leitor.h"
 
 void imprimePrompt(classFile* cf){
 	printf("----General Information----\n");

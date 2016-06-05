@@ -10,5 +10,5 @@
 void imprimePrompt(classFile* cf);
 void imprime_string_pool(cp_info* cp, int pos_pool);
 
-#include "print.c"
+#include "exibidor.c"
 #endif

@@ -1,7 +1,7 @@
 #ifndef LEITOR_EXIBIDOR_C
 #define LEITOR_EXIBIDOR_C
-#include "jvm.h"
-#include "print.h"
+#include "leitor.h"
+#include "exibidor.h"
 
 int main(int argc, char* argv[]){
 	//Abre arquivo passado via linha de comando

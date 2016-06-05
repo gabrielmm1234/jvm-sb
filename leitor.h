@@ -188,5 +188,5 @@ static inline uint8_t le1Byte(FILE* fp);
 static inline uint16_t le2Bytes(FILE* fp);
 static inline uint32_t le4Bytes(FILE* fp);
 // corpo das funcoes do programa 
-#include "jvm.c"
+#include "leitor.c"
 #endif 

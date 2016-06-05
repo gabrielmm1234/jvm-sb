@@ -9,5 +9,5 @@
 
 void imprimePrompt(classFile* cf);
 
-#include "print.c"
+#include "exibidor.c"
 #endif

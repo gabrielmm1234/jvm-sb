@@ -163,7 +163,7 @@ int main(int argc, char* argv[]);
 // Função que le informações gerais do arquivo - Antes da constant pool
 void generalInfo(classFile* cf,FILE* file);
 
-// funcao para imprimir constant pool
+// funcao para ler constant pool
 void constantPool(classFile* cf,FILE* file);
 
 // Função para ler estrutura e informações dos métodos.
@@ -172,7 +172,7 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count);
 // Função para ler estrutura e informações de atributos.
 void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count);
 
-// funcao para imprimir informacoes gerais que vem depois da constante pool 
+// funcao para ler informacoes gerais que vem depois da constante pool 
 void secondGeneralInfo(classFile* cf,FILE* file);
 
 void imprimePrompt(classFile* cf);

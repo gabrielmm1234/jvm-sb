@@ -11,13 +11,13 @@ int main(int argc, char* argv[]){
 	//Aloca memória para a estrutura do .class
 	classFile* cf = (classFile*) malloc(sizeof(classFile));
 
-	//Le e imprime informações gerais.
+	//Le informações gerais.
 	generalInfo(cf,file);
 
-	//Le e imprime a constant pool
+	//Le a constant pool
 	constantPool(cf,file);
 
-	//le e imprime informações gerais após a constant pool
+	//le informações gerais após a constant pool
 	secondGeneralInfo(cf,file);
 
 	//Se passa 1 na linha de comando imprime no prompt
@@ -132,7 +132,7 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
             // aloca espaco para o array de atributos
             cf->fields[i].attributes = (attribute_info*) malloc(cf->fields[i].attributes_count * sizeof(attribute_info));
             
-            // vai lendo e imprimindo atributos 
+            // vai lendo atributos 
             for (int j = 0; j < cf->fields[i].attributes_count; j++)
             {
                  
@@ -146,7 +146,7 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
                 // le informacao do atributo
                 fread(cf->fields[i].attributes->info, 1, cf->fields[i].attributes->attribute_length, file);
 
-                // imprime bytecode do atributo
+                // le bytecode do atributo
                 for (int k = 0; k < cf->fields[i].attributes->attribute_length; k++)
                 {
                     fread(&(cf->fields[i].attributes->info[k]), 1, 1, file);   
@@ -197,11 +197,9 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                     // le opcode da instrucao atual
                     fread(&(cp->attributes[j].code[k]), 1, 1, file);
                     
-                    // imprime instrucao
                     int indice = cp->attributes[j].code[k];
 
-
-                    // obtem quantos operandos a instrucao tem e vai imprimindo operandos
+                    // obtem quantos operandos a instrucao tem
                     int num_bytes = dec[indice].bytes;
                     for (int l = 0; l < num_bytes; l++)
                     {

@@ -13,6 +13,7 @@
 #include "exibidor.h"
 #include "instrucao.h"
 #include "carregador.h"
+#include "metodo.h"
 
 struct vetor{
 	uint32_t ref;
@@ -27,6 +28,9 @@ uint32_t numbervetor;
 
 char arquivo[100];
 int printPrompt = 0;
+
+//Ponteiro para uma estrutura.
+method_info* Main;
 
 int main(int argc, char* argv[]){
 
@@ -49,7 +53,20 @@ int main(int argc, char* argv[]){
 		strcpy (arquivo, argv[1]);
 	}
 
+	// 4 - Carrega no array de classes o .class passado por linha de comando.
 	carregaMemClasse(arquivo);
+
+	// 5 - Busca o método main para começar a execução.
+	Main = buscaMetodoMain();
+
+	//Se não encontrou o main o .class passado está errado.
+	if(Main == NULL){
+		printf("Forneça um .class via linha de comando com o método main.");
+		return 0;
+	}
+
+	//Cria frame e coloca na pilha.
+	//Executa o método.
 
 	//Se passa 1 na linha de comando imprime no prompt
 	if((argv[2] != NULL && *argv[2] == '1') || printPrompt)

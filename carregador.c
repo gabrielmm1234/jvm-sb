@@ -23,6 +23,7 @@ int32_t carregaMemClasse(char* nomeClass){
 
 	arrayClasses = realloc(arrayClasses, (aux*sizeof(classFile *)));
 	arrayClasses[aux-1] = leitorClasse(nomeClass);
+	return aux - 1;
 
 }
 
@@ -44,4 +45,8 @@ char* retornaNomeClasse(classFile* classe){
 	retorno[i] = '\0';
 
 	return retorno;
+}
+
+classFile* buscaClasseIndice(int indice){
+	return indice >= numeroClasses ? NULL : arrayClasses[indice];
 }

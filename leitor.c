@@ -1,34 +1,15 @@
+/*
+* Software Basico - 1/2016
+* Professor: Marcelo Ladeira
+* Arquivo que contém Funções de leitura do arquivo .class e montagem das estruturas.
+* Para salvar a saida em um arquivo execute da seguinte forma:
+* ./jvm .class 1 > log.txt
+*/
+
 #ifndef LEITOR_EXIBIDOR_C
 #define LEITOR_EXIBIDOR_C
 #include "leitor.h"
 #include "exibidor.h"
-
-int main(int argc, char* argv[]){
-	//Abre arquivo passado via linha de comando
-	FILE* file;
-	file = fopen(argv[1], "rb");
-
-	//Aloca memória para a estrutura do .class
-	classFile* cf = (classFile*) malloc(sizeof(classFile));
-
-	//Le informações gerais.
-	generalInfo(cf,file);
-
-	//Le a constant pool
-	constantPool(cf,file);
-
-	//le informações gerais após a constant pool
-	secondGeneralInfo(cf,file);
-
-	//Se passa 1 na linha de comando imprime no prompt
-	if(*argv[2] == '1')
-		imprimePrompt(cf);
-	
-	//liberando ponteiros.
-	free(file);
-	free(cf);
-	return 0;
-}
 
 void generalInfo(classFile* cf, FILE* file){
 	cf->magic = le4Bytes(file);

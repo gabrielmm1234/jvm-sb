@@ -1,3 +1,12 @@
+/*
+* Software Basico - 1/2016
+* Professor: Marcelo Ladeira
+* Arquivo que contém Função de imprimir no prompt a estrutura do classfile lida.
+* Para salvar a saida em um arquivo execute da seguinte forma:
+* ./jvm .class 1 > log.txt
+*/
+
+
 #ifndef PRINT_C
 #define PRINT_C
 

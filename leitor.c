@@ -11,6 +11,34 @@
 #include "leitor.h"
 #include "exibidor.h"
 
+classFile* leitorClasse(char * nomeClass){
+
+    FILE* file;
+    file = fopen(nomeClass, "rb");
+
+    if(file == NULL){
+        printf("Arquivo não encontrado! Erro ao abrir o arquivo!\n");
+        return 0;
+    }
+
+    //Aloca memória para a estrutura do .class
+    classFile* cf = (classFile*) malloc(sizeof(classFile));
+
+    //Le informações gerais.
+    generalInfo(cf,file);
+
+    //Le a constant pool
+    constantPool(cf,file);
+
+    //le informações gerais após a constant pool
+    secondGeneralInfo(cf,file);
+
+    //liberando ponteiros.
+    free(file);
+
+    return cf;
+}
+
 void generalInfo(classFile* cf, FILE* file){
 	cf->magic = le4Bytes(file);
 	if(cf->magic != 0xCAFEBABE){

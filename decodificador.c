@@ -1,6 +1,5 @@
 /*
 * Software Basico - 1/2016
-* Professor: Marcelo Ladeira
 * Arquivo que contém Função para decodificar uma instrução
 * e apresentar os mnemônicos de cada instrução no exibidor.
 */

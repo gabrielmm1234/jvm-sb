@@ -1,6 +1,5 @@
 /*
 * Software Basico - 1/2016
-* Professor: Marcelo Ladeira
 * Arquivo que contém funções para carregar classes nas estruturas
 * adequadas.
 */
@@ -24,6 +23,7 @@ int32_t carregaMemClasse(char* nomeClass){
 	aux = numeroClasses;
 
 	//Realoca o tamanho do vetor para adicionar a nova classe carregada.
+	//Classes previamente carregas não são perdidas com o realloc.
 	arrayClasses = realloc(arrayClasses, (aux*sizeof(classFile *)));
 	arrayClasses[aux-1] = leitorClasse(nomeClass);
 	return aux - 1;

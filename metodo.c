@@ -1,6 +1,5 @@
 /*
 * Software Basico - 1/2016
-* Professor: Marcelo Ladeira
 * Arquivo que contém funções responsáveis por manipular os métodos que 
 * serão usados nos frames.
 */
@@ -27,8 +26,8 @@ method_info* buscaMetodoMain(){
 		desc = main->constant_pool[(main->methods[i].descriptor_index - 1)].info.Utf8.bytes;
 
 		//Se encontrou método main retorna uma referencia.
-		if(strcmp("main",(char *)nome) == 0){
-			if(strcmp("([Ljava/lang/String;)V",(char *)desc) == 0){
+		if(strcmp("main",(char *)nome) == 0){ //Nome da função
+			if(strcmp("([Ljava/lang/String;)V",(char *)desc) == 0){ //Parâmetros e Retorno da main.
 				printf("Método main encontrado\n");
 				return &(main->methods[i]);
 			}
@@ -36,6 +35,7 @@ method_info* buscaMetodoMain(){
 	}
 
 	//Se não encontra não possui método main na classe carregada.
+	printf("Método main não encontrado.");
 	return NULL;
 }
 

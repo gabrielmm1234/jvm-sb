@@ -1,6 +1,5 @@
 /*
 * Software Basico - 1/2016
-* Professor: Marcelo Ladeira
 * Arquivo que contém as instruções que nosso programa implementou.
 * Como foi dito pelo professor foi usado um vetor de ponteiro para funções. 
 */

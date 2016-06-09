@@ -1,6 +1,5 @@
 /*
 * Software Basico - 1/2016
-* Professor: Marcelo Ladeira
 * Arquivo que contém funções que manipulam os frames criados
 * e a stack de frames.
 */

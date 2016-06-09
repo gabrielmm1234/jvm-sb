@@ -1,6 +1,5 @@
 /*
 * Software Basico - 1/2016
-* Professor: Marcelo Ladeira
 * Arquivo que contém Funções de leitura do arquivo .class e montagem das estruturas.
 * Para salvar a saida em um arquivo execute da seguinte forma:
 * ./jvm .class 1 > log.txt

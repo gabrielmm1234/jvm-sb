@@ -18,9 +18,7 @@ struct stackFrame{
 	struct stackFrame* next;
 };
 
-//Salva o frame que está sendo executado. Necessário ser global
-//Pare que o loop de execução acesse o frame e percorra o code
-//Para executar.
+//Salva o frame que está sendo executado.
 struct frame *frameCorrente;
 
 //Cria uma estrutura de frame e coloca na pilha. Precisa dos bytecodes

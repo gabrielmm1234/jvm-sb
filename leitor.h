@@ -177,12 +177,6 @@ void secondGeneralInfo(classFile* cf,FILE* file);
 
 void imprimePrompt(classFile* cf);
 
-/*
- * a funcao recebe uma referencia para a constant pool e a posicao em que estamos na constant_pool 
- * a funcao imprime a UTF8 associada a essa posicao da tabela
- */
-void imprime_string_pool(cp_info* cp, int pos_pool);
-
 // funcoes auxiliares
 static inline uint8_t le1Byte(FILE* fp);
 static inline uint16_t le2Bytes(FILE* fp);

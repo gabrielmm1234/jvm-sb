@@ -15,33 +15,18 @@
 #include "carregador.h"
 #include "metodo.h"
 
-struct vetor{
-	uint32_t ref;
-	uint32_t size;
-};
-
-//Vetor que contém o size de cada vetor.
-struct vetor* vetorLength; 
-//Numero de vetores alocados.
-uint32_t numbervetor;
-
-
 char arquivo[100];
 int printPrompt = 0;
 
-//Ponteiro para uma estrutura.
-method_info* Main;
-
 int main(int argc, char* argv[]){
 
-	// 1 - Inicializa o vetor de classes - Inicialmente nenhuma classe foi carregada.
-	vetorLength = NULL;
-	numbervetor = 0;
+	//Ponteiro para uma estrutura de method_info.
+	method_info* Main;	
 
-	// 2 - Inicializa as instruções implementadas pela jvm.
+	// 1 - Inicializa as instruções implementadas pela jvm.
 	newInstrucoes();
 
-	// 3 - Verifica argumentos por linha de comando.
+	// 2 - Verifica argumentos por linha de comando.
 	if(argc < 2){
 		printf("Forneça o .class que contém a main: \n");
 		scanf ("%s", arquivo);
@@ -53,10 +38,10 @@ int main(int argc, char* argv[]){
 		strcpy (arquivo, argv[1]);
 	}
 
-	// 4 - Carrega no array de classes o .class passado por linha de comando.
+	// 3 - Carrega no array de classes o .class passado por linha de comando.
 	carregaMemClasse(arquivo);
 
-	// 5 - Busca o método main para começar a execução.
+	// 4 - Busca o método main para começar a execução.
 	Main = buscaMetodoMain();
 
 	//Se não encontrou o main o .class passado está errado.
@@ -65,8 +50,11 @@ int main(int argc, char* argv[]){
 		return 0;
 	}
 
-	//Cria frame e coloca na pilha.
-	//Executa o método.
+	// 5 - Cria frame e coloca na pilha. Passa o metodo com o bytecode
+	// e a classe que contém o método com a constantPool.
+	iniciaMetodo(Main,buscaClasseIndice(0));
+
+	// 6 - Executa o método.
 
 	//Se passa 1 na linha de comando imprime no prompt
 	if((argv[2] != NULL && *argv[2] == '1') || printPrompt)

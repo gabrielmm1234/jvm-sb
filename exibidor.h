@@ -8,6 +8,11 @@
 #include <stdbool.h> 
 
 void imprimePrompt(classFile* cf);
+
+/*
+ * a funcao recebe uma referencia para a constant pool e a posicao em que estamos na constant_pool 
+ * a funcao imprime a UTF8 associada a essa posicao da tabela
+ */
 void imprime_string_pool(cp_info* cp, int pos_pool);
 
 #include "exibidor.c"

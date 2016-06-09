@@ -1,3 +1,7 @@
+Inicializando o vetor de ponteiros para funções!
+Carregando classe: HelloWorld.class
+Buscando método main para inicio da execução
+Método main encontrado
 ----General Information----
 CAFEBABE: 0xcafebabe 
 Minor version: 0 

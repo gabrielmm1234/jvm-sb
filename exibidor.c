@@ -256,4 +256,65 @@ void imprimePrompt(classFile* cf){
 	printf("----End Second General----\n\n");
 }
 
+void imprime_string_pool(cp_info* cp, int pos_pool)
+{
+    int tag;
+
+    // pega tag 
+    tag = cp[pos_pool].tag;
+
+    // se a tag for o de um class info 
+    if (tag == CONSTANT_Utf8)
+    {
+        // imprime informacao e sai
+        printf("%s  ", cp[pos_pool].info.Utf8.bytes);
+        return;
+    }
+
+    // senao, de acordo com a tag, decide qual sera a proxima posicao da cte pool que iremos olhar
+    switch(tag)
+    {
+        case CONSTANT_Class:
+            imprime_string_pool(cp, cp[pos_pool].info.Class.name_index - 1);
+            break;
+
+        case CONSTANT_Fieldref:
+            imprime_string_pool(cp, cp[pos_pool].info.Fieldref.class_index - 1); 
+            imprime_string_pool(cp, cp[pos_pool].info.Fieldref.name_and_type_index - 1); 
+            break;
+
+        case CONSTANT_NameAndType:
+            imprime_string_pool(cp, cp[pos_pool].info.NameAndType.name_index - 1 ); 
+            imprime_string_pool(cp, cp[pos_pool].info.NameAndType.descriptor_index - 1); 
+            break;
+
+        case CONSTANT_Methodref:
+            imprime_string_pool(cp, cp[pos_pool].info.Methodref.class_index - 1); 
+            imprime_string_pool(cp, cp[pos_pool].info.Methodref.name_and_type_index - 1); 
+            break;
+            
+        case CONSTANT_InterfaceMethodref:
+            imprime_string_pool(cp, cp[pos_pool].info.InterfaceMethodref.class_index - 1); 
+            imprime_string_pool(cp, cp[pos_pool].info.InterfaceMethodref.name_and_type_index - 1); 
+            break;
+            
+        case CONSTANT_String:
+            imprime_string_pool(cp, cp[pos_pool].info.String.string_index - 1); 
+            break;
+
+        case CONSTANT_Integer:
+            // nunca cairemos aqui
+            break;
+
+        case CONSTANT_Float:
+            // nunca cairemos aqui
+            break;
+
+        default:
+            break;
+    }
+
+}
+
+
 #endif

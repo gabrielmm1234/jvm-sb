@@ -5,6 +5,8 @@
 * serão usados nos frames.
 */
 
+#include "frame.h"
+
 
 //Função para retornar o método main do primeiro .class carregado.
 method_info* buscaMetodoMain(){
@@ -12,25 +14,40 @@ method_info* buscaMetodoMain(){
 	uint16_t nome_tam,desc_tam;
 	uint8_t* nome;
 	uint8_t* desc;
+
 	//Busca a classe que contém o método main. Foi a primeira classe a ser carregada.
 	main = buscaClasseIndice(0);
 
-	//Percorre o method_info em busca do method main.
-	for(int i = 0; i < main->methods_count; i++) {
-		nome = main->constant_pool[(main->methods[i].name_index -1 )].info.Utf8.bytes;
+	printf("Buscando método main para inicio da execução\n");
 
-		nome_tam = main->constant_pool[(main->methods[i].name_index - 1)].info.Utf8.length;
+	//Percorre o method_info em busca do method main.
+	for(int i = 0; i < main->methods_count; i++){
+		nome = main->constant_pool[(main->methods[i].name_index -1 )].info.Utf8.bytes;
 
 		desc = main->constant_pool[(main->methods[i].descriptor_index - 1)].info.Utf8.bytes;
 
-		desc_tam = main->constant_pool[(main->methods[i].descriptor_index - 1)].info.Utf8.length;
-
 		//Se encontrou método main retorna uma referencia.
-		if((strncmp("main",(char *)nome, nome_tam) == 0) &&(strncmp("([Ljava/lang/String;)V",(char *)desc, desc_tam) == 0)) {
-			return &(main->methods[i]);
+		if(strcmp("main",(char *)nome) == 0){
+			if(strcmp("([Ljava/lang/String;)V",(char *)desc) == 0){
+				printf("Método main encontrado\n");
+				return &(main->methods[i]);
+			}
 		}
 	}
 
 	//Se não encontra não possui método main na classe carregada.
 	return NULL;
+}
+
+//Metodo que busca os bytecodes atrelado a um método e inicia o frame
+//com os bytecodes para execução.
+void iniciaMetodo(method_info* metodo,classFile* classe){
+
+	//Se possui um attribute code aloca um frame com as informações
+	//necessárias. Se não cria um frame com attributes vazio.
+	if(metodo->attributes_count != 0){
+		criaFrame(classe->constant_pool,classe,metodo->attributes);
+	}else{
+
+	}
 }

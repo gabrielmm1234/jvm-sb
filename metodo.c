@@ -42,12 +42,6 @@ method_info* buscaMetodoMain(){
 //Metodo que busca os bytecodes atrelado a um método e inicia o frame
 //com os bytecodes para execução.
 void iniciaMetodo(method_info* metodo,classFile* classe){
-
-	//Se possui um attribute code aloca um frame com as informações
-	//necessárias. Se não cria um frame com attributes vazio.
-	if(metodo->attributes_count != 0){
-		criaFrame(classe->constant_pool,classe,metodo->attributes);
-	}else{
-
-	}
+	
+	criaFrame(classe->constant_pool,classe,metodo->attributes);
 }

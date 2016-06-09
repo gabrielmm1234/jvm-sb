@@ -70,6 +70,7 @@ int main(int argc, char* argv[]){
 	iniciaMetodo(Main,buscaClasseIndice(0));
 
 	// 6 - Executa o método.
+	//TODO executar o metodoCorrente.
 
 	//Se passa 1 na linha de comando imprime no prompt
 	if((argv[2] != NULL && *argv[2] == '1') || printPrompt)

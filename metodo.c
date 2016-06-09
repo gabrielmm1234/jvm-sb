@@ -42,6 +42,5 @@ method_info* buscaMetodoMain(){
 //Metodo que busca os bytecodes atrelado a um método e inicia o frame
 //com os bytecodes para execução.
 void iniciaMetodo(method_info* metodo,classFile* classe){
-	
 	criaFrame(classe->constant_pool,classe,metodo->attributes);
 }

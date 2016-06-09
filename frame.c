@@ -27,11 +27,15 @@ void criaFrame(cp_info* cp, classFile* classe, code_attribute* code){
 	sf->refFrame->max_locals = code->max_locals;
 	sf->refFrame->max_stack = code->max_stack;
 	sf->refFrame->code_length = code->code_length;
+
 	//Bytecodes.
 	sf->refFrame->code = code->code;
+
 	//pc começa na primeira instrução.
 	sf->refFrame->pc = 0;
+	
 	//Aloca espaço para o fields do método. Max_locals -> máximo de fields.
+	//Vetor de variáveis locais.
 	sf->refFrame->fields = malloc(code->max_locals * sizeof(uint32_t));
 
 	//Atualiza o frame corrente. Será o frame em execução no momento.

@@ -209,7 +209,7 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                     cp->exc_atrb = (exceptions_attribute*) malloc(sizeof(exceptions_attribute));
 
                     // le exceptions
-                    //le_exc(&(cp->exc_atrb), name_ind, att_len, file);
+                    le_exc(&(cp->exc_atrb), name_ind, att_len, file);
                 }
 
                 // senao, nao eh um atributo valido 
@@ -220,6 +220,27 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
             }
             i++;
         }
+    }
+}
+
+void le_exc(exceptions_attribute** exc_atrb, uint16_t name_ind, uint32_t att_len, FILE* file)
+{
+    // transfere informacoes relacionadas ao atributo 
+    (*exc_atrb)->attribute_name_index = name_ind; 
+    (*exc_atrb)->attribute_length = att_len; 
+
+    // pega numero de excecoes 
+    (*exc_atrb)->number_of_exceptions = le2Bytes(file);
+
+    // aloca espaco apropriado para indices da tabela de excecoes
+    (*exc_atrb)->exception_index_table = (uint16_t*) malloc( \
+            (*exc_atrb)->number_of_exceptions * sizeof(exception_table));
+
+    // vai lendo dados e imprimindo
+    for (int k = 0; k < (*exc_atrb)->number_of_exceptions; k++)
+    {
+        (*exc_atrb)->exception_index_table[k] = le2Bytes(file);
+        printf("%d -  %d", k, (*exc_atrb)->exception_index_table[k]);
     }
 }
 

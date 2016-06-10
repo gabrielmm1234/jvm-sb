@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # para compilar 
-gcc -std=c99 -g -pedantic leitor.c -o exe # mude o nome de exe para o que vc desejar que seja o executavel 
+gcc -std=c99 -g -pedantic main.c -o exe # mude o nome de exe para o que vc desejar que seja o executavel 
                                        # o restante do arquivo assume que o nome sera exe
 
 # sugestao de como fazer testes

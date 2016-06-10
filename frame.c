@@ -9,4 +9,7 @@
 void criaFrame(cp_info* cp, classFile* classe, code_attribute* code){
 	printf("Criando Frame.\n");
 	//TODO criar pilha de frames. E empilhar o frame construido aqui.
-}
+    struct stackFrame* sf;
+    sf = (struct stackFrame*) malloc(sizeof(struct stackFrame));
+    sf->refFrame = (struct frame*) malloc(sizeof(struct frame));
+} 

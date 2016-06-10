@@ -25,6 +25,25 @@
 
 #define NUM_INSTRUCAO 256
 
+// opcodes para instrucoes especiais
+#define TABLESWITCH 170
+#define LOOKUPSWITCH 171
+#define WIDE 196
+
+// opcodes que o wide precisa
+#define ILOAD 21
+#define FLOAD 23
+#define ALOAD 25
+#define LLOAD 22
+#define DLOAD 24
+#define ISTORE 54
+#define FSTORE 56
+#define ASTORE 58
+#define LSTORE 55
+#define DSTORE 57
+#define RET 169
+
+#define IINC 132
 
 /* Structs */
 typedef struct attribute_info{
@@ -85,7 +104,8 @@ typedef struct method_info{
 	uint16_t name_index;
 	uint16_t descriptor_index;
 	uint16_t attributes_count;
-	code_attribute* attributes;
+	code_attribute* cd_atrb;
+    exceptions_attribute* exc_atrb; // nao eh garantido que vai ter excecao 
 }method_info;
 
 /*Struct de informações da constant pool*/
@@ -176,6 +196,8 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count);
 void secondGeneralInfo(classFile* cf,FILE* file);
 
 void imprimePrompt(classFile* cf);
+void le_code(code_attribute** cd_atrb, uint16_t name_ind, uint32_t att_len, FILE* file);
+void salva_instrucoes(code_attribute** cd_atrb, FILE* file);
 
 // funcoes auxiliares
 static inline uint8_t le1Byte(FILE* fp);

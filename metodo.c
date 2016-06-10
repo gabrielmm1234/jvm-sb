@@ -6,7 +6,6 @@
 
 #include "frame.h"
 
-
 //Função para retornar o método main do primeiro .class carregado.
 method_info* buscaMetodoMain(){
 	classFile * main;
@@ -46,7 +45,7 @@ void iniciaMetodo(method_info* metodo,classFile* classe){
 	//Se possui um attribute code aloca um frame com as informações
 	//necessárias. Se não cria um frame com attributes vazio.
 	if(metodo->attributes_count != 0){
-		criaFrame(classe->constant_pool,classe,metodo->attributes);
+		criaFrame(classe->constant_pool,classe,metodo->cd_atrb);
 	}else{
 
 	}

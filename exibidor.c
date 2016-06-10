@@ -168,68 +168,7 @@ void imprimePrompt(classFile* cf){
         printf("----End Fields----\n");
 	}
 
-	printf("Methods Count: %d\n",cf->methods_count);
-	if(cf->methods_count != 0){
-		method_info* cp = cf->methods;
-		for(int i = 0; i < cf->methods_count; cp++){
-			printf("access_flag: 0x%0x\n",cp->access_flags);
-			printf("name_index: cp info #%d ",cp->name_index);
-			imprime_string_pool(cf->constant_pool, cp->name_index - 1);
-    		printf("\n");
-			printf("descriptor_index: cp info #%d ",cp->descriptor_index);
-			imprime_string_pool(cf->constant_pool, cp->descriptor_index - 1);
-    		printf("\n");
-			printf("attributes_count: %d\n",cp->attributes_count);
-            
-
-			for(int j = 0; j < cp->attributes_count; j++){
-				printf("----Code Info----\n");
-				printf("attribute_name_index: cp info #%d ",cp->attributes[j].attribute_name_index);
-				imprime_string_pool(cf->constant_pool, cp->attributes[j].attribute_name_index - 1);
-    			printf("\n");
-				printf("attribute_length: %d\n",cp->attributes[j].attribute_length);
-
-                // imprime informacoes do stack
-                printf("Tamanho maximo do Stack: %d\n", cp->attributes[j].max_stack);
-                printf("Numero maximo de variaveis locais: %d\n",cp->attributes[j].max_locals);
-                printf("Tamanho do codigo: %d\n", cp->attributes[j].code_length);
-
-                // obtem decodificador de instrucoes 
-                decodificador dec[NUM_INSTRUCAO];
-                inicializa_decodificador(dec); 
-
-
-                // poe valor no espacos corretos
-                for(int k = 0; k < cp->attributes[j].code_length; k++)
-                {    
-                    // imprime instrucao
-                    int indice = cp->attributes[j].code[k];
-                    printf("%d: %s  ", k, dec[indice].instrucao);
-
-
-                    // obtem quantos operandos a instrucao tem e vai imprimindo operandos
-                    int num_bytes = dec[indice].bytes;
-                    for (int l = 0; l < num_bytes; l++)
-                    {
-                        // atualiza valor de k 
-                        k++;
-
-                        // operandos sao impressos do jeito que saem 
-                        printf("%d  ", cp->attributes[j].code[k]);
-                        if(cp->attributes[j].code[k] != 0)
-                            imprime_string_pool(cf->constant_pool, cp->attributes[j].code[k] - 1);
-                    }
-                    
-                    // pula linha
-                    printf("\n"); 
-                }
-
-				printf("----End Code----\n\n");
-			}
-			i++;
-			printf("----End Method----\n\n");
-	    }
-    }
+    imprime_methods(cf);
 
 	printf("attributes_count: %d\n",cf->attributes_count);
 	if(cf->attributes_count != 0){
@@ -253,6 +192,268 @@ void imprimePrompt(classFile* cf){
 		}
 	}
 	printf("----End Second General----\n\n");
+}
+
+void imprime_methods(classFile* cf)
+{
+    uint16_t name_ind; 
+    uint32_t att_len; 
+    uint16_t methods_count = cf->methods_count; 
+
+	printf("Methods Count: %d\n", cf->methods_count);
+	if(methods_count == 0)
+		return;
+	else{
+		method_info* cp = cf->methods;
+		for(int i = 0; i < methods_count; cp++){
+			printf("access_flag: 0x%0x\n",cp->access_flags);
+			printf("name_index: cp info #%d ",cp->name_index);
+			imprime_string_pool(cf->constant_pool, cp->name_index - 1);
+    		printf("\n");
+			printf("descriptor_index: cp info #%d ",cp->descriptor_index);
+			imprime_string_pool(cf->constant_pool, cp->descriptor_index - 1);
+    		printf("\n");
+			printf("attributes_count: %d\n",cp->attributes_count);
+
+            // imprime code 
+            imprime_code(cf, cp->cd_atrb);
+
+            // se o metodo tem dois atributos, eh pq um eh code e o outro exceptions
+            //if (cp->attributes_count == 2)
+            //{
+            //    imprime_exc(cp->exc_atrb); 
+            //}
+
+			i++;
+		}
+        printf("----End Method----\n\n");
+	}
+}
+
+void imprime_code(classFile* cf, code_attribute* cd_atrb)
+{
+    int opcode, pos_referencia; 
+    int bytes_preench, offsets;
+    uint32_t default_v, low, high, npairs, temp; 
+    
+    printf("\n----Code Info----\n");
+    printf("attribute_name_index: cp info #%d ",cd_atrb->attribute_name_index);
+    imprime_string_pool(cf->constant_pool, cd_atrb->attribute_name_index - 1);
+    printf("\n");
+    printf("attribute_length: %d\n",cd_atrb->attribute_length);
+
+    // imprime informacoes do stack
+    printf("Tamanho maximo do Stack: %d\n", cd_atrb->max_stack);
+    printf("Numero maximo de variaveis locais: %d\n",cd_atrb->max_locals);
+    printf("Tamanho do codigo: %d\n", cd_atrb->code_length);
+
+    // obtem decodificador de instrucoes 
+    decodificador dec[NUM_INSTRUCAO];
+    inicializa_decodificador(dec); 
+
+    // incrementamos k conforme formos passando no loop
+    for(int k = 0; k < cd_atrb->code_length; ) 
+    {    
+        // pega opcode da instrucao
+        opcode = cd_atrb->code[k];
+        printf("%d: %s  ", k, dec[opcode].instrucao);
+
+        // toda vez que lemos bytes devemos incrementar k 
+        k++; 
+
+        if (opcode == TABLESWITCH)
+        {
+            // a posicao de referencia eh o label numerico associado a tableswitch 
+            // k - 1 pois ja incrementamos o k para a proxima instrucao 
+            pos_referencia = k - 1;
+
+            // pega bytes de preenchimento - nao salva em nenhum lugar
+            bytes_preench = k % 4;  
+            for (int l = 0; l < bytes_preench; l++)
+            {
+                k++; 
+            }
+
+            // pega bytes do target default
+            default_v = 0;
+            for (int l = 0; l < 4; l++)
+            {
+                default_v = (default_v << 4) + cd_atrb->code[k];   
+                k++; 
+            }       
+
+            // pega bytes low
+            low = 0;
+            for (int l = 0; l < 4; l++)
+            {
+                low = (low << 4) + cd_atrb->code[k];   
+                k++; 
+            }       
+
+            // pega bytes high 
+            high = 0;
+            for (int l = 0; l < 4; l++)
+            {
+                high = (high << 4) + cd_atrb->code[k];   
+                k++; 
+            }       
+            
+
+            printf("  de  %d ateh %d\n", low, high);
+
+            // pega bytes de offset 
+            offsets = 1 + high - low;
+            for (int l = 0; l < offsets; l++)
+            {
+                // pega valor do offset atual 
+                temp = 0; 
+                for (int i = 0; i < 4; i++)
+                {
+                    temp = (temp << 4) + cd_atrb->code[k];   
+                    k++; 
+                }
+
+                printf("\t%d: %d (+%d)\n", l, (pos_referencia + temp), temp);
+            } 
+            printf("\tdefault: %d (+%d)\n", (default_v + pos_referencia), default_v);
+        }
+
+        else if (opcode == LOOKUPSWITCH)
+        {
+            // a posicao de referencia eh o label numerico associado a tableswitch 
+            // k - 1 pois ja incrementamos o k para a proxima instrucao 
+            pos_referencia = k - 1;
+
+            // pega bytes de preenchimento 
+            bytes_preench = k % 4;  
+            for (int l = 0; l < bytes_preench; l++)
+            {
+                k++; 
+            }
+
+            // pega bytes do target default
+            default_v = 0;
+            for (int l = 0; l < 4; l++)
+            {
+                default_v = (default_v << 4) + cd_atrb->code[k];   
+                k++; 
+            }       
+
+            // pega bytes low
+            npairs = 0;
+            for (int l = 0; l < 4; l++)
+            {
+                npairs = (npairs << 4) + cd_atrb->code[k];   
+                k++; 
+            }       
+
+            printf("  %d\n", npairs);
+
+            // pega npairs 
+            for (int l = 0; l < npairs; l++)
+            {
+                // pega valor do match atual 
+                temp = 0; 
+                for (int i = 0; i < 4; i++)
+                {
+                    temp = (temp << 8) + cd_atrb->code[k];   
+                    k++; 
+                }
+                printf("\t%d:  ", temp);
+
+                // pega valor do offset 
+                temp = 0; 
+                for (int i = 0; i < 4; i++)
+                {
+                    temp = (temp << 8) + cd_atrb->code[k];   
+                    k++; 
+                }
+                printf("%d (+%d)\n", temp + pos_referencia, temp);
+
+            } 
+            printf("\tdefault: %d (+%d)\n", default_v + pos_referencia, default_v);
+
+        }
+
+        else if (opcode == WIDE)
+        {
+            printf("\n");
+
+            // pega opcode que segue
+            opcode = cd_atrb->code[k];
+            k++; 
+
+            // se for um opcode do iload, fload, ...
+            if (opcode == ILOAD || opcode == FLOAD || opcode == ALOAD || opcode == LLOAD || \
+                    opcode == DLOAD || opcode == ISTORE || opcode == FSTORE || opcode == ASTORE || \
+                    opcode == LSTORE || opcode == DSTORE || opcode == RET)
+            {
+                printf("%d: %s  ", k - 1, dec[opcode].instrucao);
+
+                // pega index byte1 
+                k++; 
+
+                // pega index byte2
+                k++; 
+                temp = cd_atrb->code[k-2] << 8;
+                temp += cd_atrb->code[k-1];
+                printf(" %u \n", temp);
+            }
+
+            // se for um iinc 
+            else if (opcode == IINC)
+            {
+                printf("%d: iinc ", k - 1);
+
+                // pega indexbyte1
+                k++; 
+
+                // pega indexbyte2
+                k++; 
+
+                // adiciona o 1 pois comecamos a contar em 1
+                temp = cd_atrb->code[k-2] << 8;
+                temp += cd_atrb->code[k-1];
+                printf(" %u ", temp); 
+
+                // pega constbyte1
+                k++; 
+
+                // pega constbyte2
+                k++; 
+
+                temp = cd_atrb->code[k-2] << 8; 
+                temp += cd_atrb->code[k-1];
+                printf(" por  %u \n", temp); 
+            }
+
+            // senao
+            else
+            { 
+                // arquivo .class corrompido! 
+                printf("arquivo .class invalido na instrucao wide");
+                exit(1);
+            }
+
+        }
+
+        else
+        {
+            // obtem quantos operandos a instrucao tem e vai imprimindo operandos
+            int num_bytes = dec[opcode].bytes;
+            for (int l = 0; l < num_bytes; l++)
+            {
+                // atualiza valor de k 
+                k++;
+
+                printf("%d  ", cd_atrb->code[k]);
+                if(cd_atrb->code[k] != 0)
+                    imprime_string_pool(cf->constant_pool, cd_atrb->code[k] - 1);
+            }
+            printf("\n");
+        }
+    }
+         
 }
 
 void imprime_string_pool(cp_info* cp, int pos_pool)
@@ -312,7 +513,6 @@ void imprime_string_pool(cp_info* cp, int pos_pool)
         default:
             break;
     }
-
 }
 
 

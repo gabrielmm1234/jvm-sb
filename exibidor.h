@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h> 
+#include "leitor.h"
 
 void imprimePrompt(classFile* cf);
 
@@ -14,6 +15,9 @@ void imprimePrompt(classFile* cf);
  * a funcao imprime a UTF8 associada a essa posicao da tabela
  */
 void imprime_string_pool(cp_info* cp, int pos_pool);
+
+void imprime_methods(classFile* cf);
+void imprime_code(classFile* cf, code_attribute* cd_atrb);
 
 #include "exibidor.c"
 #endif

@@ -1,11 +1,13 @@
+#ifndef INSTRUCAO_H
+#define INSTRUCAO_H
 
 //Declaração do vetor de ponteiro para funções com as 256 instruções implementadas.
 //Cada função retorna void e não recebe parâmetros.
-void (*instrucao[256]) ();
+extern void * instrucao[256];
 
 //Função que inicializa o vetor de ponteiro para funções
 //Com cada função sendo acessada pelo opcode correspondente.
-void newInstrucoes();
+void newInstrucoes(int);
 
 /* Cabeçalho de instruções implementadas */
 void nop();
@@ -123,7 +125,7 @@ void ddiv();
 void irem();
 void lrem();
 void frem();
-void drem();
+void _drem();
 void ineg();
 void lneg();
 void fneg();
@@ -210,4 +212,4 @@ void ifnonnull();
 void goto_w();
 void jsr_w();
 
-#include "instrucao.c"
+#endif

@@ -4,11 +4,17 @@
 * Como foi dito pelo professor foi usado um vetor de ponteiro para funções. 
 */
 
+#include "instrucao.h"
+#include <stdio.h>
+
 
 //Função que aponta para uma implementação de cada instrução de acordo
 //com o opcode fornecido.
-void newInstrucoes(){
+void newInstrucoes(int i)
+{
 	printf("Inicializando o vetor de ponteiros para funções!\n");
+	void * instrucao[256];
+	
 	instrucao[0] = nop;
 	instrucao[1] = aconst_null;
 	instrucao[2] = iconst_m1;
@@ -124,7 +130,7 @@ void newInstrucoes(){
 	instrucao[112] = irem;
 	instrucao[113] = lrem;
 	instrucao[114] = frem;
-	instrucao[115] = drem;
+	instrucao[115] = _drem;
 	instrucao[116] = ineg;
 	instrucao[117] = lneg;
 	instrucao[118] = fneg;
@@ -559,7 +565,7 @@ void lrem(){
 void frem(){
 
 }
-void drem(){
+void _drem(){
 
 }
 void ineg(){

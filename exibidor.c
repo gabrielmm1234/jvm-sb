@@ -5,12 +5,7 @@
 * ./jvm .class 1 > log.txt
 */
 
-
-#ifndef PRINT_C
-#define PRINT_C
-
 #include "exibidor.h"
-#include "leitor.h"
 
 void imprimePrompt(classFile* cf){
 	printf("----General Information----\n");
@@ -156,7 +151,7 @@ void imprimePrompt(classFile* cf){
                 printf("attribute_length: %d\n", cf->fields[i].attributes->attribute_length);
 
                 // imprime bytecode do atributo
-                for (int k = 0; k < cf->fields[i].attributes->attribute_length; k++)
+                for (uint32_t k = 0; k < cf->fields[i].attributes->attribute_length; k++)
                 {
                     printf("bytecode: 0x%x\n", cf->fields[i].attributes->info[k]);
                 }
@@ -200,7 +195,7 @@ void imprimePrompt(classFile* cf){
 
 
                 // poe valor no espacos corretos
-                for(int k = 0; k < cp->attributes[j].code_length; k++)
+                for(uint32_t k = 0; k < cp->attributes[j].code_length; k++)
                 {    
                     // imprime instrucao
                     int indice = cp->attributes[j].code[k];
@@ -234,13 +229,13 @@ void imprimePrompt(classFile* cf){
 	printf("attributes_count: %d\n",cf->attributes_count);
 	if(cf->attributes_count != 0){
 		attribute_info* cp = cf->attributes;
-		for(int i = 0; i < cf->attributes_count; cp++){
+		for(uint16_t i = 0; i < cf->attributes_count; cp++){
 			printf("----Attributes Info----\n");
 			printf("attribute_name_index: cp info #%d ",cp->attribute_name_index);
 			imprime_string_pool(cf->constant_pool, cp->attribute_name_index - 1);
     		printf("\n");
 			printf("attribute_length: %d\n",cp->attribute_length);
-			for(int j = 0; j < cp->attribute_length; cp->info++){
+			for(uint32_t j = 0; j < cp->attribute_length; cp->info++){
 				if(*(cp->info) != 0){
 					printf("Source file name index: cp info #%d ",*(cp->info));
 					imprime_string_pool(cf->constant_pool, *(cp->info) - 1);
@@ -314,6 +309,3 @@ void imprime_string_pool(cp_info* cp, int pos_pool)
     }
 
 }
-
-
-#endif

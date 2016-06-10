@@ -19,5 +19,4 @@ typedef struct decodificador
 // funcao que coloca o nome das strings no decodificador, juntamente com a qtd em bytes 
 void inicializa_decodificador(decodificador dec[]);
 
-#include "decodificador.c"
 #endif 

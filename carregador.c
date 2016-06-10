@@ -4,6 +4,13 @@
 * adequadas.
 */
 
+#include "carregador.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+classFile** arrayClasses;
+int16_t numeroClasses = 0;
 
 int32_t carregaMemClasse(char* nomeClass){
 	int aux;
@@ -21,11 +28,20 @@ int32_t carregaMemClasse(char* nomeClass){
 	//uma classe nova vai entrar na lista de classes carregadas.
 	numeroClasses++;
 	aux = numeroClasses;
+	printf("Carregando classe: %s\n",nomeClass);
+
+	classFile** arrayClassesTemp = NULL;
 
 	//Realoca o tamanho do vetor para adicionar a nova classe carregada.
 	//Classes previamente carregas não são perdidas com o realloc.
-	arrayClasses = realloc(arrayClasses, (aux*sizeof(classFile *)));
+	arrayClassesTemp = (classFile**) realloc(arrayClasses, (aux*sizeof(classFile *)));
+	//printf("ponteiro tempo: %d\n",*arrayClassesTemp);
+
+	arrayClasses = arrayClassesTemp;
 	arrayClasses[aux-1] = leitorClasse(nomeClass);
+
+	printf("Carregando classe: %d\n",arrayClasses[aux-1]);
+
 	return aux - 1;
 
 }
@@ -38,7 +54,7 @@ char* retornaNomeClasse(classFile* classe){
 	uint16_t nameIndex = (classe->constant_pool[thisClass]).info.Class.name_index;
 
 	int i;
-	char* retorno = malloc((classe->constant_pool[nameIndex]).info.Utf8.length + 1);
+	char* retorno = (char*) malloc((classe->constant_pool[nameIndex]).info.Utf8.length + 1);
 
 	// Percorre o bytes na constant pool e salva no retorno.
 	for (i = 0; i < ( classe->constant_pool[nameIndex]).info.Utf8.length; i++) {

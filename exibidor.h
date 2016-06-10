@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h> 
+#include "leitor.h"
 
 void imprimePrompt(classFile* cf);
 
@@ -15,5 +16,4 @@ void imprimePrompt(classFile* cf);
  */
 void imprime_string_pool(cp_info* cp, int pos_pool);
 
-#include "exibidor.c"
 #endif

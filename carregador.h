@@ -1,12 +1,16 @@
+#ifndef CARREGADOR_H
+#define CARREGADOR_H
+
+#include "leitor.h"
 
 //Array de classes carrregadas.
-classFile** arrayClasses = NULL;
+extern classFile** arrayClasses;
 
 //QUantidade de classes carregas.
-int16_t numeroClasses = 0;
+extern int16_t numeroClasses;
 
 int32_t carregaMemClasse(char* );
 char* retornaNomeClasse(classFile* );
 classFile* buscaClasseIndice(int );
 
-#include "carregador.c"
+#endif

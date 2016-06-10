@@ -5,8 +5,6 @@
 * ./jvm .class 1 > log.txt
 */
 
-#ifndef LEITOR_EXIBIDOR_C
-#define LEITOR_EXIBIDOR_C
 #include "leitor.h"
 #include "exibidor.h"
 
@@ -23,7 +21,12 @@ classFile* leitorClasse(char * nomeClass){
     }
 
     //Aloca memória para a estrutura do .class
-    classFile* cf = (classFile*) malloc(sizeof(classFile));
+    classFile* cf = NULL;
+
+    cf = (classFile*) calloc(sizeof(classFile),1);
+
+    if(cf == NULL)
+    	printf("taNULL");
 
     //Le informações gerais.
     generalInfo(cf,file);
@@ -35,7 +38,7 @@ classFile* leitorClasse(char * nomeClass){
     secondGeneralInfo(cf,file);
 
     //liberando ponteiros.
-    free(file);
+    fclose(file);
 
     return cf;
 }
@@ -73,8 +76,9 @@ void constantPool(classFile* cf, FILE* file){
 				break;
 			case CONSTANT_Utf8:
 				cp->info.Utf8.length = le2Bytes(file);
-				cp->info.Utf8.bytes = (uint8_t*) malloc ((cp->info.Utf8.length)*sizeof(uint8_t));
+				cp->info.Utf8.bytes = (uint8_t*) calloc ((cp->info.Utf8.length) + 1 ,sizeof(uint8_t));
 				fread(cp->info.Utf8.bytes,1,cp->info.Utf8.length,file);
+				cp->info.Utf8.bytes[cp->info.Utf8.length] = '\0';
 				break;
 			case CONSTANT_Methodref:
 				cp->info.Methodref.class_index = le2Bytes(file);
@@ -157,7 +161,7 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
                 fread(cf->fields[i].attributes->info, 1, cf->fields[i].attributes->attribute_length, file);
 
                 // le bytecode do atributo
-                for (int k = 0; k < cf->fields[i].attributes->attribute_length; k++)
+                for (uint32_t k = 0; k < cf->fields[i].attributes->attribute_length; k++)
                 {
                     fread(&(cf->fields[i].attributes->info[k]), 1, 1, file);   
                 }
@@ -202,7 +206,7 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                         sizeof(uint8_t));
 
                 // poe valor no espacos corretos
-                for(int k = 0; k < cp->attributes[j].code_length; k++)
+                for(uint32_t k = 0; k < cp->attributes[j].code_length; k++)
                 {    
                     // le opcode da instrucao atual
                     fread(&(cp->attributes[j].code[k]), 1, 1, file);
@@ -245,7 +249,7 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 
                 // le atributos opcionais de debug
                 // nao precisa preocupar muito com isso 
-                while (ftell(file) - posicao_inicial < cp->attributes[j].attribute_length) 
+                while ((uint32_t) ftell(file) - posicao_inicial < cp->attributes[j].attribute_length) 
                 {
                     le1Byte(file);
                 }
@@ -268,7 +272,7 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){
 			cp->attribute_name_index = le2Bytes(file);
 			cp->attribute_length = le4Bytes(file);
 			cp->info = (uint8_t*) malloc((cp->attribute_length)*sizeof(uint8_t));
-			for(int j = 0; j < cp->attribute_length; j++){
+			for(uint32_t j = 0; j < cp->attribute_length; j++){
 				fread(&cp->info[j],1,1,file);
 			}
 			i++;
@@ -313,4 +317,3 @@ static inline uint32_t le4Bytes(FILE* fp){
 	retorno = (retorno << 8) | (getc(fp));
 	return retorno;
 }
-#endif

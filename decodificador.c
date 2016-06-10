@@ -4,9 +4,6 @@
 * e apresentar os mnemônicos de cada instrução no exibidor.
 */
 
-#ifndef DECODIFICADOR_C
-#define DECODIFICADOR_C
-
 #include "decodificador.h"
 
 void inicializa_decodificador(decodificador dec[])
@@ -674,4 +671,3 @@ void inicializa_decodificador(decodificador dec[])
     strcpy(dec[255].instrucao, "impdep2");
     dec[255].bytes = 0;
 }
-#endif  

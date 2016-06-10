@@ -177,10 +177,11 @@ void secondGeneralInfo(classFile* cf,FILE* file);
 
 void imprimePrompt(classFile* cf);
 
+classFile* leitorClasse(char * nomeClass);
+
 // funcoes auxiliares
 static inline uint8_t le1Byte(FILE* fp);
 static inline uint16_t le2Bytes(FILE* fp);
 static inline uint32_t le4Bytes(FILE* fp);
-// corpo das funcoes do programa 
-#include "leitor.c"
+
 #endif 

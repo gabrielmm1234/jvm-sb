@@ -1,0 +1,22 @@
+#! /bin/bash
+
+# para compilar 
+gcc -std=c99 -g -pedantic main.c -o exe # mude o nome de exe para o que vc desejar que seja o executavel 
+                                       # o restante do arquivo assume que o nome sera exe
+
+# sugestao de como fazer testes
+### acho que isso aqui depende da maquina, estou gerando codigo para versao 1.2
+# tem que mudar o bootclass_path para gerar o .class
+
+# Hello World
+#javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar programas_java/HelloWorld.java
+#./exe 'programas_java/HelloWorld.class' 
+
+# interface
+#javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar programas_java/interface.java
+#./exe 'programas_java/xyz.class' 
+
+# field
+#javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar programas_java/field.java
+#./exe 'field.class' 
+

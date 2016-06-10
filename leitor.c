@@ -172,92 +172,307 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
 
 //Função para ler estrutura e informações dos métodos.
 void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
-	if(methods_count == 0)
-		return;
-	else{
-		cf->methods = (method_info*) malloc(methods_count*sizeof(method_info));
-		method_info* cp = cf->methods;
-		for(int i = 0; i < methods_count; cp++){
-			cp->access_flags = le2Bytes(file);
-			cp->name_index = le2Bytes(file);
-			cp->descriptor_index = le2Bytes(file);
-			cp->attributes_count = le2Bytes(file);
-			cp->attributes = (code_attribute*) malloc(cp->attributes_count*sizeof(code_attribute));
+    uint16_t name_ind; 
+    uint32_t att_len; 
 
-			for(int j = 0; j < cp->attributes_count; j++){
-				cp->attributes[j].attribute_name_index = le2Bytes(file);
-				cp->attributes[j].attribute_length = le4Bytes(file);
+    if(methods_count == 0)
+        return;
+    else{
+        cf->methods = (method_info*) malloc(methods_count*sizeof(method_info));
+        method_info* cp = cf->methods;
+        for(int i = 0; i < methods_count; cp++){
+            cp->access_flags = le2Bytes(file);
+            cp->name_index = le2Bytes(file);
+            cp->descriptor_index = le2Bytes(file);
+            cp->attributes_count = le2Bytes(file);
 
-                // posicao do ponteiro
-                int posicao_inicial = ftell(file);
-
-                // leitura do bytecode relacionado a informacoes gerais
-                cp->attributes[j].max_stack = le2Bytes(file);
-                cp->attributes[j].max_locals = le2Bytes(file);
-                cp->attributes[j].code_length = le4Bytes(file);
+            for(int j = 0; j < cp->attributes_count; j++)
+            {
+                // pega nome e indice 
+                name_ind = le2Bytes(file);
+                att_len = le4Bytes(file); 
                 
-                // obtem decodificador de instrucoes 
-                decodificador dec[NUM_INSTRUCAO];
-                inicializa_decodificador(dec); 
-
-                // leitura do bytecode relacionado a instrucoes do metodo 
-                // aloca espaco conveniente
-                cp->attributes[j].code = (uint8_t*) malloc(cp->attributes[j].code_length * \
-                        sizeof(uint8_t));
-
-                // poe valor no espacos corretos
-                for(uint32_t k = 0; k < cp->attributes[j].code_length; k++)
-                {    
-                    // le opcode da instrucao atual
-                    fread(&(cp->attributes[j].code[k]), 1, 1, file);
-                    
-                    int indice = cp->attributes[j].code[k];
-
-                    // obtem quantos operandos a instrucao tem
-                    int num_bytes = dec[indice].bytes;
-                    for (int l = 0; l < num_bytes; l++)
-                    {
-                        // atualiza valor de k 
-                        k++;
-
-                        // pega operando 
-                        fread(&(cp->attributes[j].code[k]), 1, 1, file);
-                    }
-                }
-
-                // pega tamanho da tabela de excecoes
-                cp->attributes[j].exception_table_length = le2Bytes(file);
-
-                // aloca espaco apropriado
-                cp->attributes[j].exception_table = (exception_table*) malloc( \
-                        cp->attributes[j].exception_table_length * sizeof(exception_table));
-
-                // le dados da tabela de excecoes
-                for (int k = 0; k < cp->attributes[j].exception_table_length; k++)
+                // se for um code 
+                if (strcmp( (char*) cf->constant_pool[name_ind - 1].info.Utf8.bytes, "Code") == 0)
                 {
-                    cp->attributes[j].exception_table[k].start_pc = le2Bytes(file);
-                    cp->attributes[j].exception_table[k].end_pc = le2Bytes(file);
-                    cp->attributes[j].exception_table[k].catch_type = le2Bytes(file);
+                    // aloca espaco para o attribute
+                    cp->cd_atrb = (code_attribute*) malloc(sizeof(code_attribute));
+
+                    // le atribute
+                    le_code(&(cp->cd_atrb), name_ind, att_len, file);
                 }
 
-                // pega numero de atributos
-                cp->attributes[j].attributes_count = le2Bytes(file);
-                
-                // aloca espaco apropriado
-                cp->attributes[j].attributes = (attribute_info*) malloc ( \
-                        cp->attributes[j].attributes_count * sizeof(attribute_info));
-
-                // le atributos opcionais de debug
-                // nao precisa preocupar muito com isso 
-                while ((uint32_t) ftell(file) - posicao_inicial < cp->attributes[j].attribute_length) 
+                // senao, se for um exceptions
+                else if (strcmp( (char*) cf->constant_pool[name_ind - 1].info.Utf8.bytes, "Exceptions") == 0) 
                 {
-                    le1Byte(file);
+                    // aloca espaco para o exceptions
+                    cp->exc_atrb = (exceptions_attribute*) malloc(sizeof(exceptions_attribute));
+
+                    // le exceptions
+                    //le_exc(&(cp->exc_atrb), name_ind, att_len, file);
                 }
+
+                // senao, nao eh um atributo valido 
+                else
+                {
+                    exit(1); 
+                }
+            }
+            i++;
+        }
+    }
+}
+
+void le_code(code_attribute** cd_atrb, uint16_t name_ind, uint32_t att_len, FILE* file)
+{
+    int posicao_inicial = ftell(file); 
+
+    // transfere informacoes relacionadas ao atributo 
+    (*cd_atrb)->attribute_name_index = name_ind; 
+    (*cd_atrb)->attribute_length = att_len; 
+    
+    // leitura do bytecode relacionado a informacoes gerais
+    (*cd_atrb)->max_stack = le2Bytes(file);
+    (*cd_atrb)->max_locals = le2Bytes(file);
+    (*cd_atrb)->code_length = le4Bytes(file);
+    
+    // salva instrucoes 
+    salva_instrucoes(cd_atrb, file); 
+
+    // pega tamanho da tabela de excecoes
+    (*cd_atrb)->exception_table_length = le2Bytes(file);
+
+    // aloca espaco apropriado
+    (*cd_atrb)->exception_table = (exception_table*) malloc( \
+            (*cd_atrb)->exception_table_length * sizeof(exception_table));
+
+    // le dados da tabela de excecoes
+    for (int k = 0; k < (*cd_atrb)->exception_table_length; k++)
+    {
+        (*cd_atrb)->exception_table[k].start_pc = le2Bytes(file);
+        (*cd_atrb)->exception_table[k].end_pc = le2Bytes(file);
+        (*cd_atrb)->exception_table[k].catch_type = le2Bytes(file);
+    }
+
+    // pega numero de atributos
+    (*cd_atrb)->attributes_count = le2Bytes(file);
+    
+    // aloca espaco apropriado
+    (*cd_atrb)->attributes = (attribute_info*) malloc ( \
+            (*cd_atrb)->attributes_count * sizeof(attribute_info));
+
+    // le atributos opcionais de debug
+    // nao precisa preocupar muito com isso 
+    while (ftell(file) - posicao_inicial < (*cd_atrb)->attribute_length) 
+    {
+        le1Byte(file);
+    }
+}
+
+void salva_instrucoes(code_attribute** cd_atrb, FILE* file)
+{
+    int opcode, pos_referencia; 
+    int bytes_preench, offsets;
+    uint32_t default_v, low, high, npairs; 
+
+    // obtem decodificador de instrucoes 
+    decodificador dec[NUM_INSTRUCAO];
+    inicializa_decodificador(dec); 
+
+    // leitura do bytecode relacionado a instrucoes do metodo 
+    // aloca espaco conveniente
+    (*cd_atrb)->code = (uint8_t*) malloc((*cd_atrb)->code_length * \
+            sizeof(uint8_t));
+
+    // poe valor no espacos corretos
+    // incrementamos k conforme formos passando no loop
+    for(uint32_t k = 0; k < (*cd_atrb)->code_length; ) 
+    {    
+        // le opcode da instrucao atual
+        fread(&((*cd_atrb)->code[k]), 1, 1, file);
+        
+        // pega opcode da instrucao
+        opcode = (*cd_atrb)->code[k];
+        k++; 
+
+        if (opcode == TABLESWITCH)
+        {
+            // a posicao de referencia eh o label numerico associado a tableswitch 
+            // k - 1 pois ja incrementamos o k para a proxima instrucao 
+            pos_referencia = k - 1;
+
+            // pega bytes de preenchimento 
+            bytes_preench = k % 4;  
+            for (int l = 0; l < bytes_preench; l++)
+            {
+                k++; 
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+            }
+
+            // pega bytes do target default
+            default_v = 0;
+            for (int l = 0; l < 4; l++)
+            {
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                default_v = (default_v << 4) + (*cd_atrb)->code[k];   
+                k++; 
+            }       
+
+            // pega bytes low
+            low = 0;
+            for (int l = 0; l < 4; l++)
+            {
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                low = (low << 4) + (*cd_atrb)->code[k];   
+                k++; 
+            }       
+
+            // pega bytes high 
+            high = 0;
+            for (int l = 0; l < 4; l++)
+            {
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                high = (high << 4) + (*cd_atrb)->code[k];   
+                k++; 
+            }       
+            
+            // pega bytes de offset 
+            offsets = 1 + high - low;
+            for (int l = 0; l < offsets; l++)
+            {
+                // pega valor do offset atual 
+                for (int i = 0; i < 4; i++)
+                {
+                    fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                    k++; 
+                }
+
+            } 
+        }
+
+        else if (opcode == LOOKUPSWITCH)
+        {
+            // a posicao de referencia eh o label numerico associado a tableswitch 
+            // k - 1 pois ja incrementamos o k para a proxima instrucao 
+            pos_referencia = k - 1;
+
+            // pega bytes de preenchimento - nao salva em nenhum lugar
+            bytes_preench = k % 4;  
+            for (int l = 0; l < bytes_preench; l++)
+            {
+                k++; 
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+            }
+
+            // pega bytes do target default
+            default_v = 0;
+            for (int l = 0; l < 4; l++)
+            {
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                default_v = (default_v << 4) + (*cd_atrb)->code[k];   
+                k++; 
+            }       
+
+            // pega bytes low
+            npairs = 0;
+            for (int l = 0; l < 4; l++)
+            {
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                npairs = (npairs << 4) + (*cd_atrb)->code[k];   
+                k++; 
+            }       
+
+            // pega npairs 
+            for (uint32_t l = 0; l < npairs; l++)
+            {
+                // pega valor do match atual 
+                for (int i = 0; i < 4; i++)
+                {
+                    fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                    k++; 
+                }
+
+                // pega valor do offset 
+                for (int i = 0; i < 4; i++)
+                {
+                    fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                    k++; 
+                }
+
+            } 
+
+        }
+
+        else if (opcode == WIDE)
+        {
+
+            // pega opcode que segue
+            fread(&((*cd_atrb)->code[k]), 1, 1, file);
+            opcode = (*cd_atrb)->code[k];
+            k++; 
+
+            // se o opcode for um iload, fload, ...
+            if (opcode == ILOAD || opcode == FLOAD || opcode == ALOAD || opcode == LLOAD || \
+                    opcode == DLOAD || opcode == ISTORE || opcode == FSTORE || opcode == ASTORE || \
+                    opcode == LSTORE || opcode == DSTORE || opcode == RET)
+            {
+                // pega index byte1 
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                k++; 
+
+                // pega index byte2
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                k++; 
                 
-			}
-			i++;
-		}
-	}
+            }
+
+            // se for um iinc 
+            else if (opcode == IINC)
+            {
+
+                // pega indexbyte1
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                k++; 
+
+                // pega indexbyte2
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                k++; 
+
+                // pega constbyte1
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                k++; 
+
+                // pega constbyte2
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+                k++; 
+
+            }
+
+            // senao
+            else
+            { 
+                // arquivo .class corrompido! 
+                printf("arquivo .class invalido na instrucao wide");
+                exit(1);
+            }
+        }
+
+        else
+        {
+
+            // obtem quantos operandos a instrucao tem e vai lendo operandos
+            int num_bytes = dec[opcode].bytes;
+            for (int l = 0; l < num_bytes; l++)
+            {
+                // atualiza valor de k 
+                k++;
+
+                // pega operando 
+                fread(&((*cd_atrb)->code[k]), 1, 1, file);
+            }
+
+        }
+    }
 }
 
 void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){

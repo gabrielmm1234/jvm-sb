@@ -61,7 +61,6 @@ int main(int argc, char* argv[]) {
 	//Se passa 1 na linha de comando imprime no prompt
 	if ( printPrompt)//(argv[2] != NULL && *argv[2] == '1') ||
 		for (int i = 0; i < numeroClasses; i++) {
-			printf("%d\n", &arrayClasses[i]);
 			imprimePrompt(arrayClasses[i]);
 		}
 

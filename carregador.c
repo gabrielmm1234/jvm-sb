@@ -28,7 +28,6 @@ int32_t carregaMemClasse(char* nomeClass){
 	//uma classe nova vai entrar na lista de classes carregadas.
 	numeroClasses++;
 	aux = numeroClasses;
-	printf("Carregando classe: %s\n",nomeClass);
 
 	classFile** arrayClassesTemp = NULL;
 
@@ -39,8 +38,6 @@ int32_t carregaMemClasse(char* nomeClass){
 
 	arrayClasses = arrayClassesTemp;
 	arrayClasses[aux-1] = leitorClasse(nomeClass);
-
-	printf("Carregando classe: %d\n",arrayClasses[aux-1]);
 
 	return aux - 1;
 

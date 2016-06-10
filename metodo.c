@@ -7,7 +7,6 @@
 #include "frame.h"
 #include "metodo.h"
 
-
 //Função para retornar o método main do primeiro .class carregado.
 method_info* buscaMetodoMain(){
 	classFile * main;
@@ -43,5 +42,5 @@ method_info* buscaMetodoMain(){
 //Metodo que busca os bytecodes atrelado a um método e inicia o frame
 //com os bytecodes para execução.
 void iniciaMetodo(method_info* metodo,classFile* classe){
-	criaFrame(classe->constant_pool,classe,metodo->attributes);
+	criaFrame(classe->constant_pool,classe,metodo->cd_atrb);
 }

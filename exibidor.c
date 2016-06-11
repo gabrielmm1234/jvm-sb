@@ -437,12 +437,13 @@ void imprime_code(classFile* cf, code_attribute* cd_atrb)
             int num_bytes = dec[opcode].bytes;
             for (int l = 0; l < num_bytes; l++)
             {
-                // atualiza valor de k 
-                k++;
 
                 printf("%d  ", cd_atrb->code[k]);
                 if(cd_atrb->code[k] != 0)
                     imprime_string_pool(cf->constant_pool, cd_atrb->code[k] - 1);
+
+                // atualiza valor de k 
+                k++;
             }
             printf("\n");
         }

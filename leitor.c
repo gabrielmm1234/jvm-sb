@@ -475,11 +475,12 @@ void salva_instrucoes(code_attribute** cd_atrb, FILE* file)
             int num_bytes = dec[opcode].bytes;
             for (int l = 0; l < num_bytes; l++)
             {
-                // atualiza valor de k 
-                k++;
 
                 // pega operando 
                 fread(&((*cd_atrb)->code[k]), 1, 1, file);
+
+                // atualiza valor de k 
+                k++;
             }
 
         }

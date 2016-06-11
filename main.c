@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 	carregaMemClasse(arquivo);
 
 	//Se passa 1 na linha de comando imprime no prompt
-	if ( printPrompt)//(argv[2] != NULL && *argv[2] == '1') ||
+	if ( printPrompt  )//(argv[2] != NULL && *argv[2] == '1') ||
 		for (int i = 0; i < numeroClasses; i++) {
 			imprimePrompt(arrayClasses[i]);
 		}

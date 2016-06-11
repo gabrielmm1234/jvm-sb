@@ -1,8 +1,21 @@
-/*
-* Software Basico - 1/2016
-* Arquivo que contém funções responsáveis por manipular os métodos que 
-* serão usados nos frames.
-*/
+/**
+ *@file
+ *@section DESCRIPTION
+ *Universidade de Brasilia
+ *
+ *Gabriel Mesquita de Araujo 13/0009121\n
+ *Gabriel Ferreira Silva 14/0140131\n
+ *Renato 13/0009121\n
+ *Leandro 13/0009121\n
+ *Carlos 13/0009121\n\n
+ *
+ * Software Basico - 1/2016\n
+ * Professor: Marcelo Ladeira\n\n
+ *
+ * Arquivo que contém funções responsaveis por manipular os metodos que serao usados nos frames
+ * 
+ * 
+ */
 
 #include "frame.h"
 #include "metodo.h"
@@ -10,7 +23,11 @@
 
 extern struct frame* frameCorrente;
 
-//Função para retornar o método main do primeiro .class carregado.
+/**
+ * Função para retornar uma referencia ao metodo main do primeiro .class carregado.
+ * @param void
+ * @return method_info* uma referencia ao metodo main
+ */
 method_info* buscaMetodoMain(){
 	classFile * main;
 	uint16_t nome_tam,desc_tam;
@@ -42,14 +59,22 @@ method_info* buscaMetodoMain(){
 	return NULL;
 }
 
-//Metodo que busca os bytecodes atrelado a um método e inicia o frame
-//com os bytecodes para execução.
-void iniciaMetodo(method_info* metodo,classFile* classe){
+/**
+ * Funcao para iniciar um metodo
+ * @param method_info* uma referencia ao metodo em questao 
+ * @param classFile* uma referencia a estrutura da classe 
+ * @return void
+ */
+void iniciaMetodo(method_info* metodo, classFile* classe){
 	criaFrame(classe->constant_pool,classe,metodo->cd_atrb);
 }
 
-//Percorre os bytecodes do ultimo frame alocado e executa
-//Instrução a instrução até o metodo acabar.
+/**
+ * Percorre os bytecodes do metodo do ultimo frame alocado e vai executando instrucao 
+ * a instrucao ateh o metodo acabar
+ * @param void
+ * @return void
+ */
 void executaFrameCorrente(){
 
 	//Loop que percorre o frame e executa instrução a instrução

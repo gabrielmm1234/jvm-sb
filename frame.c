@@ -1,15 +1,34 @@
-/*
-* Software Basico - 1/2016
-* Arquivo que contém funções que manipulam os frames criados
-* e a stack de frames.
-*/
+/**
+ *@file
+ *@section DESCRIPTION
+ *Universidade de Brasilia
+ *
+ *Gabriel Mesquita de Araujo 13/0009121\n
+ *Gabriel Ferreira Silva 14/0140131\n
+ *Renato 13/0009121\n
+ *Leandro 13/0009121\n
+ *Carlos 13/0009121\n\n
+ *
+ * Software Basico - 1/2016\n
+ * Professor: Marcelo Ladeira\n\n
+ *
+ * Arquivo que contém funcoes que manipulam os frames criados e a stack de frames
+ * 
+ * 
+ */
 
 #include "frame.h"
 
 static struct stackFrame* topo = NULL;
 
-//Cria uma estrutura de frame e coloca na pilha. Precisa dos bytecodes
-//de uma referencia a constantPool e da classe que contém o método.
+/**
+ * Cria uma estrutura de pilha e coloca no frame. Sao necessarios uma referencia a classe q contem o metodo\n
+ * os bytecodes e uma referencia a constant Pool\n
+ * @param cp_info* uma referencia a constant pool 
+ * @param classFile* uma referencia a classe 
+ * @param code* uma referencia ao atributo code do metodo que estamos 
+ * @return void 
+ */
 void criaFrame(cp_info* cp, classFile* classe, code_attribute* code){
 	printf("Criando Frame.\n");
 
@@ -49,6 +68,11 @@ void criaFrame(cp_info* cp, classFile* classe, code_attribute* code){
 	//TODO PILHA DE OPERANDOS!
 }
 
+/**
+ * Funcao que desaloca o topo da pilha de frames de metodos
+ * @param void
+ * @return void 
+ */
 void desalocaFrame(){
 	struct stackFrame *anterior;
 

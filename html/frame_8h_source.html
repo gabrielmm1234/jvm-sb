@@ -89,7 +89,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Busca');
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;leitor.h&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">void</span> criaFrame(<a class="code" href="structcp__info.html">cp_info</a>* cp, <a class="code" href="structClassFile.html">classFile</a>* classe, <a class="code" href="structcode__attribute.html">code_attribute</a>* code);</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">void</span> <a class="code" href="frame_8c.html#a8f536d107f4308c82a32bb5e739bc9a9">criaFrame</a>(<a class="code" href="structcp__info.html">cp_info</a>* cp, <a class="code" href="structClassFile.html">classFile</a>* classe, <a class="code" href="structcode__attribute.html">code_attribute</a>* code);</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keywordtype">void</span> desalocaFrame();</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">//Por indicação do professor cada frame terá seu próprio PC</span></div>
@@ -112,18 +112,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Busca');
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;};</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">//Salva o frame que está sendo executado.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">struct </span><a class="code" href="structframe.html">frame</a> *frameCorrente;</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="metodo_8c.html#a35603863074b337b41111e9f4352a605">   30</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structframe.html">frame</a> *<a class="code" href="instrucao_8c.html#a35603863074b337b41111e9f4352a605">frameCorrente</a>;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="instrucao_8c_html_a35603863074b337b41111e9f4352a605"><div class="ttname"><a href="instrucao_8c.html#a35603863074b337b41111e9f4352a605">frameCorrente</a></div><div class="ttdeci">struct frame * frameCorrente</div><div class="ttdef"><b>Definition:</b> frame.h:30</div></div>
 <div class="ttc" id="structframe_html"><div class="ttname"><a href="structframe.html">frame</a></div><div class="ttdef"><b>Definition:</b> frame.h:12</div></div>
 <div class="ttc" id="structcode__attribute_html"><div class="ttname"><a href="structcode__attribute.html">code_attribute</a></div><div class="ttdef"><b>Definition:</b> leitor.h:71</div></div>
 <div class="ttc" id="structcp__info_html"><div class="ttname"><a href="structcp__info.html">cp_info</a></div><div class="ttdef"><b>Definition:</b> leitor.h:112</div></div>
+<div class="ttc" id="frame_8c_html_a8f536d107f4308c82a32bb5e739bc9a9"><div class="ttname"><a href="frame_8c.html#a8f536d107f4308c82a32bb5e739bc9a9">criaFrame</a></div><div class="ttdeci">void criaFrame(cp_info *cp, classFile *classe, code_attribute *code)</div><div class="ttdef"><b>Definition:</b> frame.c:32</div></div>
 <div class="ttc" id="structClassFile_html"><div class="ttname"><a href="structClassFile.html">ClassFile</a></div><div class="ttdef"><b>Definition:</b> leitor.h:159</div></div>
 <div class="ttc" id="structstackFrame_html"><div class="ttname"><a href="structstackFrame.html">stackFrame</a></div><div class="ttdef"><b>Definition:</b> frame.h:24</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Gerado em Sábado, 11 de Junho de 2016 11:17:25 para Software Básico Java Virtual Machine por &#160;<a href="http://www.doxygen.org/index.html">
+Gerado em Sábado, 11 de Junho de 2016 13:52:11 para Software Básico Java Virtual Machine por &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

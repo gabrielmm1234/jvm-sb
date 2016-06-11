@@ -4,5 +4,7 @@ var searchData=
   ['imprime_5fmethods',['imprime_methods',['../exibidor_8c.html#ad6e3b6a3aff88b5b76589205c7da814b',1,'exibidor.c']]],
   ['imprime_5fstring_5fpool',['imprime_string_pool',['../exibidor_8c.html#ac60cc6520cce6fc85df4fa3b43986dd6',1,'exibidor.c']]],
   ['imprimeprompt',['imprimePrompt',['../exibidor_8c.html#aa995c6ea04aebf65dc31f77a6f0c8f82',1,'exibidor.c']]],
-  ['inicializa_5fdecodificador',['inicializa_decodificador',['../decodificador_8c.html#a10d21c2d218eb57de23b61858a89ea0b',1,'decodificador.c']]]
+  ['inicializa_5fdecodificador',['inicializa_decodificador',['../decodificador_8c.html#a10d21c2d218eb57de23b61858a89ea0b',1,'decodificador.c']]],
+  ['iniciametodo',['iniciaMetodo',['../metodo_8c.html#af2742a4788ab6e89f6807a09c3722aa6',1,'metodo.c']]],
+  ['instrucao_2ec',['instrucao.c',['../instrucao_8c.html',1,'']]]
 ];

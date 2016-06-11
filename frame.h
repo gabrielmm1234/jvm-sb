@@ -7,8 +7,11 @@
 void criaFrame(cp_info* cp, classFile* classe, code_attribute* code);
 void desalocaFrame();
 
-//Por indicação do professor cada frame terá seu próprio PC
-//Cada método ao ser executado cria um frame próprio.
+/**
+ * Struct que representa um frame 
+ * por indicacao do professor, cada frame tem seu proprio PC
+ * cada metodo ao ser executado cria um frame proprio
+ */
 struct frame{
 	uint32_t* fields;
 	cp_info* constant_pool;
@@ -20,7 +23,9 @@ struct frame{
 	uint32_t pc;
 };
 
-//Pilha de referencias para estrutura frame.
+/**
+ * Struct para a pilha de frames de metodos 
+ */ 
 struct stackFrame{
 	struct frame* refFrame;
 	struct stackFrame* next;

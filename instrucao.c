@@ -775,8 +775,16 @@ void ins_return(){
 
 	//Executa instrução.
 
+	//Atualiza PC.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 	printf("retornando! método acabou!\n");
-	exit(0);
 }
 void getstatic(){
 	printf("Entrei no getstatic!!\n");

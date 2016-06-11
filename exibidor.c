@@ -166,11 +166,10 @@ void imprimePrompt(classFile* cf){
                 printf("attribute_name_index: cp info #%d\n", cf->fields[i].attributes->attribute_name_index);
                 printf("attribute_length: %d\n", cf->fields[i].attributes->attribute_length);
 
-                // imprime bytecode do atributo
-                for (uint32_t k = 0; k < cf->fields[i].attributes->attribute_length; k++)
-                {
-                    printf("bytecode: 0x%x\n", cf->fields[i].attributes->info[k]);
-                }
+                // imprime constant value index 
+                printf("constant_value_index: cp info #%d", cf->fields[i].attributes->constantvalue_index);
+                imprime_string_pool(cf->constant_pool, cf->fields[i].descriptor_index - 1);
+                printf("\n");
 
                 printf("\t\t----Fim da Attribute Info do Field----\n");
             }
@@ -234,10 +233,10 @@ void imprime_methods(classFile* cf)
             imprime_code(cf, cp->cd_atrb);
 
             // se o metodo tem dois atributos, eh pq um eh code e o outro exceptions
-            //if (cp->attributes_count == 2)
-            //{
-            //    imprime_exc(cp->exc_atrb); 
-            //}
+            if (cp->attributes_count == 2)
+            {
+                imprime_exc(cf, cp->exc_atrb); 
+            }
 
 			i++;
 		}
@@ -463,18 +462,33 @@ void imprime_code(classFile* cf, code_attribute* cd_atrb)
             int num_bytes = dec[opcode].bytes;
             for (int l = 0; l < num_bytes; l++)
             {
-                // atualiza valor de k 
-                k++;
 
                 printf("%d  ", cd_atrb->code[k]);
                 if(cd_atrb->code[k] != 0)
                     imprime_string_pool(cf->constant_pool, cd_atrb->code[k] - 1);
+
+                // atualiza valor de k 
+                k++;
             }
             printf("\n");
         }
     }
          
 }
+
+void imprime_exc(classFile* cf, exceptions_attribute* exc_atrb)
+{
+    printf("\n----Exception Info----\n");
+    printf("attribute_name_index: cp info #%d ", exc_atrb->attribute_name_index);
+    imprime_string_pool(cf->constant_pool, exc_atrb->attribute_name_index - 1);
+    printf("\n");
+    printf("# - Excecao\n");
+    for (int k = 0; k < exc_atrb->number_of_exceptions; k++)
+    {
+        printf("%d - %d\n", k, exc_atrb->exception_index_table[k]);
+    }
+}
+
 
 /**
  * Função que acessa a constant pool e acessa as referencias a propria constant pool e imprime no prompt

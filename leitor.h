@@ -96,7 +96,7 @@ typedef struct field_info{
 	uint16_t name_index;
 	uint16_t descriptor_index;
 	uint16_t attributes_count;
-	attribute_info* attributes;
+	CV_info* attributes;
 }field_info;
 
 typedef struct method_info{
@@ -196,6 +196,7 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count);
 void secondGeneralInfo(classFile* cf,FILE* file);
 
 void imprimePrompt(classFile* cf);
+void le_exc(exceptions_attribute** exc_atrb, uint16_t name_ind, uint32_t att_len, FILE* file);
 void le_code(code_attribute** cd_atrb, uint16_t name_ind, uint32_t att_len, FILE* file);
 void salva_instrucoes(code_attribute** cd_atrb, FILE* file);
 

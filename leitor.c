@@ -144,27 +144,17 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
             cf->fields[i].attributes_count = le2Bytes(file);
 
             // aloca espaco para o array de atributos
-            cf->fields[i].attributes = (attribute_info*) malloc(cf->fields[i].attributes_count * sizeof(attribute_info));
+            cf->fields[i].attributes = (CV_info*) malloc(cf->fields[i].attributes_count * sizeof(CV_info));
             
             // vai lendo atributos 
             for (int j = 0; j < cf->fields[i].attributes_count; j++)
             {
-                 
                 // pega indice do nome do atributo e comprimento do atributo
                 cf->fields[i].attributes->attribute_name_index = le2Bytes(file);
                 cf->fields[i].attributes->attribute_length = le4Bytes(file);
 
-                // espaco para informacao do atributo
-                cf->fields[i].attributes->info = (uint8_t*) malloc(cf->fields[i].attributes->attribute_length * sizeof(uint8_t));
-                
-                // le informacao do atributo
-                fread(cf->fields[i].attributes->info, 1, cf->fields[i].attributes->attribute_length, file);
-
-                // le bytecode do atributo
-                for (uint32_t k = 0; k < cf->fields[i].attributes->attribute_length; k++)
-                {
-                    fread(&(cf->fields[i].attributes->info[k]), 1, 1, file);   
-                }
+                // pega constant value index
+                cf->fields[i].attributes->constantvalue_index = le2Bytes(file);
             }
         }
 	}
@@ -209,7 +199,7 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                     cp->exc_atrb = (exceptions_attribute*) malloc(sizeof(exceptions_attribute));
 
                     // le exceptions
-                    //le_exc(&(cp->exc_atrb), name_ind, att_len, file);
+                    le_exc(&(cp->exc_atrb), name_ind, att_len, file);
                 }
 
                 // senao, nao eh um atributo valido 
@@ -220,6 +210,27 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
             }
             i++;
         }
+    }
+}
+
+void le_exc(exceptions_attribute** exc_atrb, uint16_t name_ind, uint32_t att_len, FILE* file)
+{
+    // transfere informacoes relacionadas ao atributo 
+    (*exc_atrb)->attribute_name_index = name_ind; 
+    (*exc_atrb)->attribute_length = att_len; 
+
+    // pega numero de excecoes 
+    (*exc_atrb)->number_of_exceptions = le2Bytes(file);
+
+    // aloca espaco apropriado para indices da tabela de excecoes
+    (*exc_atrb)->exception_index_table = (uint16_t*) malloc( \
+            (*exc_atrb)->number_of_exceptions * sizeof(exception_table));
+
+    // vai lendo dados e imprimindo
+    for (int k = 0; k < (*exc_atrb)->number_of_exceptions; k++)
+    {
+        (*exc_atrb)->exception_index_table[k] = le2Bytes(file);
+        printf("%d -  %d", k, (*exc_atrb)->exception_index_table[k]);
     }
 }
 
@@ -464,11 +475,12 @@ void salva_instrucoes(code_attribute** cd_atrb, FILE* file)
             int num_bytes = dec[opcode].bytes;
             for (int l = 0; l < num_bytes; l++)
             {
-                // atualiza valor de k 
-                k++;
 
                 // pega operando 
                 fread(&((*cd_atrb)->code[k]), 1, 1, file);
+
+                // atualiza valor de k 
+                k++;
             }
 
         }

@@ -80,6 +80,7 @@ int main(int argc, char* argv[]) {
  	*/
 	carregaMemClasse(arquivo);
 
+
 	/** 
  	*4 - Busca o metodo main para comecar a execucao.
  	*/

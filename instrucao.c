@@ -5,15 +5,26 @@
 */
 
 #include "instrucao.h"
+#include "frame.h"
 #include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
 
+//Acesso ao frame corrente declarado no modulo frame.h
+extern struct frame* frameCorrente;
+
+decodificador dec[NUM_INSTRUCAO];
+
+
+void executarInstrucoes(uint8_t opcode){
+	instrucao[opcode]();
+}
 
 //Função que aponta para uma implementação de cada instrução de acordo
 //com o opcode fornecido.
 void newInstrucoes(int i)
 {
 	printf("Inicializando o vetor de ponteiros para funções!\n");
-	void * instrucao[256];
 	
 	instrucao[0] = nop;
 	instrucao[1] = aconst_null;
@@ -275,7 +286,8 @@ void sipush(){
 
 }
 void ldc(){
-
+	printf("Entrei no ldc!!\n");
+	exit(0);
 }
 void ldc_w(){
 
@@ -755,7 +767,15 @@ void ins_return(){
 
 }
 void getstatic(){
-
+	printf("Entrei no getstatic!!\n");
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 3; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 void putstatic(){
 

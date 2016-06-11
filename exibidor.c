@@ -1,12 +1,28 @@
-/*
-* Software Basico - 1/2016
-* Arquivo que contém Função de imprimir no prompt a estrutura do classfile lida.
-* Para salvar a saida em um arquivo execute da seguinte forma:
-* ./jvm .class 1 > log.txt
-*/
+/**
+ *@file
+ *@section DESCRIPTION
+ *Universidade de Brasilia
+ *
+ *Gabriel Mesquita de Araujo 13/0009121\n
+ *Gabriel 13/0009121\n
+ *Renato 13/0009121\n
+ *Leandro 13/0009121\n
+ *Carlos 13/0009121\n\n
+ *
+ * Software Basico - 1/2016\n
+ * Professor: Marcelo Ladeira\n\n
+ *
+ * Arquivo que contém Função de imprimir no prompt a estrutura do classfile lida.\n
+ * Para salvar a saida em um arquivo execute da seguinte forma:
+ * ./jvm .class 1 > log.txt
+ */
 
 #include "exibidor.h"
 
+/**
+ * Imprime no prompt toda a estrutura de um classFile carregado no array de classes.
+ * @param Referencia para um classFile que representa um .class carregado no array de classes.
+ */
 void imprimePrompt(classFile* cf){
 	printf("----General Information----\n");
 	printf("CAFEBABE: 0x%0x \n",cf->magic);
@@ -189,6 +205,10 @@ void imprimePrompt(classFile* cf){
 	printf("----End Second General----\n\n");
 }
 
+/**
+ * Imprime no prompt a estrutura de métodos presente no classFile.
+ * @param Referencia para um classFile que representa um .class carregado no array de classes.
+ */
 void imprime_methods(classFile* cf)
 {
     uint16_t name_ind; 
@@ -225,6 +245,11 @@ void imprime_methods(classFile* cf)
 	}
 }
 
+/**
+ * Imprime no prompt a estrutura de code presente nos methods_info de cada classFile.
+ * @param Referencia para um classFile que representa um .class carregado no array de classes.
+ * @param Referencia para uma estrutura de code. Que possui os bytecodes misc e etc.
+ */
 void imprime_code(classFile* cf, code_attribute* cd_atrb)
 {
     int opcode, pos_referencia; 
@@ -451,6 +476,11 @@ void imprime_code(classFile* cf, code_attribute* cd_atrb)
          
 }
 
+/**
+ * Função que acessa a constant pool e acessa as referencias a propria constant pool e imprime no prompt
+ * @param Referencia a uma constant Pool de um classFile.
+ * @param Indice a ser acessado na constant Pool.
+ */
 void imprime_string_pool(cp_info* cp, int pos_pool)
 {
     int tag;

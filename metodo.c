@@ -6,6 +6,9 @@
 
 #include "frame.h"
 #include "metodo.h"
+#include "instrucao.h"
+
+extern struct frame* frameCorrente;
 
 //Função para retornar o método main do primeiro .class carregado.
 method_info* buscaMetodoMain(){
@@ -43,4 +46,17 @@ method_info* buscaMetodoMain(){
 //com os bytecodes para execução.
 void iniciaMetodo(method_info* metodo,classFile* classe){
 	criaFrame(classe->constant_pool,classe,metodo->cd_atrb);
+}
+
+//Percorre os bytecodes do ultimo frame alocado e executa
+//Instrução a instrução até o metodo acabar.
+void executaFrameCorrente(){
+
+	//Loop que percorre o frame e executa instrução a instrução
+	//Enquanto pc for menor que o tamanho do code e o frame foi desalocado(terminado)
+	while((frameCorrente->pc) < frameCorrente->code_length && frameCorrente != NULL) {
+		printf("opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
+		executarInstrucoes(frameCorrente->code[frameCorrente->pc]);
+	}
+	desalocaFrame();
 }

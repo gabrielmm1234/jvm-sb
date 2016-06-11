@@ -5,6 +5,7 @@
 #include "leitor.h"
 
 void criaFrame(cp_info* cp, classFile* classe, code_attribute* code);
+void desalocaFrame();
 
 //Por indicação do professor cada frame terá seu próprio PC
 //Cada método ao ser executado cria um frame próprio.
@@ -26,6 +27,6 @@ struct stackFrame{
 };
 
 //Salva o frame que está sendo executado.
-extern struct frame *frameCorrente;
+struct frame *frameCorrente;
 
 #endif

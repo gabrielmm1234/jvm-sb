@@ -1,14 +1,18 @@
 #ifndef INSTRUCAO_H
 #define INSTRUCAO_H
 
+#include <stdint.h>
+
+
 //Declaração do vetor de ponteiro para funções com as 256 instruções implementadas.
 //Cada função retorna void e não recebe parâmetros.
-extern void * instrucao[256];
+void (*instrucao[256]) ();
 
 //Função que inicializa o vetor de ponteiro para funções
 //Com cada função sendo acessada pelo opcode correspondente.
+void executarInstrucoes(uint8_t opcode);
 void newInstrucoes(int);
-
+//void executarInstrucoes(uint8_t);
 /* Cabeçalho de instruções implementadas */
 void nop();
 void aconst_null();

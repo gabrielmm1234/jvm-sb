@@ -1,0 +1,82 @@
+\hypertarget{main_8c}{\section{Referência do Arquivo main.\-c}
+\label{main_8c}\index{main.\-c@{main.\-c}}
+}
+{\ttfamily \#include \char`\"{}exibidor.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}instrucao.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}carregador.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}metodo.\-h\char`\"{}}\\*
+\subsection*{Funções}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\subsection*{Variáveis}
+\begin{DoxyCompactItemize}
+\item 
+char \hyperlink{main_8c_ad87a1dbf751ad0db20a74c075d7138ff}{arquivo} \mbox{[}100\mbox{]}
+\item 
+int \hyperlink{main_8c_a992772a280ec246fb9301e59f556e1c1}{print\-Prompt} = 0
+\end{DoxyCompactItemize}
+
+
+\subsection{Descrição Detalhada}
+\hypertarget{main_8c_DESCRIPTION}{}\subsection{D\-E\-S\-C\-R\-I\-P\-T\-I\-O\-N}\label{main_8c_DESCRIPTION}
+Universidade de Brasilia
+
+Gabriel Mesquita de Araujo 13/0009121\par
+Gabriel 13/0009121\par
+Renato 13/0009121\par
+Leandro 13/0009121\par
+Carlos 13/0009121\par
+\par
+ Software Basico -\/ 1/2016\par
+ Professor\-: Marcelo Ladeira\par
+\par
+ Funcao main do processamento do arquivo .class e execucao das instrucoes -\/$>$ J\-V\-M.
+
+compilar\-: make\par
+ executar\-: ./jvm.exe .class 1 //\-Arquivo .class com a main e 1 para printar o classfile.\par
+ ./jvm.exe .class 0 //\-Arquivo .class com a main e 0 para nao printar o classfile.\par
+ ./jvm.exe //\-Programa pede pelo .class e opcao de print\par
+
+
+\subsection{Funções}
+\hypertarget{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{\index{main.\-c@{main.\-c}!main@{main}}
+\index{main@{main}!main.c@{main.\-c}}
+\subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a0ddf1224851353fc92bfbff6f499fa97}
+Inicio da execucao da jvm 
+\begin{DoxyParams}{Parâmetros}
+{\em argumentos} & via linha de comando. \\
+\hline
+{\em Primeiro} & argumento e o .class que contem a main \\
+\hline
+{\em Segundo} & argumento e flag para printar no prompt 1-\/printa. 0-\/nao printa. \\
+\hline
+\end{DoxyParams}
+Ponteiro para uma estrutura de \hyperlink{structmethod__info}{method\-\_\-info}. Para comecar executando a main.
+
+1 -\/ Inicializa as instrucoes implementadas pela jvm.
+
+2 -\/ Verifica argumentos por linha de comando.
+
+3 -\/ Carrega no array de classes o .class passado por linha de comando.
+
+4 -\/ Busca o metodo main para comecar a execucao.
+
+5 -\/ Cria frame e coloca na pilha. Passa o metodo com o bytecode e a classe que contem o metodo com a constant\-Pool.
+
+6 -\/ Executa o metodo main que esta no topo da \hyperlink{structstackFrame}{stack\-Frame}.
+
+\subsection{Variáveis}
+\hypertarget{main_8c_ad87a1dbf751ad0db20a74c075d7138ff}{\index{main.\-c@{main.\-c}!arquivo@{arquivo}}
+\index{arquivo@{arquivo}!main.c@{main.\-c}}
+\subsubsection[{arquivo}]{\setlength{\rightskip}{0pt plus 5cm}char arquivo\mbox{[}100\mbox{]}}}\label{main_8c_ad87a1dbf751ad0db20a74c075d7138ff}
+Salva nome do arquivo passado via linha de comando. \hypertarget{main_8c_a992772a280ec246fb9301e59f556e1c1}{\index{main.\-c@{main.\-c}!print\-Prompt@{print\-Prompt}}
+\index{print\-Prompt@{print\-Prompt}!main.c@{main.\-c}}
+\subsubsection[{print\-Prompt}]{\setlength{\rightskip}{0pt plus 5cm}int print\-Prompt = 0}}\label{main_8c_a992772a280ec246fb9301e59f556e1c1}
+Flag para printar no prompt -\/ 1 printa -\/ 0 nao printa. 

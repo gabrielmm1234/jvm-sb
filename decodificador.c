@@ -1,11 +1,28 @@
-/*
-* Software Basico - 1/2016
-* Arquivo que contém Função para decodificar uma instrução
-* e apresentar os mnemônicos de cada instrução no exibidor.
-*/
+/**
+ *@file
+ *@section DESCRIPTION
+ *Universidade de Brasilia
+ *
+ *Gabriel Mesquita de Araujo 13/0009121\n
+ *Gabriel 13/0009121\n
+ *Renato 13/0009121\n
+ *Leandro 13/0009121\n
+ *Carlos 13/0009121\n\n
+ *
+ * Software Basico - 1/2016\n
+ * Professor: Marcelo Ladeira\n\n
+ *
+ *Arquivo que contém Função para decodificar uma instrução
+ *e apresentar os mnemônicos de cada instrução no exibidor.
+ */
 
 #include "decodificador.h"
 
+/**
+ * Funcao que inicializa um vetor de instrucoes que fornecem o mnemonico e quantidade de argumentos de cada instrucao.
+ * @param Recebe um vetor de estrutura decodificador. Que contem mnemonico e quantidade de argumentos de uma instrucao.
+ *
+ */
 void inicializa_decodificador(decodificador dec[])
 {
     // adiciona instrucoes na ordem de opcode 

@@ -1,0 +1,61 @@
+\hypertarget{structcp__info}{\section{Referência da Estrutura cp\-\_\-info}
+\label{structcp__info}\index{cp\-\_\-info@{cp\-\_\-info}}
+}
+\subsection*{Atributos Públicos}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{structcp__info_a29d87595bc993eb6cd53f30e8305ec74}{uint8\-\_\-t {\bfseries tag}}\label{structcp__info_a29d87595bc993eb6cd53f30e8305ec74}
+
+\item 
+\hypertarget{structcp__info_ac2b02c93a1a6a6252c140c29865f4a56}{\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\hypertarget{unioncp__info_1_1@0_a7f0a8c80f9ee6c21d6dabf39b619ca2d}{\>struct \{\\
+\hypertarget{structcp__info_1_1@0_1_1@1_a3c8912fe67e7d3f9ce150aa6f5bec22d}{\>\>uint16\_t {\bfseries name\_index}\\
+\>\} {\bfseries Class}\\
+\hypertarget{unioncp__info_1_1@0_ace4b0161d2312eed96c3c15d9f45dcca}{\>struct \{\\
+\hypertarget{structcp__info_1_1@0_1_1@2_ab2b48e96f2178c47f9f6b683c9b2fc59}{\>\>uint16\_t {\bfseries class\_index}\\
+\hypertarget{structcp__info_1_1@0_1_1@2_ad7a8733b3b078818a59cc33eb1fa7dc3}{\>\>uint16\_t {\bfseries name\_and\_type\_index}\\
+\>\} {\bfseries Fieldref}\\
+\hypertarget{unioncp__info_1_1@0_aa3c7cfd38a5aa9395fcac9d977e7eaa7}{\>struct \{\\
+\hypertarget{structcp__info_1_1@0_1_1@3_a3c8912fe67e7d3f9ce150aa6f5bec22d}{\>\>uint16\_t {\bfseries name\_index}\\
+\hypertarget{structcp__info_1_1@0_1_1@3_aef3c90a1a874ca4acbc49029aaa0d4cb}{\>\>uint16\_t {\bfseries descriptor\_index}\\
+\>\} {\bfseries NameAndType}\\
+\hypertarget{unioncp__info_1_1@0_ac063fa60e4a62912beda055fdf23480f}{\>struct \{\\
+\hypertarget{structcp__info_1_1@0_1_1@4_afa18d3ff419ce300281ca759a20a2cc3}{\>\>uint16\_t {\bfseries length}\\
+\hypertarget{structcp__info_1_1@0_1_1@4_a34c1da9248b884af89b5c91d55087100}{\>\>uint8\_t $\ast$ {\bfseries bytes}\\
+\>\} {\bfseries Utf8}\\
+\hypertarget{unioncp__info_1_1@0_ab2261015ed3a3022e93a195a9e7322a1}{\>struct \{\\
+\hypertarget{structcp__info_1_1@0_1_1@5_ab2b48e96f2178c47f9f6b683c9b2fc59}{\>\>uint16\_t {\bfseries class\_index}\\
+\hypertarget{structcp__info_1_1@0_1_1@5_ad7a8733b3b078818a59cc33eb1fa7dc3}{\>\>uint16\_t {\bfseries name\_and\_type\_index}\\
+\>\} {\bfseries Methodref}\\
+\hypertarget{unioncp__info_1_1@0_a0f528599a4fb684175bb3717f4485bc5}{\>struct \{\\
+\hypertarget{structcp__info_1_1@0_1_1@6_ab2b48e96f2178c47f9f6b683c9b2fc59}{\>\>uint16\_t {\bfseries class\_index}\\
+\hypertarget{structcp__info_1_1@0_1_1@6_ad7a8733b3b078818a59cc33eb1fa7dc3}{\>\>uint16\_t {\bfseries name\_and\_type\_index}\\
+\>\} {\bfseries InterfaceMethodref}\\
+\hypertarget{unioncp__info_1_1@0_a104db0a5981bc3281a0579664c8bab1f}{\>struct \{\\
+\hypertarget{structcp__info_1_1@0_1_1@7_aa63dfc7668d7eff682f88b09c48eddc8}{\>\>uint16\_t {\bfseries string\_index}\\
+\>\} {\bfseries String}\\
+\hypertarget{unioncp__info_1_1@0_aa22cef451c3e99c919a40a2d4881436a}{\>struct \{\\
+\hypertarget{structcp__info_1_1@0_1_1@8_a34ed0f597e452fbeb97cb0f551a678bb}{\>\>uint32\_t {\bfseries bytes}\\
+\>\} {\bfseries Integer}\\
+\hypertarget{unioncp__info_1_1@0_aca5b0fc1674ca54c043664d4e2c4ef9d}{\>struct \{\\
+\hypertarget{structcp__info_1_1@0_1_1@9_a34ed0f597e452fbeb97cb0f551a678bb}{\>\>uint32\_t {\bfseries bytes}\\
+\>\} {\bfseries Float}\\
+\hypertarget{unioncp__info_1_1@0_af820af07d14f0e2766bcbabd1de859ea}{\>struct \{\\
+\hypertarget{structcp__info_1_1@0_1_1@10_ae3858dffc80b9cda456040e27ea19cfe}{\>\>uint32\_t {\bfseries high\_bytes}\\
+\hypertarget{structcp__info_1_1@0_1_1@10_aaafd386722f592c8821e682e4e3718b4}{\>\>uint32\_t {\bfseries low\_bytes}\\
+\>\} {\bfseries Long}\\
+\hypertarget{unioncp__info_1_1@0_a4d5745f1e72295cf509a32cad596722b}{\>struct \{\\
+\hypertarget{structcp__info_1_1@0_1_1@11_ae3858dffc80b9cda456040e27ea19cfe}{\>\>uint32\_t {\bfseries high\_bytes}\\
+\hypertarget{structcp__info_1_1@0_1_1@11_aaafd386722f592c8821e682e4e3718b4}{\>\>uint32\_t {\bfseries low\_bytes}\\
+\>\} {\bfseries Double}\\
+\} {\bfseries info}}\label{structcp__info_ac2b02c93a1a6a6252c140c29865f4a56}
+\\
+
+\end{tabbing}\end{DoxyCompactItemize}
+
+
+A documentação para esta estrutura foi gerada a partir do seguinte arquivo\-:\begin{DoxyCompactItemize}
+\item 
+leitor.\-h\end{DoxyCompactItemize}

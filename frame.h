@@ -3,9 +3,25 @@
 
 #include <stdint.h>
 #include "leitor.h"
+#include "pilha.h"
 
 void criaFrame(cp_info* cp, classFile* classe, code_attribute* code);
 void desalocaFrame();
+
+/**
+ * Struct que representa um frame a pilha de operandos da JVM
+ */
+typedef struct pilha_op
+{
+    // depth da pilha, inicialmente deve ficar em zero 
+    // ja que a pilha comeca sem operandos
+    int depth;
+    
+    // ponteiro para o array de 32 bits de tamanho max_stack 
+    uint32_t* operandos;  
+
+}
+pilha_op;
 
 /**
  * Struct que representa um frame 
@@ -21,7 +37,9 @@ struct frame{
 	uint32_t code_length;
 	uint8_t* code;
 	uint32_t pc;
+    pilha_op* pilha_op; 
 };
+
 
 /**
  * Struct para a pilha de frames de metodos 
@@ -30,6 +48,7 @@ struct stackFrame{
 	struct frame* refFrame;
 	struct stackFrame* next;
 };
+
 
 //Salva o frame que está sendo executado.
 struct frame *frameCorrente;

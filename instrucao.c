@@ -231,9 +231,12 @@ void newInstrucoes(int i)
 
 //Implementação de cada instrução.
 
+//NOP -> Não realiza nada da pilha de operandos nem no array de var local.
+//Somente pula para a proxima instrucao.
 void nop(){
-
+	frameCorrente->pc++;
 }
+
 void aconst_null(){
 
 }

@@ -287,7 +287,14 @@ void sipush(){
 }
 void ldc(){
 	printf("Entrei no ldc!!\n");
-	exit(0);
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 void ldc_w(){
 
@@ -764,15 +771,25 @@ void areturn(){
 
 }
 void ins_return(){
+	printf("entrei no ins_return!!\n");
 
+	//Executa instrução.
+
+	printf("retornando! método acabou!\n");
+	exit(0);
 }
 void getstatic(){
 	printf("Entrei no getstatic!!\n");
+
+	//Executa a instrução.
+
+
+	//Atualiza PC.
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 	printf("num_bytes: %d\n",num_bytes);
 	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 3; i++)
+	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
 	printf("novo pc: %d\n",frameCorrente->pc);
 	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
@@ -787,6 +804,20 @@ void putfield(){
 
 }
 void invokevirtual(){
+	printf("Entrei no invokevirtual!!\n");
+
+	//Executa a instrução.
+
+
+	//Atualiza PC.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 
 }
 void invokespecial(){

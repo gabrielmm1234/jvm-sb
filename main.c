@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
 	/** 
  	*6 - Executa o metodo main que esta no topo da stackFrame.
  	*/
-	//executaFrameCorrente();
+	executaFrameCorrente();
 
 
 	//Se passa 1 na linha de comando imprime no prompt

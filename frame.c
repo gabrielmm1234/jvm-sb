@@ -76,11 +76,14 @@ void criaFrame(cp_info* cp, classFile* classe, code_attribute* code){
 void desalocaFrame(){
 	struct stackFrame *anterior;
 
+	printf("desalocando Frame!\n");
 	//se topo->next diferente de null -> existe outros frames para executar.
 	//Atualiza o frame corrente para prosseguir a execução.
 	if (topo->next != NULL) {
+		printf("Execução prossegue para proximo frame!\n");
 		frameCorrente = topo->next->refFrame;
 	} else {
+		printf("Execução Acabou - Não há mais frames!\n");
 		frameCorrente = NULL;
 	}
 

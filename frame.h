@@ -18,7 +18,7 @@ typedef struct pilha_op
     int depth;
     
     // ponteiro para o array de 32 bits de tamanho max_stack 
-    uint32_t* operandos;  
+    int32_t* operandos;  
 
 }
 pilha_op;

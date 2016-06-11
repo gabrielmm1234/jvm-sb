@@ -332,7 +332,7 @@ void ldc(){
     //if (frameCorrente->cp_info[indice].tag == CONSTANT_Float)
 
     // se o indice para a constant pool for para uma string
-    if (frameCorrente->constant_pool[indice].tag == CONSTANT_String)
+    if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String)
     {
         // poe uma referencia a essa instancia na pilha de operandos
         frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth] = (int32_t) indice;

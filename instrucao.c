@@ -312,10 +312,35 @@ void sipush(){
 
 }
 void ldc(){
+    uint8_t indice;
+
 	printf("Entrei no ldc!!\n");
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 	printf("num_bytes: %d\n",num_bytes);
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+
+    // se o indice para a constant pool for um int
+    //if (frameCorrente->cp_info[indice].tag == CONSTANT_Integer)
+    //{
+
+    //}
+
+    // se o indice para a constant pool for um float 
+    //if (frameCorrente->cp_info[indice].tag == CONSTANT_Float)
+
+    // se o indice para a constant pool for para uma string
+    if (frameCorrente->constant_pool[indice].tag == CONSTANT_String)
+    {
+        // poe uma referencia a essa instancia na pilha de operandos
+        frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth] = (int32_t) indice;
+
+        // incrementa profundidade da pilha de operandos 
+        frameCorrente->pilha_op->depth += 1;
+    }
+
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;

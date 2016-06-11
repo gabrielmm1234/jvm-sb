@@ -150,11 +150,10 @@ void imprimePrompt(classFile* cf){
                 printf("attribute_name_index: cp info #%d\n", cf->fields[i].attributes->attribute_name_index);
                 printf("attribute_length: %d\n", cf->fields[i].attributes->attribute_length);
 
-                // imprime bytecode do atributo
-                for (uint32_t k = 0; k < cf->fields[i].attributes->attribute_length; k++)
-                {
-                    printf("bytecode: 0x%x\n", cf->fields[i].attributes->info[k]);
-                }
+                // imprime constant value index 
+                printf("constant_value_index: cp info #%d", cf->fields[i].attributes->constantvalue_index);
+                imprime_string_pool(cf->constant_pool, cf->fields[i].descriptor_index - 1);
+                printf("\n");
 
                 printf("\t\t----Fim da Attribute Info do Field----\n");
             }

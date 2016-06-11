@@ -144,27 +144,17 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
             cf->fields[i].attributes_count = le2Bytes(file);
 
             // aloca espaco para o array de atributos
-            cf->fields[i].attributes = (attribute_info*) malloc(cf->fields[i].attributes_count * sizeof(attribute_info));
+            cf->fields[i].attributes = (CV_info*) malloc(cf->fields[i].attributes_count * sizeof(CV_info));
             
             // vai lendo atributos 
             for (int j = 0; j < cf->fields[i].attributes_count; j++)
             {
-                 
                 // pega indice do nome do atributo e comprimento do atributo
                 cf->fields[i].attributes->attribute_name_index = le2Bytes(file);
                 cf->fields[i].attributes->attribute_length = le4Bytes(file);
 
-                // espaco para informacao do atributo
-                cf->fields[i].attributes->info = (uint8_t*) malloc(cf->fields[i].attributes->attribute_length * sizeof(uint8_t));
-                
-                // le informacao do atributo
-                fread(cf->fields[i].attributes->info, 1, cf->fields[i].attributes->attribute_length, file);
-
-                // le bytecode do atributo
-                for (uint32_t k = 0; k < cf->fields[i].attributes->attribute_length; k++)
-                {
-                    fread(&(cf->fields[i].attributes->info[k]), 1, 1, file);   
-                }
+                // pega constant value index
+                cf->fields[i].attributes->constantvalue_index = le2Bytes(file);
             }
         }
 	}

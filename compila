@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # para compilar 
-gcc -std=c99 -g -pedantic main.c -o exe # mude o nome de exe para o que vc desejar que seja o executavel 
+#gcc -std=c99 -g -pedantic main.c -o exe # mude o nome de exe para o que vc desejar que seja o executavel 
                                        # o restante do arquivo assume que o nome sera exe
 
 # sugestao de como fazer testes
@@ -20,3 +20,11 @@ gcc -std=c99 -g -pedantic main.c -o exe # mude o nome de exe para o que vc desej
 #javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar programas_java/field.java
 #./exe 'field.class' 
 
+# para testes
+#./jvm.exe < testes/hello.txt
+#./jvm.exe < testes/delta.txt
+#./jvm.exe < testes/fields.txt
+#./jvm.exe < testes/tableswitch.txt
+#./jvm.exe < testes/lookupswitch.txt
+#./jvm.exe < testes/wide1.txt
+#./jvm.exe < testes/wide2.txt

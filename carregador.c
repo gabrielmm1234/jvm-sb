@@ -20,16 +20,18 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 /** 
  *Array de referencia a classFiles. Declarado no carregador.h
  */
 classFile** arrayClasses;
+area_metodos area_met; 
 
 /** 
  *Quantidade de classes já carregadas pelo carregador.
  */
-int16_t numeroClasses = 0;
+bool ja_carregou = false;
 
 /**
  * É passado o nome do arquivo .class a ser carregado.\n
@@ -41,9 +43,15 @@ int16_t numeroClasses = 0;
 int32_t carregaMemClasse(char* nomeClass){
 	int aux;
 
+    // se eh a primeira classe a ser carregada
+    if (ja_carregou == false)
+    {
+        area_met.num_classes = 0;
+        ja_carregou = true; 
+    }
 	//Se ja esta carregado retorna posição no array de classes.
-	for (int32_t i = 0; i < numeroClasses; i++) {
-		if (strcmp(nomeClass, retornaNomeClasse(arrayClasses[i])) == 0)
+	for (int32_t i = 0; i < area_met.num_classes; i++) {
+		if (strcmp(nomeClass, retornaNomeClasse(area_met.array_classes[i])) == 0)
 			return i;
 	}
 
@@ -52,8 +60,8 @@ int32_t carregaMemClasse(char* nomeClass){
 	printf("Carregando classe: %s\n",nomeClass);
 
 	//uma classe nova vai entrar na lista de classes carregadas.
-	numeroClasses++;
-	aux = numeroClasses;
+	area_met.num_classes++;
+	aux = area_met.num_classes;
 
 	classFile** arrayClassesTemp = NULL;
 
@@ -64,6 +72,9 @@ int32_t carregaMemClasse(char* nomeClass){
 
 	arrayClasses = arrayClassesTemp;
 	arrayClasses[aux-1] = leitorClasse(nomeClass);
+
+    area_met.array_classes = (classFile**) calloc(1, sizeof(classFile*));
+    area_met.array_classes = arrayClasses; 
 
 	if(arrayClasses[aux -1] == NULL)
 		printf("Erro ao carregar classe!\n");
@@ -105,5 +116,5 @@ char* retornaNomeClasse(classFile* classe){
  * @return Referencia a um classFile ou NULL caso nao exista a referencia 
  */
 classFile* buscaClasseIndice(int indice){
-	return indice >= numeroClasses ? NULL : arrayClasses[indice];
+	return indice >= area_met.num_classes ? NULL : area_met.array_classes[indice];
 }

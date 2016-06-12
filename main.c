@@ -106,7 +106,7 @@ int main(int argc, char* argv[]) {
 
 	//Se passa 1 na linha de comando imprime no prompt
 	if (printPrompt)
-		for (int i = 0; i < numeroClasses; i++) {
+		for (int i = 0; i < area_met.num_classes; i++) {
 			imprimePrompt(arrayClasses[i]);
 		}
 

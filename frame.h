@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include "leitor.h"
-#include "pilha.h"
 
 void criaFrame(cp_info* cp, classFile* classe, code_attribute* code);
 void desalocaFrame();

@@ -19,8 +19,7 @@ typedef struct pilha_op
     // ponteiro para o array de 32 bits de tamanho max_stack 
     int32_t* operandos;  
 
-}
-pilha_op;
+}pilha_op;
 
 /**
  * Struct que representa um frame 

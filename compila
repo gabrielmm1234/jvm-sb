@@ -20,6 +20,9 @@
 #javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar programas_java/field.java
 #./exe 'field.class' 
 
+# print3
+#javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar programas_java/Print3.java
+
 # para testes
 #./jvm.exe < testes/hello.txt
 #./jvm.exe < testes/delta.txt

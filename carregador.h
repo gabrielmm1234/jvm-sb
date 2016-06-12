@@ -9,7 +9,6 @@ extern classFile** arrayClasses;
 extern area_metodos area_met; 
 
 //QUantidade de classes carregas.
-//extern int16_t numeroClasses;
 
 // funcoes usadas no carregador 
 int32_t carregaMemClasse(char* );

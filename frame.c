@@ -61,11 +61,16 @@ void criaFrame(cp_info* cp, classFile* classe, code_attribute* code){
 
 	//Aloca espaço para o array de var local
 	topo->refFrame->fields = calloc(sizeof(uint32_t), topo->refFrame->max_locals);
+
+    // aloca espaco para a pilha de operandos e poe indice na pilha na posicao correta
+    topo->refFrame->pilha_op = calloc(1, sizeof(pilha_op));
+    topo->refFrame->pilha_op->operandos = calloc(topo->refFrame->max_stack, sizeof(uint32_t));
+    topo->refFrame->pilha_op->depth = 0; // inicialmente a pilha esta vazia 
+
 	//Atualiza o frameCorrente para o frame alocado agora.
 	//IMPORTANTE para que o loop de execução acesse o frameCorrente atualizado.
 	frameCorrente = topo->refFrame;
 
-	//TODO PILHA DE OPERANDOS!
 }
 
 /**
@@ -89,13 +94,15 @@ void desalocaFrame(){
 
 	//Salva frame anterior.
 	anterior = topo->next;
+
 	//Desaloca frame já executado.
 	free(topo->refFrame->fields);
+    free(topo->refFrame->pilha_op->operandos);
+    free(topo->refFrame->pilha_op);
 	free(topo->refFrame);
 	free(topo);
 
 	//Atualiza topo com o proximo frame a ser executado.
 	topo = anterior;
 
-	//TODO Liberar pilha do frame desalocado.
 }

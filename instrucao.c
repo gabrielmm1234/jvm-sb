@@ -317,16 +317,42 @@ void sipush(){
 
 }
 void ldc(){
+    uint8_t indice;
+
 	printf("Entrei no ldc!!\n");
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 	printf("num_bytes: %d\n",num_bytes);
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+
+    // se o indice para a constant pool for um int
+    //if (frameCorrente->cp_info[indice].tag == CONSTANT_Integer)
+    //{
+        
+    //}
+
+    // se o indice para a constant pool for um float 
+    //if (frameCorrente->cp_info[indice].tag == CONSTANT_Float)
+
+    // se o indice para a constant pool for para uma string
+    if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String)
+    {
+        // poe uma referencia a essa instancia na pilha de operandos
+        frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth] = (int32_t) indice;
+
+        // incrementa profundidade da pilha de operandos 
+        frameCorrente->pilha_op->depth += 1;
+    }
+
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
 	printf("novo pc: %d\n",frameCorrente->pc);
 	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
+
 void ldc_w(){
 
 }
@@ -821,7 +847,17 @@ void getstatic(){
 	printf("Entrei no getstatic!!\n");
 
 	//Executa a instrução.
-
+    // pega indice da constant pool 
+    
+    // se o indice nao corresponde a uma referencia a um field
+        // erro
+    
+    // pega classe correspondente
+    // se a classe nao eh a System Java
+        // carrega classe na memoria, caso ainda nao tenha sido 
+        // se nao for um campo static lanca excecao 
+    // poe valor da classe no stack 
+    // incrementa profundidade do stack 
 
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
@@ -846,7 +882,15 @@ void invokevirtual(){
 	printf("Entrei no invokevirtual!!\n");
 
 	//Executa a instrução.
-
+    
+    // pega indice 
+    
+    // se a referencia a constant pool nao for uma referencia simbolica a um metodo
+        // avisa erro e para
+    
+    // se for uma chamada a printStream 
+        // nesse caso usa printf do C 
+        // decrementa a profundidade do stack por 2
 
 	//Atualiza PC.
 	inicializa_decodificador(dec); 

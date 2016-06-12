@@ -49,6 +49,7 @@ int32_t carregaMemClasse(char* nomeClass){
         area_met.num_classes = 0;
         ja_carregou = true; 
     }
+
 	//Se ja esta carregado retorna posição no array de classes.
 	for (int32_t i = 0; i < area_met.num_classes; i++) {
 		if (strcmp(nomeClass, retornaNomeClasse(area_met.array_classes[i])) == 0)
@@ -57,7 +58,7 @@ int32_t carregaMemClasse(char* nomeClass){
 
 	//Se não está carregado carrega e salva no array de classes.
 
-	printf("Carregando classe: %s\n",nomeClass);
+	printf("Carregando classe: %s\n", nomeClass);
 
 	//uma classe nova vai entrar na lista de classes carregadas.
 	area_met.num_classes++;
@@ -67,16 +68,14 @@ int32_t carregaMemClasse(char* nomeClass){
 
 	//Realoca o tamanho do vetor para adicionar a nova classe carregada.
 	//Classes previamente carregas não são perdidas com o realloc.
-	arrayClassesTemp = (classFile**) realloc(arrayClasses, (aux*sizeof(classFile *)));
+	arrayClassesTemp = (classFile**) realloc(area_met.array_classes, (aux*sizeof(classFile *)));
 	//printf("ponteiro tempo: %d\n",*arrayClassesTemp);
 
-	arrayClasses = arrayClassesTemp;
-	arrayClasses[aux-1] = leitorClasse(nomeClass);
-
     area_met.array_classes = (classFile**) calloc(1, sizeof(classFile*));
-    area_met.array_classes = arrayClasses; 
+    area_met.array_classes = arrayClassesTemp;
+    area_met.array_classes[aux - 1] = leitorClasse(nomeClass);  
 
-	if(arrayClasses[aux -1] == NULL)
+	if(area_met.array_classes[aux -1] == NULL)
 		printf("Erro ao carregar classe!\n");
 
 	return aux - 1;

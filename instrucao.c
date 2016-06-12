@@ -1,8 +1,21 @@
-/*
-* Software Basico - 1/2016
-* Arquivo que contém as instruções que nosso programa implementou.
-* Como foi dito pelo professor foi usado um vetor de ponteiro para funções. 
-*/
+/**
+ *@file
+ *@section DESCRIPTION
+ *Universidade de Brasilia
+ *
+ *Gabriel Mesquita de Araujo 13/0009121\n
+ *Gabriel Ferreira Silva 14/0140131\n
+ *Renato 13/0009121\n
+ *Leandro 13/0009121\n
+ *Carlos 13/0009121\n\n
+ *
+ * Software Basico - 1/2016\n
+ * Professor: Marcelo Ladeira\n\n
+ *
+ * Arquivo que contém as instrucoes implementadas pelo nosso program
+ * Conforme sugerido, foi usado um vetor de ponteiro para funcoes
+ * 
+ */
 
 #include "instrucao.h"
 #include "frame.h"
@@ -10,19 +23,34 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-//Acesso ao frame corrente declarado no modulo frame.h
+/**
+ * Acesso ao frame corrente declarado no modulo frame.h
+ */
 extern struct frame* frameCorrente;
 
+/**
+ * o decodificador permite eh um array com informacoes das varias instrucoes\n
+ * a partir do opcode da instrucao, pode-se pelo decodificador descobrir o nome e quantos bytes ele ocupa 
+ */ 
 decodificador dec[NUM_INSTRUCAO];
 
 
+/**
+ * Funcao para executar uma instrucao, com base no opcode passado\n
+ * @param uint8_t correspondente ao opcode da instrucao 
+ * @return void
+ */
 void executarInstrucoes(uint8_t opcode){
 	instrucao[opcode]();
 }
 
-//Função que aponta para uma implementação de cada instrução de acordo
-//com o opcode fornecido.
-void newInstrucoes(int i)
+/**
+ * Função que aponta para uma implementação de cada instrução de acordo
+ * com o opcode fornecido.
+ * @param void
+ * @return void
+ */
+void newInstrucoes()
 {
 	printf("Inicializando o vetor de ponteiros para funções!\n");
 	

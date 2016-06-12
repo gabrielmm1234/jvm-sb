@@ -1,0 +1,93 @@
+\hypertarget{metodo_8c}{\section{Referência do Arquivo metodo.\-c}
+\label{metodo_8c}\index{metodo.\-c@{metodo.\-c}}
+}
+{\ttfamily \#include \char`\"{}frame.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}metodo.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}instrucao.\-h\char`\"{}}\\*
+\subsection*{Funções}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structmethod__info}{method\-\_\-info} $\ast$ \hyperlink{metodo_8c_ab1a774009cd6da2eb31323558446f149}{busca\-Metodo\-Main} ()
+\item 
+void \hyperlink{metodo_8c_af2742a4788ab6e89f6807a09c3722aa6}{inicia\-Metodo} (\hyperlink{structmethod__info}{method\-\_\-info} $\ast$metodo, \hyperlink{structClassFile}{class\-File} $\ast$classe)
+\item 
+void \hyperlink{metodo_8c_ae6a6b8342dd5977b74379e5295614ea8}{executa\-Frame\-Corrente} ()
+\end{DoxyCompactItemize}
+\subsection*{Variáveis}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structframe}{frame} $\ast$ \hyperlink{metodo_8c_a35603863074b337b41111e9f4352a605}{frame\-Corrente}
+\end{DoxyCompactItemize}
+
+
+\subsection{Descrição Detalhada}
+\hypertarget{metodo_8c_DESCRIPTION}{}\subsection{D\-E\-S\-C\-R\-I\-P\-T\-I\-O\-N}\label{metodo_8c_DESCRIPTION}
+Universidade de Brasilia
+
+Gabriel Mesquita de Araujo 13/0009121\par
+Gabriel Ferreira Silva 14/0140131\par
+Renato 13/0009121\par
+Leandro 13/0009121\par
+Carlos 13/0009121\par
+\par
+ Software Basico -\/ 1/2016\par
+ Professor\-: Marcelo Ladeira\par
+\par
+ Arquivo que contém funções responsaveis por manipular os metodos que serao usados nos frames 
+
+\subsection{Funções}
+\hypertarget{metodo_8c_ab1a774009cd6da2eb31323558446f149}{\index{metodo.\-c@{metodo.\-c}!busca\-Metodo\-Main@{busca\-Metodo\-Main}}
+\index{busca\-Metodo\-Main@{busca\-Metodo\-Main}!metodo.c@{metodo.\-c}}
+\subsubsection[{busca\-Metodo\-Main}]{\setlength{\rightskip}{0pt plus 5cm}{\bf method\-\_\-info}$\ast$ busca\-Metodo\-Main (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{metodo_8c_ab1a774009cd6da2eb31323558446f149}
+Função para retornar uma referencia ao metodo main do primeiro .class carregado. 
+\begin{DoxyParams}{Parâmetros}
+{\em void} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Retorna}
+method\-\_\-info$\ast$ uma referencia ao metodo main 
+\end{DoxyReturn}
+\hypertarget{metodo_8c_ae6a6b8342dd5977b74379e5295614ea8}{\index{metodo.\-c@{metodo.\-c}!executa\-Frame\-Corrente@{executa\-Frame\-Corrente}}
+\index{executa\-Frame\-Corrente@{executa\-Frame\-Corrente}!metodo.c@{metodo.\-c}}
+\subsubsection[{executa\-Frame\-Corrente}]{\setlength{\rightskip}{0pt plus 5cm}void executa\-Frame\-Corrente (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{metodo_8c_ae6a6b8342dd5977b74379e5295614ea8}
+Percorre os bytecodes do metodo do ultimo frame alocado e vai executando instrucao a instrucao ateh o metodo acabar 
+\begin{DoxyParams}{Parâmetros}
+{\em void} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Retorna}
+void 
+\end{DoxyReturn}
+\hypertarget{metodo_8c_af2742a4788ab6e89f6807a09c3722aa6}{\index{metodo.\-c@{metodo.\-c}!inicia\-Metodo@{inicia\-Metodo}}
+\index{inicia\-Metodo@{inicia\-Metodo}!metodo.c@{metodo.\-c}}
+\subsubsection[{inicia\-Metodo}]{\setlength{\rightskip}{0pt plus 5cm}void inicia\-Metodo (
+\begin{DoxyParamCaption}
+\item[{{\bf method\-\_\-info} $\ast$}]{metodo, }
+\item[{{\bf class\-File} $\ast$}]{classe}
+\end{DoxyParamCaption}
+)}}\label{metodo_8c_af2742a4788ab6e89f6807a09c3722aa6}
+Funcao para iniciar um metodo 
+\begin{DoxyParams}{Parâmetros}
+{\em method\-\_\-info$\ast$} & uma referencia ao metodo em questao \\
+\hline
+{\em class\-File$\ast$} & uma referencia a estrutura da classe \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Retorna}
+void 
+\end{DoxyReturn}
+
+
+\subsection{Variáveis}
+\hypertarget{metodo_8c_a35603863074b337b41111e9f4352a605}{\index{metodo.\-c@{metodo.\-c}!frame\-Corrente@{frame\-Corrente}}
+\index{frame\-Corrente@{frame\-Corrente}!metodo.c@{metodo.\-c}}
+\subsubsection[{frame\-Corrente}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf frame}$\ast$ frame\-Corrente}}\label{metodo_8c_a35603863074b337b41111e9f4352a605}
+Acesso ao frame corrente declarado no modulo \hyperlink{frame_8h_source}{frame.\-h} 

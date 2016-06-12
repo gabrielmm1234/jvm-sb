@@ -4,7 +4,7 @@
  *Universidade de Brasilia
  *
  *Gabriel Mesquita de Araujo 13/0009121\n
- *Gabriel 13/0009121\n
+ *Gabriel Ferreira Silva 14/0140131\n
  *Renato 13/0009121\n
  *Leandro 13/0009121\n
  *Carlos 13/0009121\n\n
@@ -33,7 +33,7 @@ int16_t numeroClasses = 0;
 
 /**
  * É passado o nome do arquivo .class a ser carregado.\n
- * Se ja foi carregado retorna a posição no array de classes da classe.
+ * 
  * Se ainda não foi carregado carrega no array de classes.
  * @param nome do arquivo ".class" a ser carregado no array de classes.
  * @return posição da classe alocada no array de classes.
@@ -102,7 +102,7 @@ char* retornaNomeClasse(classFile* classe){
  *Função que retorna uma referencia a uma classFile de acordo com o indice.\n
  *Util para encontrar a classe da main no inicio do processamento.
  * @param Posicao a ser acessada no array de classes.
- * @return Referencia a um classFile.
+ * @return Referencia a um classFile ou NULL caso nao exista a referencia 
  */
 classFile* buscaClasseIndice(int indice){
 	return indice >= numeroClasses ? NULL : arrayClasses[indice];

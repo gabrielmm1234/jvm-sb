@@ -4,7 +4,7 @@
  *Universidade de Brasilia
  *
  *Gabriel Mesquita de Araujo 13/0009121\n
- *Gabriel 13/0009121\n
+ *Gabriel Ferreira Silva 14/0140131\n
  *Renato 13/0009121\n
  *Leandro 13/0009121\n
  *Carlos 13/0009121\n\n
@@ -15,10 +15,10 @@
  * Funcao main do processamento do arquivo .class
  * e execucao das instrucoes -> JVM.
  *
- * compilar:	make\n
- * executar:	./jvm.exe .class 1  //Arquivo .class com a main e 1 para printar o classfile.\n
- *          	./jvm.exe .class 0  //Arquivo .class com a main e 0 para nao printar o classfile.\n
- *				./jvm.exe 			//Programa pede pelo .class e opcao de print\n
+ * para compilar:	make\n
+ * para executar:	./jvm.exe .class 1  //Arquivo .class com a main e 1 para printar o classfile.\n
+ *                	./jvm.exe .class 0  //Arquivo .class com a main e 0 para nao printar o classfile.\n
+ *			    	./jvm.exe 			//Programa pede pelo .class e opcao de print\n
  */
 
 #include "exibidor.h"
@@ -39,9 +39,9 @@ int printPrompt = 0;
 
 /**
  * Inicio da execucao da jvm
- * @param argumentos via linha de comando. 
- * @param Primeiro argumento e o .class que contem a main
- * @param Segundo argumento e flag para printar no prompt 1-printa. 0-nao printa.
+ * @param argumentos passados via linha de comando. 
+ * @param Primeiro argumento eh o .class que contem a main
+ * @param Segundo argumento eh flag para printar no prompt 1-printa. 0-nao printa.
  */
 int main(int argc, char* argv[]) {
 
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 	/** 
  	*1 - Inicializa as instrucoes implementadas pela jvm.
  	*/
-	newInstrucoes(1);
+	newInstrucoes();
 
 	/** 
  	*2 - Verifica argumentos por linha de comando.

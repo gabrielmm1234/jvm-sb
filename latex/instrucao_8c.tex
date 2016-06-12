@@ -1,0 +1,685 @@
+\hypertarget{instrucao_8c}{\section{Referência do Arquivo instrucao.\-c}
+\label{instrucao_8c}\index{instrucao.\-c@{instrucao.\-c}}
+}
+{\ttfamily \#include \char`\"{}instrucao.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}frame.\-h\char`\"{}}\\*
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+{\ttfamily \#include $<$stdint.\-h$>$}\\*
+{\ttfamily \#include $<$stdlib.\-h$>$}\\*
+\subsection*{Funções}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{instrucao_8c_a0b675f280bfa2d4c4a0b2e791e0db196}{executar\-Instrucoes} (uint8\-\_\-t opcode)
+\item 
+void \hyperlink{instrucao_8c_a340ac7bb6a55889d1abaa85015e5e59f}{new\-Instrucoes} ()
+\item 
+\hypertarget{instrucao_8c_a9feb7476507383309c8e3ff2648016f3}{void {\bfseries nop} ()}\label{instrucao_8c_a9feb7476507383309c8e3ff2648016f3}
+
+\item 
+\hypertarget{instrucao_8c_abe6dd55d61a71f86f8039f4e2d1d00c8}{void {\bfseries aconst\-\_\-null} ()}\label{instrucao_8c_abe6dd55d61a71f86f8039f4e2d1d00c8}
+
+\item 
+\hypertarget{instrucao_8c_a3d4fe47d548d6189745787177183c38c}{void {\bfseries iconst\-\_\-m1} ()}\label{instrucao_8c_a3d4fe47d548d6189745787177183c38c}
+
+\item 
+\hypertarget{instrucao_8c_aea322ceba1bd8d3ef7f33273d58e6f0b}{void {\bfseries iconst\-\_\-0} ()}\label{instrucao_8c_aea322ceba1bd8d3ef7f33273d58e6f0b}
+
+\item 
+\hypertarget{instrucao_8c_ad99980f3110041de270ec04c53107b8f}{void {\bfseries iconst\-\_\-1} ()}\label{instrucao_8c_ad99980f3110041de270ec04c53107b8f}
+
+\item 
+\hypertarget{instrucao_8c_ade068b77731b687d290ff8110b5111fb}{void {\bfseries iconst\-\_\-2} ()}\label{instrucao_8c_ade068b77731b687d290ff8110b5111fb}
+
+\item 
+\hypertarget{instrucao_8c_aa4de912d11b59f82deba1dc335d69123}{void {\bfseries iconst\-\_\-3} ()}\label{instrucao_8c_aa4de912d11b59f82deba1dc335d69123}
+
+\item 
+\hypertarget{instrucao_8c_a8c772a238a36dc3c353206ec51a65382}{void {\bfseries iconst\-\_\-4} ()}\label{instrucao_8c_a8c772a238a36dc3c353206ec51a65382}
+
+\item 
+\hypertarget{instrucao_8c_a2e5a16634b3e5c00d324b462ea77183b}{void {\bfseries iconst\-\_\-5} ()}\label{instrucao_8c_a2e5a16634b3e5c00d324b462ea77183b}
+
+\item 
+\hypertarget{instrucao_8c_a404bc01bc13afddc52495b6a77a2ff4d}{void {\bfseries lconst\-\_\-0} ()}\label{instrucao_8c_a404bc01bc13afddc52495b6a77a2ff4d}
+
+\item 
+\hypertarget{instrucao_8c_a47ef909a27b1a683c8941d87f542b162}{void {\bfseries lconst\-\_\-1} ()}\label{instrucao_8c_a47ef909a27b1a683c8941d87f542b162}
+
+\item 
+\hypertarget{instrucao_8c_a86f714d43e3b969d5c30dbfdabd472bf}{void {\bfseries fconst\-\_\-0} ()}\label{instrucao_8c_a86f714d43e3b969d5c30dbfdabd472bf}
+
+\item 
+\hypertarget{instrucao_8c_ab87ae6df1b95fd3c3829af30ba899199}{void {\bfseries fconst\-\_\-1} ()}\label{instrucao_8c_ab87ae6df1b95fd3c3829af30ba899199}
+
+\item 
+\hypertarget{instrucao_8c_aa2c5e3ce6d5b8daf54213367d7f02f25}{void {\bfseries fconst\-\_\-2} ()}\label{instrucao_8c_aa2c5e3ce6d5b8daf54213367d7f02f25}
+
+\item 
+\hypertarget{instrucao_8c_a06b623842362ff5bad4321bd3901c041}{void {\bfseries dconst\-\_\-0} ()}\label{instrucao_8c_a06b623842362ff5bad4321bd3901c041}
+
+\item 
+\hypertarget{instrucao_8c_a7f89f5063a41ce732da654abce7f1c81}{void {\bfseries dconst\-\_\-1} ()}\label{instrucao_8c_a7f89f5063a41ce732da654abce7f1c81}
+
+\item 
+\hypertarget{instrucao_8c_a63e60d614254aaf759e91850ce33be71}{void {\bfseries bipush} ()}\label{instrucao_8c_a63e60d614254aaf759e91850ce33be71}
+
+\item 
+\hypertarget{instrucao_8c_ab232b871bc72922db8f077fc3f356348}{void {\bfseries sipush} ()}\label{instrucao_8c_ab232b871bc72922db8f077fc3f356348}
+
+\item 
+\hypertarget{instrucao_8c_a05601922d5b1a9203cd26a1a21789255}{void {\bfseries ldc} ()}\label{instrucao_8c_a05601922d5b1a9203cd26a1a21789255}
+
+\item 
+\hypertarget{instrucao_8c_a24bf1524b99a783375f26b5e4f79fb44}{void {\bfseries ldc\-\_\-w} ()}\label{instrucao_8c_a24bf1524b99a783375f26b5e4f79fb44}
+
+\item 
+\hypertarget{instrucao_8c_ae507168e021393f8ee28cf11c80e5349}{void {\bfseries ldc2\-\_\-w} ()}\label{instrucao_8c_ae507168e021393f8ee28cf11c80e5349}
+
+\item 
+\hypertarget{instrucao_8c_a30a4061a47793773606ff72c0b81ddb1}{void {\bfseries iload} ()}\label{instrucao_8c_a30a4061a47793773606ff72c0b81ddb1}
+
+\item 
+\hypertarget{instrucao_8c_a7226903dff59a80c04a44f84578cdad0}{void {\bfseries lload} ()}\label{instrucao_8c_a7226903dff59a80c04a44f84578cdad0}
+
+\item 
+\hypertarget{instrucao_8c_aa3e85071d417a5fc35d9acca2deb91e2}{void {\bfseries fload} ()}\label{instrucao_8c_aa3e85071d417a5fc35d9acca2deb91e2}
+
+\item 
+\hypertarget{instrucao_8c_aee02129130ae41bfde27b94ac97dbe80}{void {\bfseries dload} ()}\label{instrucao_8c_aee02129130ae41bfde27b94ac97dbe80}
+
+\item 
+\hypertarget{instrucao_8c_a0612d86928db91f08031ee340d996be3}{void {\bfseries aload} ()}\label{instrucao_8c_a0612d86928db91f08031ee340d996be3}
+
+\item 
+\hypertarget{instrucao_8c_aca5ca79be27a14e2dba470ceb7f3654a}{void {\bfseries iload\-\_\-0} ()}\label{instrucao_8c_aca5ca79be27a14e2dba470ceb7f3654a}
+
+\item 
+\hypertarget{instrucao_8c_a10fcbbe1a4c6ddec0bbe135218268af9}{void {\bfseries iload\-\_\-1} ()}\label{instrucao_8c_a10fcbbe1a4c6ddec0bbe135218268af9}
+
+\item 
+\hypertarget{instrucao_8c_a3bd5260f8a2c829e158d7f49b1ef7e91}{void {\bfseries iload\-\_\-2} ()}\label{instrucao_8c_a3bd5260f8a2c829e158d7f49b1ef7e91}
+
+\item 
+\hypertarget{instrucao_8c_a244c1eb8abc603a256a5e932beb9fa75}{void {\bfseries iload\-\_\-3} ()}\label{instrucao_8c_a244c1eb8abc603a256a5e932beb9fa75}
+
+\item 
+\hypertarget{instrucao_8c_abeae105a6ead0eb87caedb8ad91a5770}{void {\bfseries lload\-\_\-0} ()}\label{instrucao_8c_abeae105a6ead0eb87caedb8ad91a5770}
+
+\item 
+\hypertarget{instrucao_8c_aadaebe19e5662365a33a9a0ab37b8335}{void {\bfseries lload\-\_\-1} ()}\label{instrucao_8c_aadaebe19e5662365a33a9a0ab37b8335}
+
+\item 
+\hypertarget{instrucao_8c_a772d2097155cfdbd5a8b3f897d84b7e2}{void {\bfseries lload\-\_\-2} ()}\label{instrucao_8c_a772d2097155cfdbd5a8b3f897d84b7e2}
+
+\item 
+\hypertarget{instrucao_8c_a4f6467c1c2e79085cc34fe84ad78f4f0}{void {\bfseries lload\-\_\-3} ()}\label{instrucao_8c_a4f6467c1c2e79085cc34fe84ad78f4f0}
+
+\item 
+\hypertarget{instrucao_8c_affe32f4da26138ad4c46dc734b979055}{void {\bfseries fload\-\_\-0} ()}\label{instrucao_8c_affe32f4da26138ad4c46dc734b979055}
+
+\item 
+\hypertarget{instrucao_8c_a251c7799e471285cb5b69b2e24bd026e}{void {\bfseries fload\-\_\-1} ()}\label{instrucao_8c_a251c7799e471285cb5b69b2e24bd026e}
+
+\item 
+\hypertarget{instrucao_8c_a78a3005be5f239e0fc162fc1351253a6}{void {\bfseries fload\-\_\-2} ()}\label{instrucao_8c_a78a3005be5f239e0fc162fc1351253a6}
+
+\item 
+\hypertarget{instrucao_8c_a3ca0cddbce6c71b1f1639b567d0a2e86}{void {\bfseries fload\-\_\-3} ()}\label{instrucao_8c_a3ca0cddbce6c71b1f1639b567d0a2e86}
+
+\item 
+\hypertarget{instrucao_8c_a6aa7bf5ace90f3e13e42e817383f4581}{void {\bfseries dload\-\_\-0} ()}\label{instrucao_8c_a6aa7bf5ace90f3e13e42e817383f4581}
+
+\item 
+\hypertarget{instrucao_8c_ab2d4de89fe303e1aa1dd1b7686e696df}{void {\bfseries dload\-\_\-1} ()}\label{instrucao_8c_ab2d4de89fe303e1aa1dd1b7686e696df}
+
+\item 
+\hypertarget{instrucao_8c_ae229d0a441abd7b634e07ee3592e8954}{void {\bfseries dload\-\_\-2} ()}\label{instrucao_8c_ae229d0a441abd7b634e07ee3592e8954}
+
+\item 
+\hypertarget{instrucao_8c_aa1de1fc2a11431697fe3903f7a981707}{void {\bfseries dload\-\_\-3} ()}\label{instrucao_8c_aa1de1fc2a11431697fe3903f7a981707}
+
+\item 
+\hypertarget{instrucao_8c_ab051c3c6171f5785a9f6a6110a1807a0}{void {\bfseries aload\-\_\-0} ()}\label{instrucao_8c_ab051c3c6171f5785a9f6a6110a1807a0}
+
+\item 
+\hypertarget{instrucao_8c_add91003517acd6feeb58927db349a8b7}{void {\bfseries aload\-\_\-1} ()}\label{instrucao_8c_add91003517acd6feeb58927db349a8b7}
+
+\item 
+\hypertarget{instrucao_8c_a729776e357c33d581988d154e08ab529}{void {\bfseries aload\-\_\-2} ()}\label{instrucao_8c_a729776e357c33d581988d154e08ab529}
+
+\item 
+\hypertarget{instrucao_8c_aa3fb3edc54e4194c15765d605a701c04}{void {\bfseries aload\-\_\-3} ()}\label{instrucao_8c_aa3fb3edc54e4194c15765d605a701c04}
+
+\item 
+\hypertarget{instrucao_8c_a8c45e9d93b9b4160fcf9273188c4aeb1}{void {\bfseries iaload} ()}\label{instrucao_8c_a8c45e9d93b9b4160fcf9273188c4aeb1}
+
+\item 
+\hypertarget{instrucao_8c_ab0c61415cc28b4f1f5c1452ffc0a3999}{void {\bfseries laload} ()}\label{instrucao_8c_ab0c61415cc28b4f1f5c1452ffc0a3999}
+
+\item 
+\hypertarget{instrucao_8c_abd45903905948ef0d3e850e9ffceb3b1}{void {\bfseries faload} ()}\label{instrucao_8c_abd45903905948ef0d3e850e9ffceb3b1}
+
+\item 
+\hypertarget{instrucao_8c_a6cfe8317c40137884e419d9c9e9259fd}{void {\bfseries daload} ()}\label{instrucao_8c_a6cfe8317c40137884e419d9c9e9259fd}
+
+\item 
+\hypertarget{instrucao_8c_af128b8c4d595787ad11fd099014bd115}{void {\bfseries aaload} ()}\label{instrucao_8c_af128b8c4d595787ad11fd099014bd115}
+
+\item 
+\hypertarget{instrucao_8c_a0828de026525be2db57f3337f1dd1658}{void {\bfseries baload} ()}\label{instrucao_8c_a0828de026525be2db57f3337f1dd1658}
+
+\item 
+\hypertarget{instrucao_8c_ad104cf0f51f7a706a07065b850707970}{void {\bfseries caload} ()}\label{instrucao_8c_ad104cf0f51f7a706a07065b850707970}
+
+\item 
+\hypertarget{instrucao_8c_aa65d7fecec2c6215ed40546f888c43bd}{void {\bfseries saload} ()}\label{instrucao_8c_aa65d7fecec2c6215ed40546f888c43bd}
+
+\item 
+\hypertarget{instrucao_8c_a28a80d06be99de713084ea98747681bd}{void {\bfseries istore} ()}\label{instrucao_8c_a28a80d06be99de713084ea98747681bd}
+
+\item 
+\hypertarget{instrucao_8c_aa74420d088939afdf32f52fe86d4b2f7}{void {\bfseries lstore} ()}\label{instrucao_8c_aa74420d088939afdf32f52fe86d4b2f7}
+
+\item 
+\hypertarget{instrucao_8c_a3e8f01537767e49e052bc272c0922d9b}{void {\bfseries fstore} ()}\label{instrucao_8c_a3e8f01537767e49e052bc272c0922d9b}
+
+\item 
+\hypertarget{instrucao_8c_a30732e79d714a9a8495378fa4c6f3873}{void {\bfseries dstore} ()}\label{instrucao_8c_a30732e79d714a9a8495378fa4c6f3873}
+
+\item 
+\hypertarget{instrucao_8c_afe6496edb460cb6871e9b7b5a50b52eb}{void {\bfseries astore} ()}\label{instrucao_8c_afe6496edb460cb6871e9b7b5a50b52eb}
+
+\item 
+\hypertarget{instrucao_8c_aedbdf11ae3fa8a748d1988f678f8962a}{void {\bfseries istore\-\_\-0} ()}\label{instrucao_8c_aedbdf11ae3fa8a748d1988f678f8962a}
+
+\item 
+\hypertarget{instrucao_8c_a120fd2a91d9c1474b620d367f0ee814a}{void {\bfseries istore\-\_\-1} ()}\label{instrucao_8c_a120fd2a91d9c1474b620d367f0ee814a}
+
+\item 
+\hypertarget{instrucao_8c_ab34a066338af6add5236ac1a93528e82}{void {\bfseries istore\-\_\-2} ()}\label{instrucao_8c_ab34a066338af6add5236ac1a93528e82}
+
+\item 
+\hypertarget{instrucao_8c_a0c2d8e314bca01ab20c2bc79c200ef2d}{void {\bfseries istore\-\_\-3} ()}\label{instrucao_8c_a0c2d8e314bca01ab20c2bc79c200ef2d}
+
+\item 
+\hypertarget{instrucao_8c_a34a9c4656c38f9051e0cd35fa49e12c4}{void {\bfseries lstore\-\_\-0} ()}\label{instrucao_8c_a34a9c4656c38f9051e0cd35fa49e12c4}
+
+\item 
+\hypertarget{instrucao_8c_a2b3d118b1bbe7f6e326b33cf673f0a64}{void {\bfseries lstore\-\_\-1} ()}\label{instrucao_8c_a2b3d118b1bbe7f6e326b33cf673f0a64}
+
+\item 
+\hypertarget{instrucao_8c_af43fe1c19bb5815c373fe5244286bada}{void {\bfseries lstore\-\_\-2} ()}\label{instrucao_8c_af43fe1c19bb5815c373fe5244286bada}
+
+\item 
+\hypertarget{instrucao_8c_aa06af1f01f065c77ea7911e72a633b38}{void {\bfseries lstore\-\_\-3} ()}\label{instrucao_8c_aa06af1f01f065c77ea7911e72a633b38}
+
+\item 
+\hypertarget{instrucao_8c_ad2ea86eafe30b372311ca99e2f67bbeb}{void {\bfseries fstore\-\_\-0} ()}\label{instrucao_8c_ad2ea86eafe30b372311ca99e2f67bbeb}
+
+\item 
+\hypertarget{instrucao_8c_a555a6c512008e55808c7b3d611a86127}{void {\bfseries fstore\-\_\-1} ()}\label{instrucao_8c_a555a6c512008e55808c7b3d611a86127}
+
+\item 
+\hypertarget{instrucao_8c_a4f559ad7d32c2e99eb1de0660e8cb87c}{void {\bfseries fstore\-\_\-2} ()}\label{instrucao_8c_a4f559ad7d32c2e99eb1de0660e8cb87c}
+
+\item 
+\hypertarget{instrucao_8c_adbab062e831d9b905a4e18900f90203b}{void {\bfseries fstore\-\_\-3} ()}\label{instrucao_8c_adbab062e831d9b905a4e18900f90203b}
+
+\item 
+\hypertarget{instrucao_8c_a2ac19bd147427d38595c6d932e9e376e}{void {\bfseries dstore\-\_\-0} ()}\label{instrucao_8c_a2ac19bd147427d38595c6d932e9e376e}
+
+\item 
+\hypertarget{instrucao_8c_abfef85d7b1e463849ddd2cf4c3116580}{void {\bfseries dstore\-\_\-1} ()}\label{instrucao_8c_abfef85d7b1e463849ddd2cf4c3116580}
+
+\item 
+\hypertarget{instrucao_8c_a5d24cd50387162de04f0cd7322ea94ff}{void {\bfseries dstore\-\_\-2} ()}\label{instrucao_8c_a5d24cd50387162de04f0cd7322ea94ff}
+
+\item 
+\hypertarget{instrucao_8c_ad5ef3c987b259bc49a90d7983204e352}{void {\bfseries dstore\-\_\-3} ()}\label{instrucao_8c_ad5ef3c987b259bc49a90d7983204e352}
+
+\item 
+\hypertarget{instrucao_8c_a3741796e90bf158e7bc6d36433585447}{void {\bfseries astore\-\_\-0} ()}\label{instrucao_8c_a3741796e90bf158e7bc6d36433585447}
+
+\item 
+\hypertarget{instrucao_8c_ad4b86f31027907c64e7b41fa3e988270}{void {\bfseries astore\-\_\-1} ()}\label{instrucao_8c_ad4b86f31027907c64e7b41fa3e988270}
+
+\item 
+\hypertarget{instrucao_8c_a5c56511c9767ba7649fefa08277e4add}{void {\bfseries astore\-\_\-2} ()}\label{instrucao_8c_a5c56511c9767ba7649fefa08277e4add}
+
+\item 
+\hypertarget{instrucao_8c_a3daa608a24f761018a2d8de2db63ac0e}{void {\bfseries astore\-\_\-3} ()}\label{instrucao_8c_a3daa608a24f761018a2d8de2db63ac0e}
+
+\item 
+\hypertarget{instrucao_8c_a0d893ebbdfed60a8891f9aa310adf3b5}{void {\bfseries iastore} ()}\label{instrucao_8c_a0d893ebbdfed60a8891f9aa310adf3b5}
+
+\item 
+\hypertarget{instrucao_8c_a0d94f9666466006f4e1efba4565f9621}{void {\bfseries lastore} ()}\label{instrucao_8c_a0d94f9666466006f4e1efba4565f9621}
+
+\item 
+\hypertarget{instrucao_8c_a5a7dd5a2f85f7f7af987f0ce47732759}{void {\bfseries fastore} ()}\label{instrucao_8c_a5a7dd5a2f85f7f7af987f0ce47732759}
+
+\item 
+\hypertarget{instrucao_8c_ad46084fcde36412f9c04aa49cbdab6e7}{void {\bfseries dastore} ()}\label{instrucao_8c_ad46084fcde36412f9c04aa49cbdab6e7}
+
+\item 
+\hypertarget{instrucao_8c_af88b9d0cf27555d24c3b3aec5267a339}{void {\bfseries aastore} ()}\label{instrucao_8c_af88b9d0cf27555d24c3b3aec5267a339}
+
+\item 
+\hypertarget{instrucao_8c_a8d34f3e2213e2ea0b7710c85b7595948}{void {\bfseries bastore} ()}\label{instrucao_8c_a8d34f3e2213e2ea0b7710c85b7595948}
+
+\item 
+\hypertarget{instrucao_8c_a969df3e32c8c5da5aba9ff9bc6830f6a}{void {\bfseries castore} ()}\label{instrucao_8c_a969df3e32c8c5da5aba9ff9bc6830f6a}
+
+\item 
+\hypertarget{instrucao_8c_ad22e5532f8579c296012e98d4762664b}{void {\bfseries sastore} ()}\label{instrucao_8c_ad22e5532f8579c296012e98d4762664b}
+
+\item 
+\hypertarget{instrucao_8c_a312e7f6c761a199c1369fbe651e084f0}{void {\bfseries pop} ()}\label{instrucao_8c_a312e7f6c761a199c1369fbe651e084f0}
+
+\item 
+\hypertarget{instrucao_8c_aa0a7b0e8bd7b85b3befdf254b3e4aa2c}{void {\bfseries pop2} ()}\label{instrucao_8c_aa0a7b0e8bd7b85b3befdf254b3e4aa2c}
+
+\item 
+\hypertarget{instrucao_8c_a841871e8e493d723fa32f6603e144474}{void {\bfseries dup} ()}\label{instrucao_8c_a841871e8e493d723fa32f6603e144474}
+
+\item 
+\hypertarget{instrucao_8c_abbfa5a4140ca24d9147a451202ec0261}{void {\bfseries dup\-\_\-x1} ()}\label{instrucao_8c_abbfa5a4140ca24d9147a451202ec0261}
+
+\item 
+\hypertarget{instrucao_8c_afa7ca353522d6f05cdee507bd8813ac4}{void {\bfseries dup\-\_\-x2} ()}\label{instrucao_8c_afa7ca353522d6f05cdee507bd8813ac4}
+
+\item 
+\hypertarget{instrucao_8c_a21ee32e7ee90d02c99685ebfc4ba7d8b}{void {\bfseries dup2} ()}\label{instrucao_8c_a21ee32e7ee90d02c99685ebfc4ba7d8b}
+
+\item 
+\hypertarget{instrucao_8c_a7adc353e0c29565a46a94f892721a095}{void {\bfseries dup2\-\_\-x1} ()}\label{instrucao_8c_a7adc353e0c29565a46a94f892721a095}
+
+\item 
+\hypertarget{instrucao_8c_ad05c56fb10efa03b1d08b45fcd249caf}{void {\bfseries dup2\-\_\-x2} ()}\label{instrucao_8c_ad05c56fb10efa03b1d08b45fcd249caf}
+
+\item 
+\hypertarget{instrucao_8c_a07bca8cc0cfca0e80cac16305cac9f13}{void {\bfseries swap} ()}\label{instrucao_8c_a07bca8cc0cfca0e80cac16305cac9f13}
+
+\item 
+\hypertarget{instrucao_8c_ae37f8a1e267669e057f9e7917bd8ab39}{void {\bfseries iadd} ()}\label{instrucao_8c_ae37f8a1e267669e057f9e7917bd8ab39}
+
+\item 
+\hypertarget{instrucao_8c_a9f6b80c0262230eb9842d2378fc49cf4}{void {\bfseries ladd} ()}\label{instrucao_8c_a9f6b80c0262230eb9842d2378fc49cf4}
+
+\item 
+\hypertarget{instrucao_8c_a8afa6d5e3d12fc3321017e05eab296dc}{void {\bfseries fadd} ()}\label{instrucao_8c_a8afa6d5e3d12fc3321017e05eab296dc}
+
+\item 
+\hypertarget{instrucao_8c_a772d3b21584c912ca711a418ee1d6a36}{void {\bfseries dadd} ()}\label{instrucao_8c_a772d3b21584c912ca711a418ee1d6a36}
+
+\item 
+\hypertarget{instrucao_8c_a01d07133e63f9ac7e86ee2d3ec9baf8f}{void {\bfseries isub} ()}\label{instrucao_8c_a01d07133e63f9ac7e86ee2d3ec9baf8f}
+
+\item 
+\hypertarget{instrucao_8c_aaa1cc04476ac5a3a1ec66b5098169f91}{void {\bfseries lsub} ()}\label{instrucao_8c_aaa1cc04476ac5a3a1ec66b5098169f91}
+
+\item 
+\hypertarget{instrucao_8c_acd60d95a83a959a7e4c1abdfb52909be}{void {\bfseries fsub} ()}\label{instrucao_8c_acd60d95a83a959a7e4c1abdfb52909be}
+
+\item 
+\hypertarget{instrucao_8c_af38c889b73967d262c395af067071ba1}{void {\bfseries dsub} ()}\label{instrucao_8c_af38c889b73967d262c395af067071ba1}
+
+\item 
+\hypertarget{instrucao_8c_a252b30e3c8b67c5dc8c2ad5b358e8c49}{void {\bfseries imul} ()}\label{instrucao_8c_a252b30e3c8b67c5dc8c2ad5b358e8c49}
+
+\item 
+\hypertarget{instrucao_8c_a12d2fea9cb9a2ac29b655232f28b6a46}{void {\bfseries lmul} ()}\label{instrucao_8c_a12d2fea9cb9a2ac29b655232f28b6a46}
+
+\item 
+\hypertarget{instrucao_8c_a10d30f1e2fcb55284dcc2e4329121b7f}{void {\bfseries fmul} ()}\label{instrucao_8c_a10d30f1e2fcb55284dcc2e4329121b7f}
+
+\item 
+\hypertarget{instrucao_8c_a88c0605a1396c37313618a58e11623b6}{void {\bfseries dmul} ()}\label{instrucao_8c_a88c0605a1396c37313618a58e11623b6}
+
+\item 
+\hypertarget{instrucao_8c_abd1598e346574cb1143404c595f28d63}{void {\bfseries idiv} ()}\label{instrucao_8c_abd1598e346574cb1143404c595f28d63}
+
+\item 
+\hypertarget{instrucao_8c_aa44e50413a638ff669df97ac2223c526}{void {\bfseries ins\-\_\-ldiv} ()}\label{instrucao_8c_aa44e50413a638ff669df97ac2223c526}
+
+\item 
+\hypertarget{instrucao_8c_a36fe02badb66c831b9da05b448c489fc}{void {\bfseries fdiv} ()}\label{instrucao_8c_a36fe02badb66c831b9da05b448c489fc}
+
+\item 
+\hypertarget{instrucao_8c_ad3b90ca72b51776459d43ea7ee1f44c9}{void {\bfseries ddiv} ()}\label{instrucao_8c_ad3b90ca72b51776459d43ea7ee1f44c9}
+
+\item 
+\hypertarget{instrucao_8c_ade3f7ae2b8bf66076ec711047118b210}{void {\bfseries irem} ()}\label{instrucao_8c_ade3f7ae2b8bf66076ec711047118b210}
+
+\item 
+\hypertarget{instrucao_8c_afd8ef785713dfa57189029ec1ab9aac9}{void {\bfseries lrem} ()}\label{instrucao_8c_afd8ef785713dfa57189029ec1ab9aac9}
+
+\item 
+\hypertarget{instrucao_8c_a1992d9a2a798b6e3e308fcd045f0ae6d}{void {\bfseries frem} ()}\label{instrucao_8c_a1992d9a2a798b6e3e308fcd045f0ae6d}
+
+\item 
+\hypertarget{instrucao_8c_a69b44df10a8a1148994306f61b6884fc}{void {\bfseries \-\_\-drem} ()}\label{instrucao_8c_a69b44df10a8a1148994306f61b6884fc}
+
+\item 
+\hypertarget{instrucao_8c_a0b9cbceea9fb0e139c0c671651e29f99}{void {\bfseries ineg} ()}\label{instrucao_8c_a0b9cbceea9fb0e139c0c671651e29f99}
+
+\item 
+\hypertarget{instrucao_8c_aa9bfa074a687ac1c23d0f36d9c39cedc}{void {\bfseries lneg} ()}\label{instrucao_8c_aa9bfa074a687ac1c23d0f36d9c39cedc}
+
+\item 
+\hypertarget{instrucao_8c_a92ded25cd53bb087b251b019a5babb53}{void {\bfseries fneg} ()}\label{instrucao_8c_a92ded25cd53bb087b251b019a5babb53}
+
+\item 
+\hypertarget{instrucao_8c_ac8493828f03e41133fa33a860001321b}{void {\bfseries dneg} ()}\label{instrucao_8c_ac8493828f03e41133fa33a860001321b}
+
+\item 
+\hypertarget{instrucao_8c_ad1790bd7f7ba088526767d70579bdf6f}{void {\bfseries ishl} ()}\label{instrucao_8c_ad1790bd7f7ba088526767d70579bdf6f}
+
+\item 
+\hypertarget{instrucao_8c_a7609e2fa0a7b13871ed165268c517203}{void {\bfseries lshl} ()}\label{instrucao_8c_a7609e2fa0a7b13871ed165268c517203}
+
+\item 
+\hypertarget{instrucao_8c_a04ab90a481c69b7d1c67ed03a5672b6f}{void {\bfseries ishr} ()}\label{instrucao_8c_a04ab90a481c69b7d1c67ed03a5672b6f}
+
+\item 
+\hypertarget{instrucao_8c_a524e6f8741e8c2ab2bf194123341578d}{void {\bfseries lshr} ()}\label{instrucao_8c_a524e6f8741e8c2ab2bf194123341578d}
+
+\item 
+\hypertarget{instrucao_8c_a07527b3c36aefdfa7c6aee9ed9c07dcd}{void {\bfseries iushr} ()}\label{instrucao_8c_a07527b3c36aefdfa7c6aee9ed9c07dcd}
+
+\item 
+\hypertarget{instrucao_8c_aa2f8be3fb4c164d1ed72c675a2319636}{void {\bfseries lushr} ()}\label{instrucao_8c_aa2f8be3fb4c164d1ed72c675a2319636}
+
+\item 
+\hypertarget{instrucao_8c_a33c91ef3a786b39fdf213a29341d0f1c}{void {\bfseries iand} ()}\label{instrucao_8c_a33c91ef3a786b39fdf213a29341d0f1c}
+
+\item 
+\hypertarget{instrucao_8c_a3c29060e61e5ef8929d29158353dfa7e}{void {\bfseries land} ()}\label{instrucao_8c_a3c29060e61e5ef8929d29158353dfa7e}
+
+\item 
+\hypertarget{instrucao_8c_a1b61e8115820a72297d297484dc9072e}{void {\bfseries ior} ()}\label{instrucao_8c_a1b61e8115820a72297d297484dc9072e}
+
+\item 
+\hypertarget{instrucao_8c_ad4ea0c2e3bf8cd6f8fbaed5644ab1a33}{void {\bfseries lor} ()}\label{instrucao_8c_ad4ea0c2e3bf8cd6f8fbaed5644ab1a33}
+
+\item 
+\hypertarget{instrucao_8c_a66dc9092c80d31e38c139d23ec632ad7}{void {\bfseries ixor} ()}\label{instrucao_8c_a66dc9092c80d31e38c139d23ec632ad7}
+
+\item 
+\hypertarget{instrucao_8c_ad7f8e11c8b10535c5f00b02022d3019f}{void {\bfseries lxor} ()}\label{instrucao_8c_ad7f8e11c8b10535c5f00b02022d3019f}
+
+\item 
+\hypertarget{instrucao_8c_a9b9640224970ab26f3ed804039633737}{void {\bfseries iinc} ()}\label{instrucao_8c_a9b9640224970ab26f3ed804039633737}
+
+\item 
+\hypertarget{instrucao_8c_ab70d39ee70866a2332f7726860e7fbfc}{void {\bfseries i2l} ()}\label{instrucao_8c_ab70d39ee70866a2332f7726860e7fbfc}
+
+\item 
+\hypertarget{instrucao_8c_aadc30d76e0798683a1f5579104f8feb8}{void {\bfseries i2f} ()}\label{instrucao_8c_aadc30d76e0798683a1f5579104f8feb8}
+
+\item 
+\hypertarget{instrucao_8c_a9d8deb8e5c5ebae898071e8cf7c6faa7}{void {\bfseries i2d} ()}\label{instrucao_8c_a9d8deb8e5c5ebae898071e8cf7c6faa7}
+
+\item 
+\hypertarget{instrucao_8c_a5e86260d8dd517db67571c027d78dfed}{void {\bfseries l2i} ()}\label{instrucao_8c_a5e86260d8dd517db67571c027d78dfed}
+
+\item 
+\hypertarget{instrucao_8c_a17f70bc1852fdbf3c93ee7686903f85b}{void {\bfseries l2f} ()}\label{instrucao_8c_a17f70bc1852fdbf3c93ee7686903f85b}
+
+\item 
+\hypertarget{instrucao_8c_a462cebd11df3daa816e0163289d3fa91}{void {\bfseries l2d} ()}\label{instrucao_8c_a462cebd11df3daa816e0163289d3fa91}
+
+\item 
+\hypertarget{instrucao_8c_a40903a5dbcda012b0796b4129fb925cb}{void {\bfseries f2i} ()}\label{instrucao_8c_a40903a5dbcda012b0796b4129fb925cb}
+
+\item 
+\hypertarget{instrucao_8c_a2f91c451a8e0a04530705828b3c7d239}{void {\bfseries f2l} ()}\label{instrucao_8c_a2f91c451a8e0a04530705828b3c7d239}
+
+\item 
+\hypertarget{instrucao_8c_a2db165b053ae60790ecf22be4e56b73f}{void {\bfseries f2d} ()}\label{instrucao_8c_a2db165b053ae60790ecf22be4e56b73f}
+
+\item 
+\hypertarget{instrucao_8c_a4568704d5ad58e1b2ff763db43253129}{void {\bfseries d2i} ()}\label{instrucao_8c_a4568704d5ad58e1b2ff763db43253129}
+
+\item 
+\hypertarget{instrucao_8c_a605e0390f8cb63718791a45cc8f653eb}{void {\bfseries d2l} ()}\label{instrucao_8c_a605e0390f8cb63718791a45cc8f653eb}
+
+\item 
+\hypertarget{instrucao_8c_a29f62ca82d2ff3ddb9d45638c5985706}{void {\bfseries d2f} ()}\label{instrucao_8c_a29f62ca82d2ff3ddb9d45638c5985706}
+
+\item 
+\hypertarget{instrucao_8c_a9cd69873779952a0573433f1108297ec}{void {\bfseries i2b} ()}\label{instrucao_8c_a9cd69873779952a0573433f1108297ec}
+
+\item 
+\hypertarget{instrucao_8c_a5ee7da12ed48a0ddf225dab90f545220}{void {\bfseries i2c} ()}\label{instrucao_8c_a5ee7da12ed48a0ddf225dab90f545220}
+
+\item 
+\hypertarget{instrucao_8c_a03e39da403bc5933756defea4506b565}{void {\bfseries i2s} ()}\label{instrucao_8c_a03e39da403bc5933756defea4506b565}
+
+\item 
+\hypertarget{instrucao_8c_acf8b8fe8a537ea0dbaf4eead0b4ae832}{void {\bfseries lcmp} ()}\label{instrucao_8c_acf8b8fe8a537ea0dbaf4eead0b4ae832}
+
+\item 
+\hypertarget{instrucao_8c_afcdfba24673cba9a62b2bedd76282453}{void {\bfseries fcmpl} ()}\label{instrucao_8c_afcdfba24673cba9a62b2bedd76282453}
+
+\item 
+\hypertarget{instrucao_8c_a2dcaceab565c333a01b17268014b4c0a}{void {\bfseries fcmpg} ()}\label{instrucao_8c_a2dcaceab565c333a01b17268014b4c0a}
+
+\item 
+\hypertarget{instrucao_8c_aac1321b58332c43f2b74e64a44004ff0}{void {\bfseries dcmpl} ()}\label{instrucao_8c_aac1321b58332c43f2b74e64a44004ff0}
+
+\item 
+\hypertarget{instrucao_8c_a8c14a40e0041167b0e7bc715b89472f5}{void {\bfseries dcmpg} ()}\label{instrucao_8c_a8c14a40e0041167b0e7bc715b89472f5}
+
+\item 
+\hypertarget{instrucao_8c_a00f7f2c7697351802eca88223c74ea3a}{void {\bfseries ifeq} ()}\label{instrucao_8c_a00f7f2c7697351802eca88223c74ea3a}
+
+\item 
+\hypertarget{instrucao_8c_a554aa695cd67a5d9487a72426bb08330}{void {\bfseries ifne} ()}\label{instrucao_8c_a554aa695cd67a5d9487a72426bb08330}
+
+\item 
+\hypertarget{instrucao_8c_ad77daa64120db9e391d82efd349e0db6}{void {\bfseries iflt} ()}\label{instrucao_8c_ad77daa64120db9e391d82efd349e0db6}
+
+\item 
+\hypertarget{instrucao_8c_a9866c2d4df3b46703dfc5d78b7ff1e94}{void {\bfseries ifge} ()}\label{instrucao_8c_a9866c2d4df3b46703dfc5d78b7ff1e94}
+
+\item 
+\hypertarget{instrucao_8c_a6e4e8b89a51f6a116e9747c6ba6971ca}{void {\bfseries ifgt} ()}\label{instrucao_8c_a6e4e8b89a51f6a116e9747c6ba6971ca}
+
+\item 
+\hypertarget{instrucao_8c_afe217b1e83881dd72a69978bbaae1952}{void {\bfseries ifle} ()}\label{instrucao_8c_afe217b1e83881dd72a69978bbaae1952}
+
+\item 
+\hypertarget{instrucao_8c_a470c812834d9d9f0c320f565b1003009}{void {\bfseries if\-\_\-icmpeq} ()}\label{instrucao_8c_a470c812834d9d9f0c320f565b1003009}
+
+\item 
+\hypertarget{instrucao_8c_ad0175ab3a89f8a7bf5adfef314f1679f}{void {\bfseries if\-\_\-icmpne} ()}\label{instrucao_8c_ad0175ab3a89f8a7bf5adfef314f1679f}
+
+\item 
+\hypertarget{instrucao_8c_a8b80858427afbf3aff075a379c37c213}{void {\bfseries if\-\_\-icmplt} ()}\label{instrucao_8c_a8b80858427afbf3aff075a379c37c213}
+
+\item 
+\hypertarget{instrucao_8c_a875d15b6c1fa77a9f9e519e2d8822de3}{void {\bfseries if\-\_\-icmpge} ()}\label{instrucao_8c_a875d15b6c1fa77a9f9e519e2d8822de3}
+
+\item 
+\hypertarget{instrucao_8c_ab92037e7bb9912bed634f84fb54cb62b}{void {\bfseries if\-\_\-icmpgt} ()}\label{instrucao_8c_ab92037e7bb9912bed634f84fb54cb62b}
+
+\item 
+\hypertarget{instrucao_8c_af27093d4a440ae4ed4c141e7dc036e53}{void {\bfseries if\-\_\-icmple} ()}\label{instrucao_8c_af27093d4a440ae4ed4c141e7dc036e53}
+
+\item 
+\hypertarget{instrucao_8c_ab590f77ad4e7cefbfb932bbc0ebd828b}{void {\bfseries if\-\_\-acmpeq} ()}\label{instrucao_8c_ab590f77ad4e7cefbfb932bbc0ebd828b}
+
+\item 
+\hypertarget{instrucao_8c_a9da2f76a2311bb18c095828a45d5e3b1}{void {\bfseries if\-\_\-acmpne} ()}\label{instrucao_8c_a9da2f76a2311bb18c095828a45d5e3b1}
+
+\item 
+\hypertarget{instrucao_8c_a90fe5ed5390bbde442c25342f6634910}{void {\bfseries ins\-\_\-goto} ()}\label{instrucao_8c_a90fe5ed5390bbde442c25342f6634910}
+
+\item 
+\hypertarget{instrucao_8c_a80622b913b8283b74fd2df62501af707}{void {\bfseries jsr} ()}\label{instrucao_8c_a80622b913b8283b74fd2df62501af707}
+
+\item 
+\hypertarget{instrucao_8c_aadd5fc114c0604b21457e1dca7c8fb87}{void {\bfseries ret} ()}\label{instrucao_8c_aadd5fc114c0604b21457e1dca7c8fb87}
+
+\item 
+\hypertarget{instrucao_8c_a346a4979f41279912f358424b8c9cdb8}{void {\bfseries tableswitch} ()}\label{instrucao_8c_a346a4979f41279912f358424b8c9cdb8}
+
+\item 
+\hypertarget{instrucao_8c_a2f88ead173d23c965568aea52b1a0768}{void {\bfseries lookupswitch} ()}\label{instrucao_8c_a2f88ead173d23c965568aea52b1a0768}
+
+\item 
+\hypertarget{instrucao_8c_a3a8cf7689c78ddea746200743907f5a7}{void {\bfseries ireturn} ()}\label{instrucao_8c_a3a8cf7689c78ddea746200743907f5a7}
+
+\item 
+\hypertarget{instrucao_8c_a3619de9ed777231ca7783e97c4a3bbb8}{void {\bfseries lreturn} ()}\label{instrucao_8c_a3619de9ed777231ca7783e97c4a3bbb8}
+
+\item 
+\hypertarget{instrucao_8c_a26a481f90473433e3602d5a98268bb2e}{void {\bfseries freturn} ()}\label{instrucao_8c_a26a481f90473433e3602d5a98268bb2e}
+
+\item 
+\hypertarget{instrucao_8c_a50018d2162d978eb4bc01ab41c6153ed}{void {\bfseries dreturn} ()}\label{instrucao_8c_a50018d2162d978eb4bc01ab41c6153ed}
+
+\item 
+\hypertarget{instrucao_8c_abc27098abf8c7eb4db5be4034f0e5482}{void {\bfseries areturn} ()}\label{instrucao_8c_abc27098abf8c7eb4db5be4034f0e5482}
+
+\item 
+\hypertarget{instrucao_8c_a076a08f7e1f09aaf8492c578c1cc8b4b}{void {\bfseries ins\-\_\-return} ()}\label{instrucao_8c_a076a08f7e1f09aaf8492c578c1cc8b4b}
+
+\item 
+\hypertarget{instrucao_8c_a83c0c1e57fa9474537180722bdaf65ec}{void {\bfseries getstatic} ()}\label{instrucao_8c_a83c0c1e57fa9474537180722bdaf65ec}
+
+\item 
+\hypertarget{instrucao_8c_a3b8d9e095398de486b1443bb15adc340}{void {\bfseries putstatic} ()}\label{instrucao_8c_a3b8d9e095398de486b1443bb15adc340}
+
+\item 
+\hypertarget{instrucao_8c_a840f06b326362c8d7d80b20820618f81}{void {\bfseries getfield} ()}\label{instrucao_8c_a840f06b326362c8d7d80b20820618f81}
+
+\item 
+\hypertarget{instrucao_8c_ac99fc237dc3eb223fe72de3a325220f7}{void {\bfseries putfield} ()}\label{instrucao_8c_ac99fc237dc3eb223fe72de3a325220f7}
+
+\item 
+\hypertarget{instrucao_8c_a78801a57dd7317b58754d741e22607a7}{void {\bfseries invokevirtual} ()}\label{instrucao_8c_a78801a57dd7317b58754d741e22607a7}
+
+\item 
+\hypertarget{instrucao_8c_aea396d65920fd2046b81c2b5742f8fc2}{void {\bfseries invokespecial} ()}\label{instrucao_8c_aea396d65920fd2046b81c2b5742f8fc2}
+
+\item 
+\hypertarget{instrucao_8c_a99b74fdcaa5d59615718fc49f4cb1bf2}{void {\bfseries invokestatic} ()}\label{instrucao_8c_a99b74fdcaa5d59615718fc49f4cb1bf2}
+
+\item 
+\hypertarget{instrucao_8c_a04465c61aa4c123ce79dc562244e7af8}{void {\bfseries invokeinterface} ()}\label{instrucao_8c_a04465c61aa4c123ce79dc562244e7af8}
+
+\item 
+\hypertarget{instrucao_8c_a8b31d2a9b5f40beb9895de019f02e99d}{void {\bfseries ins\-\_\-new} ()}\label{instrucao_8c_a8b31d2a9b5f40beb9895de019f02e99d}
+
+\item 
+\hypertarget{instrucao_8c_ac3fba9efa00d7e123c76bb67ef1253e4}{void {\bfseries newarray} ()}\label{instrucao_8c_ac3fba9efa00d7e123c76bb67ef1253e4}
+
+\item 
+\hypertarget{instrucao_8c_a48d28a45eb2f30e7a698c67305bb4b51}{void {\bfseries anewarray} ()}\label{instrucao_8c_a48d28a45eb2f30e7a698c67305bb4b51}
+
+\item 
+\hypertarget{instrucao_8c_a3e9152027bdb3f5d696e31f3fef4e55f}{void {\bfseries arraylength} ()}\label{instrucao_8c_a3e9152027bdb3f5d696e31f3fef4e55f}
+
+\item 
+\hypertarget{instrucao_8c_afa2682319236878a5a1fc6a2152e67ee}{void {\bfseries athrow} ()}\label{instrucao_8c_afa2682319236878a5a1fc6a2152e67ee}
+
+\item 
+\hypertarget{instrucao_8c_abbc93f2c04b51d183a67b81ebb14379c}{void {\bfseries checkcast} ()}\label{instrucao_8c_abbc93f2c04b51d183a67b81ebb14379c}
+
+\item 
+\hypertarget{instrucao_8c_a4c4804ae17465674d489279d4f95da76}{void {\bfseries instanceof} ()}\label{instrucao_8c_a4c4804ae17465674d489279d4f95da76}
+
+\item 
+\hypertarget{instrucao_8c_a3a32107ac2f23dcbefe510cd60a15394}{void {\bfseries monitorenter} ()}\label{instrucao_8c_a3a32107ac2f23dcbefe510cd60a15394}
+
+\item 
+\hypertarget{instrucao_8c_a314cbb7accae1f69768806ce20399b62}{void {\bfseries monitorexit} ()}\label{instrucao_8c_a314cbb7accae1f69768806ce20399b62}
+
+\item 
+\hypertarget{instrucao_8c_a296e4d798368b2136158a86aa0b74e4f}{void {\bfseries wide} ()}\label{instrucao_8c_a296e4d798368b2136158a86aa0b74e4f}
+
+\item 
+\hypertarget{instrucao_8c_ae3250087ab8dbd608d14e21f1377cbde}{void {\bfseries multianewarray} ()}\label{instrucao_8c_ae3250087ab8dbd608d14e21f1377cbde}
+
+\item 
+\hypertarget{instrucao_8c_a1fd103c7e18b630298192875914467fa}{void {\bfseries ifnull} ()}\label{instrucao_8c_a1fd103c7e18b630298192875914467fa}
+
+\item 
+\hypertarget{instrucao_8c_ae39581b0d862caf7323264596950cdd9}{void {\bfseries ifnonnull} ()}\label{instrucao_8c_ae39581b0d862caf7323264596950cdd9}
+
+\item 
+\hypertarget{instrucao_8c_a644324ed1a37c333efbc3f9c2ef2efa3}{void {\bfseries goto\-\_\-w} ()}\label{instrucao_8c_a644324ed1a37c333efbc3f9c2ef2efa3}
+
+\item 
+\hypertarget{instrucao_8c_a2db60a7b925afb86257991907c127e99}{void {\bfseries jsr\-\_\-w} ()}\label{instrucao_8c_a2db60a7b925afb86257991907c127e99}
+
+\end{DoxyCompactItemize}
+\subsection*{Variáveis}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structframe}{frame} $\ast$ \hyperlink{instrucao_8c_a35603863074b337b41111e9f4352a605}{frame\-Corrente}
+\item 
+\hyperlink{structdecodificador}{decodificador} \hyperlink{instrucao_8c_ace4cdbcec44c53ef035b5d4c1f732c5b}{dec} \mbox{[}N\-U\-M\-\_\-\-I\-N\-S\-T\-R\-U\-C\-A\-O\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Descrição Detalhada}
+\hypertarget{metodo_8c_DESCRIPTION}{}\subsection{D\-E\-S\-C\-R\-I\-P\-T\-I\-O\-N}\label{metodo_8c_DESCRIPTION}
+Universidade de Brasilia
+
+Gabriel Mesquita de Araujo 13/0009121\par
+Gabriel Ferreira Silva 14/0140131\par
+Renato 13/0009121\par
+Leandro 13/0009121\par
+Carlos 13/0009121\par
+\par
+ Software Basico -\/ 1/2016\par
+ Professor\-: Marcelo Ladeira\par
+\par
+ Arquivo que contém as instrucoes implementadas pelo nosso program Conforme sugerido, foi usado um vetor de ponteiro para funcoes 
+
+\subsection{Funções}
+\hypertarget{instrucao_8c_a0b675f280bfa2d4c4a0b2e791e0db196}{\index{instrucao.\-c@{instrucao.\-c}!executar\-Instrucoes@{executar\-Instrucoes}}
+\index{executar\-Instrucoes@{executar\-Instrucoes}!instrucao.c@{instrucao.\-c}}
+\subsubsection[{executar\-Instrucoes}]{\setlength{\rightskip}{0pt plus 5cm}void executar\-Instrucoes (
+\begin{DoxyParamCaption}
+\item[{uint8\-\_\-t}]{opcode}
+\end{DoxyParamCaption}
+)}}\label{instrucao_8c_a0b675f280bfa2d4c4a0b2e791e0db196}
+Funcao para executar uma instrucao, com base no opcode passado\par
+
+\begin{DoxyParams}{Parâmetros}
+{\em uint8\-\_\-t} & correspondente ao opcode da instrucao \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Retorna}
+void 
+\end{DoxyReturn}
+\hypertarget{instrucao_8c_a340ac7bb6a55889d1abaa85015e5e59f}{\index{instrucao.\-c@{instrucao.\-c}!new\-Instrucoes@{new\-Instrucoes}}
+\index{new\-Instrucoes@{new\-Instrucoes}!instrucao.c@{instrucao.\-c}}
+\subsubsection[{new\-Instrucoes}]{\setlength{\rightskip}{0pt plus 5cm}void new\-Instrucoes (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{instrucao_8c_a340ac7bb6a55889d1abaa85015e5e59f}
+Função que aponta para uma implementação de cada instrução de acordo com o opcode fornecido. 
+\begin{DoxyParams}{Parâmetros}
+{\em void} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Retorna}
+void 
+\end{DoxyReturn}
+
+
+\subsection{Variáveis}
+\hypertarget{instrucao_8c_ace4cdbcec44c53ef035b5d4c1f732c5b}{\index{instrucao.\-c@{instrucao.\-c}!dec@{dec}}
+\index{dec@{dec}!instrucao.c@{instrucao.\-c}}
+\subsubsection[{dec}]{\setlength{\rightskip}{0pt plus 5cm}{\bf decodificador} dec\mbox{[}N\-U\-M\-\_\-\-I\-N\-S\-T\-R\-U\-C\-A\-O\mbox{]}}}\label{instrucao_8c_ace4cdbcec44c53ef035b5d4c1f732c5b}
+o decodificador permite eh um array com informacoes das varias instrucoes\par
+a partir do opcode da instrucao, pode-\/se pelo decodificador descobrir o nome e quantos bytes ele ocupa \hypertarget{instrucao_8c_a35603863074b337b41111e9f4352a605}{\index{instrucao.\-c@{instrucao.\-c}!frame\-Corrente@{frame\-Corrente}}
+\index{frame\-Corrente@{frame\-Corrente}!instrucao.c@{instrucao.\-c}}
+\subsubsection[{frame\-Corrente}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf frame}$\ast$ frame\-Corrente}}\label{instrucao_8c_a35603863074b337b41111e9f4352a605}
+Acesso ao frame corrente declarado no modulo \hyperlink{frame_8h_source}{frame.\-h} 

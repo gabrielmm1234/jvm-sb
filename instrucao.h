@@ -11,8 +11,8 @@ void (*instrucao[256]) ();
 //Função que inicializa o vetor de ponteiro para funções
 //Com cada função sendo acessada pelo opcode correspondente.
 void executarInstrucoes(uint8_t opcode);
-void newInstrucoes(int);
-//void executarInstrucoes(uint8_t);
+void newInstrucoes();
+
 /* Cabeçalho de instruções implementadas */
 void nop();
 void aconst_null();

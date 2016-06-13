@@ -311,9 +311,36 @@ void bipush(){
 void sipush(){
 
 }
-void ldc(){
-    uint8_t indice;
 
+int obtem_utf_eq(cp_info* cp, int pos_pool)
+{
+    int tag;
+
+    // pega tag 
+    tag = cp[pos_pool].tag;
+
+    // se a tag for o de um class info 
+    if (tag == CONSTANT_Utf8)
+    {
+        // imprime informacao e sai
+        return pos_pool;
+    }
+
+    // senao, de acordo com a tag, decide qual sera a proxima posicao da cte pool que iremos olhar
+    switch(tag)
+    {
+        // para fieldref e outros ele bifurcava e seguia dois 
+        // como fazer nesses casos?
+        case CONSTANT_Class:
+            return obtem_utf_eq(cp, cp[pos_pool].info.Class.name_index - 1);
+
+        case CONSTANT_String:
+            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
+    }
+}
+void ldc(){
+    uint8_t indice, indice_utf;
+    
 	printf("Entrei no ldc!!\n");
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
@@ -321,6 +348,7 @@ void ldc(){
 
     // pega indice 
     indice = frameCorrente->code[frameCorrente->pc + 1];
+    indice_utf = obtem_utf_eq(frameCorrente->constant_pool, indice-1); 
 
     // se o indice para a constant pool for um int
     //if (frameCorrente->cp_info[indice].tag == CONSTANT_Integer)
@@ -335,7 +363,7 @@ void ldc(){
     if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String)
     {
         // poe uma referencia a essa instancia na pilha de operandos
-        frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth] = (int32_t) indice;
+        frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth] = (int32_t) indice_utf;
 
         // incrementa profundidade da pilha de operandos 
         frameCorrente->pilha_op->depth += 1;

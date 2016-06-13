@@ -19,6 +19,7 @@
 
 #include "instrucao.h"
 #include "frame.h"
+#include "carregador.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -882,11 +883,45 @@ void invokevirtual(){
 	printf("Entrei no invokevirtual!!\n");
 
 	//Executa a instrução.
-    
+
+
+    char* nomeClasse;
+    char* nomeMetodo;
+    char* descricaoMetodo;
+    uint16_t nomeMetodoAux, descricaoMetodoAux,nomeTipoAux;
+    uint32_t resultado;
+    int32_t classeIndice;
     // pega indice 
     
     // se a referencia a constant pool nao for uma referencia simbolica a um metodo
         // avisa erro e para
+    uint32_t pcAux = frameCorrente->code[frameCorrente->pc + 2];
+
+    classeIndice = frameCorrente->constant_pool[pcAux - 1].info.Methodref.class_index;
+
+    nomeClasse = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[classeIndice - 1].info.Class.name_index);
+    printf("nomeClasse: %s\n",nomeClasse);
+
+    nomeTipoAux = frameCorrente->constant_pool[pcAux - 1].info.Methodref.name_and_type_index;
+
+    nomeMetodoAux = frameCorrente->constant_pool[nomeTipoAux - 1].info.NameAndType.name_index;
+
+	descricaoMetodoAux = frameCorrente->constant_pool[nomeTipoAux - 1].info.NameAndType.descriptor_index;
+	
+
+    nomeMetodo = retornaNome(frameCorrente->classe, nomeMetodoAux);
+    printf("nomeMetodo: %s\n",nomeMetodo);
+
+    descricaoMetodo = retornaNome(frameCorrente->classe, descricaoMetodoAux);
+    printf("descricaoMetodo: %s\n",descricaoMetodo);
+
+	if((strcmp(nomeClasse, "java/io/PrintStream") == 0) && (strcmp(nomeMetodo,"println") == 0)){
+		if(strstr(descricaoMetodo, "Ljava/lang/String") != NULL) {
+			resultado = frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth];
+			printf("Entrei no print!\n");
+			printf("%s\n",(char *)resultado);
+		}
+	}
     
     // se for uma chamada a printStream 
         // nesse caso usa printf do C 
@@ -901,6 +936,7 @@ void invokevirtual(){
 		frameCorrente->pc++;
 	printf("novo pc: %d\n",frameCorrente->pc);
 	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
+	exit(0);
 
 }
 void invokespecial(){

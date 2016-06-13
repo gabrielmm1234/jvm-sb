@@ -14,5 +14,6 @@ extern area_metodos area_met;
 int32_t carregaMemClasse(char* );
 char* retornaNomeClasse(classFile* );
 classFile* buscaClasseIndice(int );
+char * retornaNome(classFile* cf, uint16_t indiceNome);
 
 #endif

@@ -117,3 +117,15 @@ char* retornaNomeClasse(classFile* classe){
 classFile* buscaClasseIndice(int indice){
 	return indice >= area_met.num_classes ? NULL : area_met.array_classes[indice];
 }
+
+char * retornaNome(classFile* cf, uint16_t indiceNome) {
+	int i;
+	char* retorno = malloc((cf->constant_pool[indiceNome - 1]).info.Utf8.length + 1);
+
+	for (i = 0; i < (cf->constant_pool[indiceNome - 1]).info.Utf8.length; i++) {
+		retorno[i] = (char) (cf->constant_pool[indiceNome - 1]).info.Utf8.bytes[i];
+	}
+	retorno[i] = '\0';
+
+	return retorno;
+}

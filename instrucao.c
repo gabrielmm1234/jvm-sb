@@ -20,6 +20,8 @@
 #include "instrucao.h"
 #include "frame.h"
 #include "carregador.h"
+#include "area_metodos.h"
+#include "metodo.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -630,9 +632,18 @@ void sastore(){
  * @return void 
  */
 void pop(){
-	//TODO pop
+	printf("Entrei no pop\n");
+	pop_op(frameCorrente);
 
-	//TODO autaliza pc
+	//autaliza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 
 void pop2(){
@@ -645,12 +656,25 @@ void pop2(){
  * @return void 
  */
 void dup(){
-	//TODO auxiliar = pop
+	printf("Entrei no dup\n");
+	int32_t aux;
 
-	//TODO push auxiliar
-	//TODO push auxiliar
+	//Desempilha
+	aux = pop_op(frameCorrente);
 
-	//TODO atualiza pc
+	//Duplica
+	push(frameCorrente,aux);
+	push(frameCorrente,aux);
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 
 void dup_x1(){
@@ -1170,6 +1194,21 @@ void invokevirtual(){
  * @return void 
  */
 void invokespecial(){
+	printf("Entrei no invokespecial\n");
+
+	//Executar instrução.
+
+	//Atualiza PC.
+
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);	
 
 }
 
@@ -1191,11 +1230,42 @@ void invokeinterface(){
  * @return void 
  */
 void ins_new(){
+	printf("Entrei no new!\n");
+	uint32_t indice;
+	int32_t aux;
+	char* nomeClasse;
+	classFile* classe;
+	objeto* objeto;
 	//TODO cria objeto no heap(array).
 
+	//Pega indice na instrução.
+	indice = frameCorrente->code[2+(frameCorrente->pc)];
+
+	//Pega o nome da classe apontado pelo indice.
+	nomeClasse = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[indice-1].info.Class.name_index);
+
+	//Busca indice da classe no array de classeFiles
+	aux = carregaMemClasse(nomeClasse);
+
+	//Pega classFile pelo indice no array de classes
+	classe = buscaClasseIndice(aux);
+
+	//Cria um objeto a partir do classFile.
+	objeto = criaObjeto(classe);
+
 	//TODO empilha objeto na pilha de operandos (push)
+	push(frameCorrente,(int32_t) objeto);
 
 	//TODO atualia pc.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 void newarray(){
 

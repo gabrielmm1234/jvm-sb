@@ -20,8 +20,12 @@
 #include "frame.h"
 #include "metodo.h"
 #include "instrucao.h"
+#include "area_metodos.h"
 
 extern struct frame* frameCorrente;
+
+uint32_t numObjetos = 0;
+
 
 /**
  * Função para retornar uma referencia ao metodo main do primeiro .class carregado.
@@ -84,4 +88,31 @@ void executaFrameCorrente(){
 		executarInstrucoes(frameCorrente->code[frameCorrente->pc]);
 	}
 	desalocaFrame();
+}
+
+objeto* criaObjeto(classFile* classe){
+	objeto* objeto;
+
+	if(numObjetos == 0){
+		heap = calloc(128,sizeof(struct objeto*));
+	}
+
+	//Aloca espaço e inicializa classe do objeto.
+	objeto = calloc(sizeof(objeto),1);
+	objeto->classe = classe;
+
+	//Aloca espaço para os fields.
+	objeto->campos = calloc(sizeof(uint32_t), classe->fields_count);
+	objeto->indiceCampos = calloc(sizeof(uint32_t), classe->fields_count);
+
+	//Preenche o objeto com os indices dos fields.
+	for(int i = 0; i < classe->fields_count; i++){
+		objeto->indiceCampos[i] = classe->fields[i].name_index; 
+	}
+
+	//Coloca no heap
+	heap[numObjetos] = objeto;
+	numObjetos++;
+	//retorna objeto
+	return objeto;
 }

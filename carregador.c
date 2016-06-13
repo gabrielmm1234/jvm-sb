@@ -52,8 +52,9 @@ int32_t carregaMemClasse(char* nomeClass){
 
 	//Se ja esta carregado retorna posição no array de classes.
 	for (int32_t i = 0; i < area_met.num_classes; i++) {
-		if (strcmp(nomeClass, retornaNomeClasse(area_met.array_classes[i])) == 0)
+		if (strcmp(nomeClass, retornaNomeClasse(area_met.array_classes[i])) == 0){
 			return i;
+		}
 	}
 
 	//Se não está carregado carrega e salva no array de classes.
@@ -92,19 +93,18 @@ int32_t carregaMemClasse(char* nomeClass){
  */
 char* retornaNomeClasse(classFile* classe){
 	uint16_t thisClass = classe->this_class;
-	uint16_t nameIndex = (classe->constant_pool[thisClass]).info.Class.name_index;
+	uint16_t nameIndex = (classe->constant_pool[thisClass - 1]).info.Class.name_index;
 
 	int i;
-	char* retorno = (char*) malloc((classe->constant_pool[nameIndex]).info.Utf8.length + 1);
+	char* retorno = (char*) malloc((classe->constant_pool[nameIndex - 1]).info.Utf8.length + 1);
 
 	// Percorre o bytes na constant pool e salva no retorno.
-	for (i = 0; i < ( classe->constant_pool[nameIndex]).info.Utf8.length; i++) {
-		retorno[i] = (char) (classe->constant_pool[nameIndex]).info.Utf8.bytes[i];
+	for (i = 0; i < ( classe->constant_pool[nameIndex - 1]).info.Utf8.length; i++) {
+		retorno[i] = (char) (classe->constant_pool[nameIndex - 1]).info.Utf8.bytes[i];
 	}
 
 	// \0 no final do nome da classe a ser retornada
 	retorno[i] = '\0';
-
 	return retorno;
 }
 

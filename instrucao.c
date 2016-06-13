@@ -272,7 +272,16 @@ void aconst_null(){
 void iconst_m1(){
 
 }
+
+/**
+ * Funcao que empilha 0 na pilha de operandos.
+ * @param void
+ * @return void 
+ */
 void iconst_0(){
+	//TODO push 0
+
+	//TODO atualiza pc.
 
 }
 void iconst_1(){
@@ -296,7 +305,15 @@ void lconst_0(){
 void lconst_1(){
 
 }
+
+/**
+ * Funcao que coloca 0.0 na pilha.
+ * @param void
+ * @return void 
+ */
 void fconst_0(){
+	//TODO push 0.0
+	//TODO atualiza pc.
 
 }
 void fconst_1(){
@@ -311,7 +328,17 @@ void dconst_0(){
 void dconst_1(){
 
 }
+
+/**
+ * Acessa um parametro(8 bits) da instrução em empilha na pilha de operandos.
+ * @param void
+ * @return void 
+ */
 void bipush(){
+	//TODO acessa arg1
+	//TODO push arg1
+
+	//TODO atualiza pc.
 
 }
 void sipush(){
@@ -384,6 +411,12 @@ void ldc(){
 void ldc_w(){
 
 }
+
+/**
+ * Acessa a constant pool num campo de 64 bits e coloca na pilha.
+ * @param void
+ * @return void 
+ */
 void ldc2_w(){
 
 }
@@ -450,8 +483,16 @@ void dload_2(){
 void dload_3(){
 
 }
-void aload_0(){
 
+/**
+ * Acessa posição 0 do array de var local e empilha na pilha de operandos.
+ * @param void
+ * @return void 
+ */
+void aload_0(){
+	//TODO push(frameCorrente->fields[0])
+
+	//TODO atualiza pc.
 }
 void aload_1(){
 
@@ -585,15 +626,36 @@ void castore(){
 void sastore(){
 
 }
-void pop(){
 
+/**
+ * Funcao que desempilha um valor da pilha de operandos.
+ * @param void
+ * @return void 
+ */
+void pop(){
+	//TODO pop
+
+	//TODO autaliza pc
 }
+
 void pop2(){
 
 }
-void dup(){
 
+/**
+ * Instrução que retira valor da pilha e adiciona de volta duplicado.
+ * @param void
+ * @return void 
+ */
+void dup(){
+	//TODO auxiliar = pop
+
+	//TODO push auxiliar
+	//TODO push auxiliar
+
+	//TODO atualiza pc
 }
+
 void dup_x1(){
 
 }
@@ -612,7 +674,18 @@ void dup2_x2(){
 void swap(){
 
 }
+
+/**
+ * Funcao desempilha dois valores inteiros, soma-os e empilha resultado.
+ * @param void
+ * @return void 
+ */
 void iadd(){
+	//TODO pop val1
+	//TODO pop val2
+	//TODO push vai + val2
+
+	//TODO atualiza pc.
 
 }
 void ladd(){
@@ -621,6 +694,12 @@ void ladd(){
 void fadd(){
 
 }
+
+/**
+ * Desempilha dois valores, soma e empilha dois valores double.
+ * @param void
+ * @return void 
+ */
 void dadd(){
 
 }
@@ -633,11 +712,28 @@ void lsub(){
 void fsub(){
 
 }
+
+/**
+ * Desempilha 2 valores double da pilha, subtrai e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void dsub(){
 
 }
-void imul(){
 
+/**
+ * Desempilha 2 valores da pilha, multiplica-os e empilha o resultado.
+ * @param void
+ * @return void 
+ */
+void imul(){
+	//TODO pop val1
+	//TODO pop val2
+
+	//TODO push val1 * val2
+
+	//TODO atualiza pc.
 }
 void lmul(){
 
@@ -645,6 +741,12 @@ void lmul(){
 void fmul(){
 
 }
+
+/**
+ * Desempilha 2 valores double da pilha, multiplica-os e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void dmul(){
 
 }
@@ -657,6 +759,12 @@ void ins_ldiv(){
 void fdiv(){
 
 }
+
+/**
+ * Desempilha dois valores double da pilha divide e empilha o resultado,
+ * @param void
+ * @return void 
+ */
 void ddiv(){
 
 }
@@ -672,7 +780,18 @@ void frem(){
 void _drem(){
 
 }
+
+/**
+ * Desempilha um int ,negativa e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void ineg(){
+	//TODO pop val1
+	//TODO -val1
+	//TODO push val1
+
+	//TODO atualiza pc.
 
 }
 void lneg(){
@@ -726,9 +845,27 @@ void iinc(){
 void i2l(){
 
 }
+
+/**
+ * Funcao que desempilha um inteiro da pilha, converte para um float e empilha
+ * o resultado.
+ * @param void
+ * @return void 
+ */
 void i2f(){
+	//TODO pop val
+	//TODO (float) val
+	//TODO push val
+
+	//TODO atualiza pc.
 
 }
+
+/**
+ * Desempilha um inteiro converte para double e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void i2d(){
 
 }
@@ -747,6 +884,12 @@ void f2i(){
 void f2l(){
 
 }
+
+/**
+ * Desempilha um float converte para double e empilha
+ * @param void
+ * @return void 
+ */
 void f2d(){
 
 }
@@ -756,6 +899,12 @@ void d2i(){
 void d2l(){
 
 }
+
+/**
+ * Desempilha um double converte para float e empilha.
+ * @param void
+ * @return void 
+ */
 void d2f(){
 
 }
@@ -771,7 +920,26 @@ void i2s(){
 void lcmp(){
 
 }
+
+/**
+ * Função que desempilha dois floats da pilha e compara.
+ * Se primeiro maior que segundo -> empilha 1
+ * Se forem iguais -> empilha 0
+ * Se primeiro menor que segundo -> empilha -1
+ * @param void
+ * @return void 
+ */
 void fcmpl(){
+	//TODO pop val1
+	//TODO pop val2
+
+	//TODO if >
+	//TODO if ==
+	//TODO if <
+
+	//TODO push resultado
+
+	//TODO atualiza pc.
 
 }
 void fcmpg(){
@@ -789,7 +957,21 @@ void ifeq(){
 void ifne(){
 
 }
+
+/**
+ * Funcao que realiza um jump se valor desempilhado for menor que 0.
+ * @param void
+ * @return void 
+ */
 void iflt(){
+	//TODO pega offset
+
+	//TODO pop val1
+
+	//TODO if val1 < 0
+		//TODO JUMP
+	//TODO else
+		//TODO atualiza pc.
 
 }
 void ifge(){
@@ -825,8 +1007,16 @@ void if_acmpeq(){
 void if_acmpne(){
 
 }
-void ins_goto(){
 
+/**
+ * Funcao que realiza um jump a partir de um offset da instrução.
+ * @param void
+ * @return void 
+ */
+void ins_goto(){
+	//TODO obtém offset
+
+	//TODO pc = pc + offset
 }
 void jsr(){
 
@@ -855,10 +1045,18 @@ void dreturn(){
 void areturn(){
 
 }
+
+/**
+ * Funcao retorna 0
+ * @param void
+ * @return void 
+ */
 void ins_return(){
 	printf("entrei no ins_return!!\n");
 
 	//Executa instrução.
+
+	//TODO setar variaveis globais de retorno para 0.
 
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
@@ -903,14 +1101,24 @@ void putstatic(){
 void getfield(){
 
 }
+
+/**
+ * Função que acessa valor na pilha e atribui ao objeto que o executa.
+ * @param void
+ * @return void 
+ */
 void putfield(){
 
 }
+
+/**
+ * Funcao que invoca métodos de uma classe que não se enquadram nas demais
+ * categorias (static,interface,special).
+ * @param void
+ * @return void 
+ */
 void invokevirtual(){
 	printf("Entrei no invokevirtual!!\n");
-
-	//Executa a instrução.
-
 
     char* nomeClasse;
     char* nomeMetodo;
@@ -919,16 +1127,12 @@ void invokevirtual(){
     uint32_t resultado;
     int32_t classeIndice;
     uint8_t* string;
-    // pega indice 
-    
-    // se a referencia a constant pool nao for uma referencia simbolica a um metodo
-        // avisa erro e para
+
     uint32_t pcAux = frameCorrente->code[frameCorrente->pc + 2];
 
     classeIndice = frameCorrente->constant_pool[pcAux - 1].info.Methodref.class_index;
 
     nomeClasse = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[classeIndice - 1].info.Class.name_index);
-    //printf("nomeClasse: %s\n",nomeClasse);
 
     nomeTipoAux = frameCorrente->constant_pool[pcAux - 1].info.Methodref.name_and_type_index;
 
@@ -938,10 +1142,8 @@ void invokevirtual(){
 	
 
     nomeMetodo = retornaNome(frameCorrente->classe, nomeMetodoAux);
-    //printf("nomeMetodo: %s\n",nomeMetodo);
 
     descricaoMetodo = retornaNome(frameCorrente->classe, descricaoMetodoAux);
-    //printf("descricaoMetodo: %s\n",descricaoMetodo);
 
 	if((strcmp(nomeClasse, "java/io/PrintStream") == 0) && (strcmp(nomeMetodo,"println") == 0)){
 		if(strstr(descricaoMetodo, "Ljava/lang/String") != NULL) {
@@ -950,32 +1152,52 @@ void invokevirtual(){
 			printf("%s\n",string);
 		}
 	}
-    
-    // se for uma chamada a printStream 
-        // nesse caso usa printf do C 
-        // decrementa a profundidade do stack por 2
 
 	//Atualiza PC.
+
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 	printf("num_bytes: %d\n",num_bytes);
+
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
 	printf("novo pc: %d\n",frameCorrente->pc);
 	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
+
+/**
+ * Função que invoca métodos especiais de uma classe.
+ * @param void
+ * @return void 
+ */
 void invokespecial(){
 
 }
+
+/**
+ * Funcao que invoca métodos estáticos de uma classe.
+ * @param void
+ * @return void 
+ */
 void invokestatic(){
 
 }
 void invokeinterface(){
 
 }
-void ins_new(){
 
+/**
+ * Função que cria um objeto (struct objeto) e adiciona no heap(array)
+ * @param void
+ * @return void 
+ */
+void ins_new(){
+	//TODO cria objeto no heap(array).
+
+	//TODO empilha objeto na pilha de operandos (push)
+
+	//TODO atualia pc.
 }
 void newarray(){
 

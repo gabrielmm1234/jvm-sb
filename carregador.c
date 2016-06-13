@@ -118,13 +118,26 @@ classFile* buscaClasseIndice(int indice){
 	return indice >= area_met.num_classes ? NULL : area_met.array_classes[indice];
 }
 
+
+/**
+ * Função que retorna um nome de um utf8 a partir de um indice.
+ * Muito usada como função de auxílio para implementar as instruções.
+ * @param Referência a um classFile para acesso a constant pool.
+ * @param indice para acesso a constant pool.
+ * @return retorna uma string com o nome.
+ */
 char * retornaNome(classFile* cf, uint16_t indiceNome) {
 	int i;
+
+	//Aloca espaço.
 	char* retorno = malloc((cf->constant_pool[indiceNome - 1]).info.Utf8.length + 1);
 
+	//Percorre o campo bytes de um utf8 para um auxiliar.
 	for (i = 0; i < (cf->constant_pool[indiceNome - 1]).info.Utf8.length; i++) {
 		retorno[i] = (char) (cf->constant_pool[indiceNome - 1]).info.Utf8.bytes[i];
 	}
+
+	//Adiciona \0 ao final do nome.
 	retorno[i] = '\0';
 
 	return retorno;

@@ -888,9 +888,10 @@ void invokevirtual(){
     char* nomeClasse;
     char* nomeMetodo;
     char* descricaoMetodo;
-    uint16_t nomeMetodoAux, descricaoMetodoAux,nomeTipoAux;
+    uint16_t nomeMetodoAux, descricaoMetodoAux,nomeTipoAux,stringAux;
     uint32_t resultado;
     int32_t classeIndice;
+    uint8_t* string;
     // pega indice 
     
     // se a referencia a constant pool nao for uma referencia simbolica a um metodo
@@ -900,7 +901,7 @@ void invokevirtual(){
     classeIndice = frameCorrente->constant_pool[pcAux - 1].info.Methodref.class_index;
 
     nomeClasse = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[classeIndice - 1].info.Class.name_index);
-    printf("nomeClasse: %s\n",nomeClasse);
+    //printf("nomeClasse: %s\n",nomeClasse);
 
     nomeTipoAux = frameCorrente->constant_pool[pcAux - 1].info.Methodref.name_and_type_index;
 
@@ -910,16 +911,18 @@ void invokevirtual(){
 	
 
     nomeMetodo = retornaNome(frameCorrente->classe, nomeMetodoAux);
-    printf("nomeMetodo: %s\n",nomeMetodo);
+    //printf("nomeMetodo: %s\n",nomeMetodo);
 
     descricaoMetodo = retornaNome(frameCorrente->classe, descricaoMetodoAux);
-    printf("descricaoMetodo: %s\n",descricaoMetodo);
+    //printf("descricaoMetodo: %s\n",descricaoMetodo);
 
 	if((strcmp(nomeClasse, "java/io/PrintStream") == 0) && (strcmp(nomeMetodo,"println") == 0)){
 		if(strstr(descricaoMetodo, "Ljava/lang/String") != NULL) {
-			resultado = frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth];
-			printf("Entrei no print!\n");
-			printf("%s\n",(char *)resultado);
+			resultado = frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1];
+			stringAux = frameCorrente->constant_pool[resultado - 1].info.String.string_index;
+			//printf("string_index: %d\n",stringAux);
+			string = frameCorrente->constant_pool[stringAux - 1].info.Utf8.bytes;
+			printf("%s\n",string);
 		}
 	}
     
@@ -936,8 +939,6 @@ void invokevirtual(){
 		frameCorrente->pc++;
 	printf("novo pc: %d\n",frameCorrente->pc);
 	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
-	exit(0);
-
 }
 void invokespecial(){
 

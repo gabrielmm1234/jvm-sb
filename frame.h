@@ -26,7 +26,7 @@ typedef struct pilha_op
  * por indicacao do professor, cada frame tem seu proprio PC
  * cada metodo ao ser executado cria um frame proprio
  */
-struct frame{
+typedef struct frame{
 	uint32_t* fields;
 	cp_info* constant_pool;
 	classFile* classe; //revisar conceito!
@@ -36,7 +36,7 @@ struct frame{
 	uint8_t* code;
 	uint32_t pc;
     pilha_op* pilha_op; 
-};
+}frame;
 
 
 /**
@@ -51,4 +51,6 @@ struct stackFrame{
 //Salva o frame que está sendo executado.
 struct frame *frameCorrente;
 
+void push(frame* frame_corrente, int32_t valor); 
+int32_t pop_op(frame* frame_corrente);
 #endif

@@ -368,10 +368,7 @@ void ldc(){
     // se o indice para a constant pool for para uma string
     if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String)
     {
-        // poe uma referencia a essa instancia na pilha de operandos
-        frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth] = (int32_t) indice_utf;
-        // incrementa profundidade da pilha de operandos 
-        frameCorrente->pilha_op->depth += 1;
+        push(frameCorrente, (int32_t) indice_utf);
     }
 
 	//proxima instruçao.
@@ -945,7 +942,8 @@ void invokevirtual(){
 
 	if((strcmp(nomeClasse, "java/io/PrintStream") == 0) && (strcmp(nomeMetodo,"println") == 0)){
 		if(strstr(descricaoMetodo, "Ljava/lang/String") != NULL) {
-			resultado = frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1];
+			resultado = pop_op(frameCorrente);
+			//resultado = frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1];
 			string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
 			printf("%s\n",string);
 		}

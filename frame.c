@@ -106,3 +106,33 @@ void desalocaFrame(){
 	topo = anterior;
 
 }
+
+/**
+ * funcao para dar um push na pilha de operandos, 
+ * @param frame* frame_corrente, uma referencia ao frame atual
+ * @param int32_t valor, o valor a ser colocado na pilha
+ * @return void
+ */
+void push(frame* frame_corrente, int32_t valor)
+{
+    // poe valor no frame
+    frame_corrente->pilha_op->operandos[frame_corrente->pilha_op->depth] = valor; 
+
+    // incrementa profundidade da pilha 
+    frame_corrente->pilha_op->depth += 1;
+}
+
+/**
+ * funcao para dar um pop na pilha de operandos, 
+ * @param frame* frame_corrente, uma referencia ao frame atual
+ * @return int32_t valor, o valor a ser colocado na pilha
+ */
+int32_t pop_op(frame* frame_corrente)
+{
+    // decrementa profundidade da pilha 
+    frame_corrente->pilha_op->depth -= 1;
+
+    // retorna valor. o +1 se deve ao fato de ja termos decrementado o topo da pilha
+    return frame_corrente->pilha_op->operandos[frame_corrente->pilha_op->depth];  
+
+}

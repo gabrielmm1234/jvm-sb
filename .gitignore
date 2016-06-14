@@ -2,3 +2,4 @@ exe
 *.obj
 html/
 jvm.exe
+latex/

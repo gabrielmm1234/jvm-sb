@@ -490,10 +490,19 @@ void dload_3(){
  */
 void aload_0(){
 	printf("Entrei aload_0\n");
-	//TODO push(frameCorrente->fields[0])
 
-	//TODO atualiza pc.
-	exit(0);
+	//Empilha a posição 0 do vetor de variáveis locais.
+	push(frameCorrente,frameCorrente->fields[0]);
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 void aload_1(){
 
@@ -637,7 +646,7 @@ void pop(){
 	printf("Entrei no pop\n");
 	pop_op(frameCorrente);
 
-	//autaliza pc
+	//atualiza pc
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 	printf("num_bytes: %d\n",num_bytes);
@@ -1122,6 +1131,20 @@ void putstatic(){
 
 }
 void getfield(){
+	printf("Entrei no getfield\n");
+
+	//Executa instrução.
+
+	//Atualiza PC.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
+	exit(0);
 
 }
 
@@ -1131,7 +1154,18 @@ void getfield(){
  * @return void 
  */
 void putfield(){
+	printf("Entrei no putfield\n");
 
+	//Atualiza PC.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 
 /**
@@ -1211,6 +1245,42 @@ void invokespecial(){
 	//Pega nome da classe.
 	char* nomeClasse = retornaNome(frameCorrente->classe,(frameCorrente->constant_pool[indiceClasse-1]).info.Class.name_index);
 	printf("nomeClasse: %s\n",nomeClasse);
+
+	if(strcmp("java/lang/Object",nomeClasse) == 0){
+
+		printf("Método nativo java - java/lang/object\n");
+
+		//Atualiza PC.
+		inicializa_decodificador(dec); 
+		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+		printf("num_bytes: %d\n",num_bytes);
+
+		//proxima instruçao.
+		for(int8_t i = 0; i < num_bytes + 1; i++)
+			frameCorrente->pc++;
+		printf("novo pc: %d\n",frameCorrente->pc);
+		printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
+
+		return;
+	}
+
+	if(strcmp("java/util/Scanner",nomeClasse) == 0){
+
+		printf("Método nativo java - java/util/Scanner\n");
+
+		//Atualiza PC.
+		inicializa_decodificador(dec); 
+		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+		printf("num_bytes: %d\n",num_bytes);
+
+		//proxima instruçao.
+		for(int8_t i = 0; i < num_bytes + 1; i++)
+			frameCorrente->pc++;
+		printf("novo pc: %d\n",frameCorrente->pc);
+		printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
+
+		return;
+	}
 
 	//Pega posição da classe no array de classes
 	int32_t indexClasse = carregaMemClasse(nomeClasse);
@@ -1296,6 +1366,23 @@ void ins_new(){
 	//Pega o nome da classe apontado pelo indice.
 	nomeClasse = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[indice-1].info.Class.name_index);
 
+	if(strcmp("java/util/Scanner",nomeClasse) == 0){
+
+		printf("Método nativo java - java/util/Scanner\n");
+
+		//Atualiza PC.
+		inicializa_decodificador(dec); 
+		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+		printf("num_bytes: %d\n",num_bytes);
+
+		//proxima instruçao.
+		for(int8_t i = 0; i < num_bytes + 1; i++)
+			frameCorrente->pc++;
+		printf("novo pc: %d\n",frameCorrente->pc);
+		printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
+
+		return;
+	}
 	//Busca indice da classe no array de classeFiles
 	aux = carregaMemClasse(nomeClasse);
 

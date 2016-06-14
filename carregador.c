@@ -76,8 +76,10 @@ int32_t carregaMemClasse(char* nomeClass){
     area_met.array_classes = arrayClassesTemp;
     area_met.array_classes[aux - 1] = leitorClasse(nomeClass);  
 
-	if(area_met.array_classes[aux -1] == NULL)
+	if(area_met.array_classes[aux -1] == NULL){
 		printf("Erro ao carregar classe!\n");
+		exit(0);
+	}
 
 	return aux - 1;
 

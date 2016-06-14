@@ -154,6 +154,43 @@ method_info* buscaMetodo(classFile* indiceClasse, classFile* searchClasse, uint1
 }
 
 /**
+ * Função que recebe um nome e uma descrição de um campo e encontra sua posição. 
+ * @param nome da classe que possui o campo
+ * @param nome do campo
+ * @param descrição do campo
+ * @return posição do campo no fields da classe.
+ */
+int32_t buscaCampo(char* className, char* name, char* desc){
+	//Obtem classe pelo nome para percorrer seus fields
+	classFile* classe = retornaClasseNome(className);
+	//Busca nome e descrição do método pelo indice fornecido
+	uint8_t* searchName;
+	uint8_t* searchDesc;
+	for(int i = 0; i < classe->fields_count; i++) {
+
+		//Busca nome do metodo na searchClasse
+		searchName = classe->constant_pool[(classe->fields[i].name_index-1)].info.Utf8.bytes;
+		//Busca descrição do metodo na searchClasse	
+		searchDesc = classe->constant_pool[(classe->fields[i].descriptor_index-1)].info.Utf8.bytes;
+		
+		//Compara o nome e descrição. Se for igual é o método desejado e retorna.
+		if ((strcmp(name, searchName) == 0) && (strcmp(desc, searchDesc) == 0)) {
+			return i;
+		}
+
+	}
+}
+
+classFile* retornaClasseNome(char* nomeClasse) {
+	for (int i = 0; i < area_met.num_classes; i++) {
+		if (strcmp(nomeClasse, retornaNomeClasse(area_met.array_classes[i])) == 0)
+			return area_met.array_classes[i];
+	}
+	return NULL;
+}
+
+
+/**
  * Função que recebe uma classe e um método e busca pela quantidade
  * de parâmetros do método presente na descrição dos métodos pelos
  * caracteres especiais. (L,B,C,F,I,S,Z,D,J)

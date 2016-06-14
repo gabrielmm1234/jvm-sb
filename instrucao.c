@@ -337,12 +337,22 @@ void dconst_1(){
  * @return void 
  */
 void bipush(){
-	//TODO acessa arg1
-	//TODO push arg1
-
-	//TODO atualiza pc.
-
+	printf("Entrei no bipush\n");
+	int8_t argumento = (int8_t) frameCorrente->code[(++frameCorrente->pc)];
+	printf("argumento empilhado: %d\n",argumento);
+	push(frameCorrente,(int32_t)argumento);
+	
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
+
 void sipush(){
 
 }
@@ -398,6 +408,8 @@ void ldc(){
     if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String)
     {
         push(frameCorrente, (int32_t) indice_utf);
+        printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
+
     }
 
 	//proxima instruçao.
@@ -493,6 +505,8 @@ void aload_0(){
 
 	//Empilha a posição 0 do vetor de variáveis locais.
 	push(frameCorrente,frameCorrente->fields[0]);
+	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
+
 
 	//atualiza pc
 	inicializa_decodificador(dec); 
@@ -675,7 +689,10 @@ void dup(){
 
 	//Duplica
 	push(frameCorrente,aux);
+	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 	push(frameCorrente,aux);
+	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
+
 
 	//atualiza pc
 	inicializa_decodificador(dec); 
@@ -713,12 +730,23 @@ void swap(){
  * @return void 
  */
 void iadd(){
-	//TODO pop val1
-	//TODO pop val2
-	//TODO push vai + val2
+	printf("Entrei no iadd\n");
+	int32_t v1,v2;
+	v1 = pop_op(frameCorrente);
+	v2 = pop_op(frameCorrente);
+	printf("v1: %d\n",v1);
+	printf("v2: %d\n",v2);
+	push(frameCorrente, v1+v2);
 
-	//TODO atualiza pc.
-
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 void ladd(){
 
@@ -760,12 +788,21 @@ void dsub(){
  * @return void 
  */
 void imul(){
-	//TODO pop val1
-	//TODO pop val2
+	printf("Entrei no imul\n");
+	 int32_t v1 = pop_op(frameCorrente);
+	 int32_t v2 = pop_op(frameCorrente);
+	 push(frameCorrente,(int32_t)(v1 * v2));
+	 printf("Valor empilhado: %d\n",v1*v2);
 
-	//TODO push val1 * val2
-
-	//TODO atualiza pc.
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 void lmul(){
 
@@ -885,11 +922,19 @@ void i2l(){
  * @return void 
  */
 void i2f(){
-	//TODO pop val
-	//TODO (float) val
-	//TODO push val
+	printf("Entrei no i2f\n");
+	
 
-	//TODO atualiza pc.
+	//Atualiza PC.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
+	exit(0);
 
 }
 
@@ -1133,7 +1178,42 @@ void putstatic(){
 void getfield(){
 	printf("Entrei no getfield\n");
 
-	//Executa instrução.
+	//Pega indice no argumento da instrução.
+	uint32_t indice = frameCorrente->code[frameCorrente->pc + 2];
+	printf("indice: %d\n",indice);
+
+	//Acessa o indice da classe que possui o field.
+	int32_t indiceClasse = frameCorrente->constant_pool[indice-1].info.Fieldref.class_index;
+	printf("indiceClasse: %d\n",indiceClasse);
+
+	//Obtem o nome da classe a partir do indice obtido anteriormente
+	char* nomeClasse = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[indiceClasse-1].info.Class.name_index);
+	printf("nomeClasse: %s\n",nomeClasse);
+	//Obtem agora o indice do nome e do tipo
+	uint16_t nomeTipoIndice = frameCorrente->constant_pool[indice-1].info.Fieldref.name_and_type_index;
+	printf("nomeTipoIndice: %d\n",nomeTipoIndice);
+	//Obtem finalmente o nome e o tipo do field
+	char* nome = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[nomeTipoIndice-1].info.NameAndType.name_index);
+	char* tipo = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[nomeTipoIndice-1].info.NameAndType.descriptor_index);
+ 	printf("nome: %s\n",nome);
+ 	printf("tipo: %s\n",tipo);
+
+ 	objeto* obj = (objeto*) pop_op(frameCorrente);
+
+ 	//Obtem indice do field utilizando as informações anteriores.
+ 	int32_t indiceField = buscaCampo(nomeClasse,nome,tipo);
+ 	printf("indiceField: %d\n",indiceField);
+
+ 	//obtem indice do nome do field (variavel)
+ 	uint32_t indiceNome = frameCorrente->classe->fields[indiceField].name_index;
+ 	printf("indiceNome: %d\n",indiceNome);
+
+ 	int32_t i;
+	for(i = 0;obj->indiceCampos[i] != indiceNome; i++);
+ 	//Pega o field do objeto e empilha.
+ 	uint32_t val = obj->campos[i];
+ 	printf("val empilhado: %d\n",val);
+ 	push(frameCorrente,val);
 
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
@@ -1144,7 +1224,6 @@ void getfield(){
 		frameCorrente->pc++;
 	printf("novo pc: %d\n",frameCorrente->pc);
 	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
-	exit(0);
 
 }
 
@@ -1155,6 +1234,44 @@ void getfield(){
  */
 void putfield(){
 	printf("Entrei no putfield\n");
+
+	//Pega indice no argumento da instrução.
+	uint32_t indice = frameCorrente->code[frameCorrente->pc + 2];
+	printf("indice: %d\n",indice);
+
+	//Acessa o indice da classe que possui o field.
+	int32_t indiceClasse = frameCorrente->constant_pool[indice-1].info.Fieldref.class_index;
+	printf("indiceClasse: %d\n",indiceClasse);
+
+	//Obtem o nome da classe a partir do indice obtido anteriormente
+	char* nomeClasse = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[indiceClasse-1].info.Class.name_index);
+	printf("nomeClasse: %s\n",nomeClasse);
+	//Obtem agora o indice do nome e do tipo
+	uint16_t nomeTipoIndice = frameCorrente->constant_pool[indice-1].info.Fieldref.name_and_type_index;
+	printf("nomeTipoIndice: %d\n",nomeTipoIndice);
+	//Obtem finalmente o nome e o tipo do field
+	char* nome = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[nomeTipoIndice-1].info.NameAndType.name_index);
+	char* tipo = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[nomeTipoIndice-1].info.NameAndType.descriptor_index);
+ 	printf("nome: %s\n",nome);
+ 	printf("tipo: %s\n",tipo);
+
+ 	//Obtem indice do field utilizando as informações anteriores.
+ 	int32_t indiceField = buscaCampo(nomeClasse,nome,tipo);
+ 	printf("indiceField: %d\n",indiceField);
+
+ 	//obtem indice do nome do field (variavel)
+ 	uint32_t indiceNome = frameCorrente->classe->fields[indiceField].name_index;
+ 	printf("indiceNome: %d\n",indiceNome);
+
+ 	//obtem valor e objeto da pilha e seta o valor no field do objeto.
+ 	int32_t val = pop_op(frameCorrente);
+ 	printf("valor desempilhado: %d\n",val);
+ 	objeto* obj = (objeto*)pop_op(frameCorrente);
+
+ 	int i;
+ 	for(i = 0; obj->indiceCampos[i] != indiceNome; i++);
+	obj->campos[i] = val;
+
 
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
@@ -1209,6 +1326,13 @@ void invokevirtual(){
 			string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
 			printf("%s\n",string);
 		}
+	}
+
+	if((strcmp(nomeClasse, "java/util/Scanner") == 0) && (strcmp(nomeMetodo,"next") == 0)){
+		int32_t aux;
+		scanf("%d",&aux);
+		push(frameCorrente,aux);
+		printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 	}
 
 	//Atualiza PC.
@@ -1340,7 +1464,18 @@ void invokespecial(){
  * @return void 
  */
 void invokestatic(){
+	printf("Entrei no invokestatic\n");
 
+	//Atualiza PC.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	printf("num_bytes: %d\n",num_bytes);
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("novo pc: %d\n",frameCorrente->pc);
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 void invokeinterface(){
 
@@ -1392,10 +1527,11 @@ void ins_new(){
 	//Cria um objeto a partir do classFile.
 	objeto = criaObjeto(classe);
 
-	//TODO empilha objeto na pilha de operandos (push)
+	//empilha objeto na pilha de operandos (push)
 	push(frameCorrente,(int32_t) objeto);
+	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 
-	//TODO atualia pc.
+	//atualia pc.
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 	printf("num_bytes: %d\n",num_bytes);

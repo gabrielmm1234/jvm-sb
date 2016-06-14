@@ -90,6 +90,12 @@ void executaFrameCorrente(){
 	desalocaFrame();
 }
 
+/**
+ * Função que recebe um classFile e preenche uma estrutura de um objeto
+ * que será salvo na heap (array).
+ * @param referencia a um classFile.
+ * @return referencia a uma estrutura que representa um objeto.
+ */
 objeto* criaObjeto(classFile* classe){
 	objeto* objeto;
 
@@ -115,4 +121,68 @@ objeto* criaObjeto(classFile* classe){
 	numObjetos++;
 	//retorna objeto
 	return objeto;
+}
+
+/**
+ * Função que recebe uma classe de busca um indice para a constant pool
+ * e busca o método a ser executado. Usado geralmente nos invokes.
+ * @param classe de indice
+ * @param classe de busca
+ * @param indice para constant pool
+ * @return referencia a uma estrutura de um método
+ */
+method_info* buscaMetodo(classFile* indiceClasse, classFile* searchClasse, uint16_t indice){
+
+	//Busca nome e descrição do método pelo indice fornecido
+	char* name = retornaNome(indiceClasse, indiceClasse->constant_pool[indice-1].info.NameAndType.name_index);
+	char* desc = retornaNome(indiceClasse, indiceClasse->constant_pool[indice-1].info.NameAndType.descriptor_index);
+	char* searchName;
+	char* searchDesc;
+	for(int i = 0; i < searchClasse->methods_count; i++) {
+
+		//Busca nome do metodo na searchClasse
+		searchName = searchClasse->constant_pool[(searchClasse->methods[i].name_index-1)].info.Utf8.bytes;
+		//Busca descrição do metodo na searchClasse	
+		searchDesc = searchClasse->constant_pool[(searchClasse->methods[i].descriptor_index-1)].info.Utf8.bytes;
+		
+		//Compara o nome e descrição. Se for igual é o método desejado e retorna.
+		if((strcmp(name,searchName) == 0) && (strcmp(desc,searchDesc) == 0)) {
+			return(searchClasse->methods + i);
+		}
+
+	}
+}
+
+/**
+ * Função que recebe uma classe e um método e busca pela quantidade
+ * de parâmetros do método presente na descrição dos métodos pelos
+ * caracteres especiais. (L,B,C,F,I,S,Z,D,J)
+ * @param referencia a uma classe que contém o método
+ * @param método para acesso a sua descrição
+ * @return quantidade de parametros passados para a função.
+ */
+int32_t retornaNumeroParametros(classFile* classe, method_info* metodo) {
+	int32_t numeroParametros = 0;
+	uint16_t length;
+	uint8_t* bytes;
+
+	//Busca o utf8 e o tamanho correspondente da descrição do metodo.
+	bytes = classe->constant_pool[(metodo->descriptor_index-1)].info.Utf8.bytes;
+	length = classe->constant_pool[(metodo->descriptor_index-1)].info.Utf8.length;
+
+	//Percorre o vetor de caracteres em busca dos caracteres especiais.
+	for(int i = 0; i < length && bytes[i] != ')'; i++) {
+		if(bytes[i] == 'L') {
+			while(bytes[i] != ';') {
+				i++;
+			}
+			numeroParametros++;
+		} else if((bytes[i] == 'B')||(bytes[i] == 'C')||(bytes[i] == 'F')|| (bytes[i] == 'I')||(bytes[i] == 'S')||(bytes[i] == 'Z') ) {
+			numeroParametros++;
+		//long e Double precisam de dois espaços.
+		} else if((bytes[i] == 'D')||(bytes[i] == 'J')) {
+			numeroParametros+=2;
+		}
+	}
+	return numeroParametros;
 }

@@ -489,9 +489,11 @@ void dload_3(){
  * @return void 
  */
 void aload_0(){
+	printf("Entrei aload_0\n");
 	//TODO push(frameCorrente->fields[0])
 
 	//TODO atualiza pc.
+	exit(0);
 }
 void aload_1(){
 
@@ -1195,11 +1197,62 @@ void invokevirtual(){
  */
 void invokespecial(){
 	printf("Entrei no invokespecial\n");
-
+	method_info* metodoInvocado;
 	//Executar instrução.
 
-	//Atualiza PC.
+	//Pega indice no argumento da instrução.
+	uint32_t indice = frameCorrente->code[frameCorrente->pc + 2];
+	printf("indice: %d\n",indice);
 
+	//Pega o indice do nome da classe na CP pelo indice anterior.
+	uint32_t indiceClasse = (frameCorrente->constant_pool[indice-1]).info.Methodref.class_index;
+	printf("indiceClasse: %d\n",indiceClasse);
+
+	//Pega nome da classe.
+	char* nomeClasse = retornaNome(frameCorrente->classe,(frameCorrente->constant_pool[indiceClasse-1]).info.Class.name_index);
+	printf("nomeClasse: %s\n",nomeClasse);
+
+	//Pega posição da classe no array de classes
+	int32_t indexClasse = carregaMemClasse(nomeClasse);
+	printf("posClasse: %d\n",indexClasse);
+
+	//Pega referencia ao classFile pelo indice anterior.
+	classFile* classe = buscaClasseIndice(indexClasse);
+
+	//Pega o nome e tipo dó método pelo indice da instrução.
+	uint16_t nomeTipoIndice = frameCorrente->constant_pool[indice-1].info.Methodref.name_and_type_index;
+	printf("nomeTipoIndice: %d\n",nomeTipoIndice);
+
+	//Busca método a ser invocado.
+	metodoInvocado = buscaMetodo(frameCorrente->classe,classe,nomeTipoIndice);
+
+	if(metodoInvocado != NULL){
+		printf("método invocado: %s\n",classe->constant_pool[metodoInvocado->name_index - 1].info.Utf8.bytes);
+	}
+
+	//Pega parametros da pilha pelo numero de fields
+	int32_t numeroParametros = retornaNumeroParametros(classe,metodoInvocado);
+	printf("numeroParametros: %d\n",numeroParametros);
+
+	//Aloca espaço para os parametros do método
+	uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
+
+	//Desempilha os parametros da pilha.
+	for(int32_t i = 0; i <= numeroParametros; i++)
+		fields[i] = pop_op(frameCorrente);
+
+	//inicia método
+	iniciaMetodo(metodoInvocado, classe);
+
+	//Preenche fields no frame novo (invoke).
+	for(int32_t i = 0; i <= numeroParametros; i++) {
+			frameCorrente->fields[i] = fields[i];
+	}
+
+	//Executa método.
+	executaFrameCorrente();
+
+	//Atualiza PC.
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 	printf("num_bytes: %d\n",num_bytes);
@@ -1208,8 +1261,7 @@ void invokespecial(){
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
 	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);	
-
+	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 
 /**

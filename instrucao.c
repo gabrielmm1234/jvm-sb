@@ -451,8 +451,36 @@ void ldc_w(){
  * @return void 
  */
 void ldc2_w(){
+	printf("Entrei no ldc2_w\n");
 
+	//Pega indice presente na instrução para acesso a constant pool.
+	uint8_t indice = frameCorrente->code[frameCorrente->pc + 2];
+	printf("Indice: %d\n",indice);
 
+	//Pega tag da posição da constant pool dada pelo indice
+	//Pode ser ou long ou double.
+	uint8_t tag = (frameCorrente->constant_pool[indice-1]).tag;
+	printf("tag: %d\n",tag);
+
+	//TODO LONG
+
+	//Se tag é 6 (double) acessa high bytes e low bytes e empilha.
+	if(tag == 6){
+		uint32_t alta = frameCorrente->constant_pool[indice-1].info.Double.high_bytes;
+		uint32_t baixa = frameCorrente->constant_pool[indice-1].info.Double.low_bytes;
+		printf("Parte alta empilhada: %d\n",alta);
+		printf("Parte baixa empilhada: %d\n",baixa);
+		push(frameCorrente,alta);
+		push(frameCorrente,baixa);
+	}
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
 void iload(){
@@ -852,8 +880,6 @@ void dadd(){
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-
-	exit(0);
 }
 
 void isub(){
@@ -927,7 +953,67 @@ void fdiv(){
  * @return void 
  */
 void ddiv(){
+	printf("Entrei no ddiv\n");
 
+	//Partes altas e baixas dos dois doubles.
+	int32_t alta,baixa,alta1,baixa1;
+
+	baixa1 = pop_op(frameCorrente);
+	alta1 = pop_op(frameCorrente);
+
+	baixa = pop_op(frameCorrente);
+	alta = pop_op(frameCorrente);
+
+	//Converter os numeros 32 bits para 64 bits(double)
+
+	//Atribui parte alta primeiro
+	int64_t dVal = alta1;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa1;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble1.
+	double v1;
+	memcpy(&v1, &dVal, sizeof(double));
+
+	//Converter os numeros 32 bits para 64 bits(double)
+
+	//Atribui parte alta primeiro
+	dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble1.
+	double v2;
+	memcpy(&v2, &dVal, sizeof(double));
+
+	double resultado = v2 / v1;
+	printf("Resultado: %f\n",resultado);
+
+	//Necessario converter mais uma vez o double somado para int64 para 
+	//empilhar corretamente.
+	int64_t pilhaVal;
+	memcpy(&pilhaVal, &resultado, sizeof(int64_t));
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = pilhaVal >> 32;
+	baixa = pilhaVal & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(frameCorrente,alta);
+	push(frameCorrente,baixa);
+
+
+	exit(0);
 }
 void irem(){
 

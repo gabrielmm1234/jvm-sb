@@ -34,10 +34,10 @@ else
 endif
 
 $(TARGET): $(OBJECTS)
-	$(CC) -m32 -o $@ $^ 
+	$(CC) -m32 -o $@ $^ -lm
 
 %.obj: %.c
-	$(CC) $(CFLAGS) $(INCLUDE) -o $@ -c $<
+	$(CC) $(CFLAGS) $(INCLUDE) -o $@ -c $< 
 	
 %.obj: %.cpp
 	$(CCPP) $(CFLAGS) $(INCLUDE) -o $@ -c $<

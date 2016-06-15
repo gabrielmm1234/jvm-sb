@@ -1,7 +1,7 @@
 #ifndef INSTRUCAO_H
 #define INSTRUCAO_H
 
-#include <stdint.h>
+#include <stdint.h> 
 
 
 //Declaração do vetor de ponteiro para funções com as 256 instruções implementadas.

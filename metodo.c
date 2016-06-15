@@ -84,7 +84,7 @@ void executaFrameCorrente(){
 	//Loop que percorre o frame e executa instrução a instrução
 	//Enquanto pc for menor que o tamanho do code e o frame foi desalocado(terminado)
 	while((frameCorrente->pc) < frameCorrente->code_length && frameCorrente != NULL) {
-		printf("opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
+		// printf("opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 		executarInstrucoes(frameCorrente->code[frameCorrente->pc]);
 	}
 	desalocaFrame();

@@ -8,6 +8,9 @@
 //Cada função retorna void e não recebe parâmetros.
 void (*instrucao[256]) ();
 
+//Usado para salvar o tipo do ultimo getfield feito para o println.
+char* tipoGlobal;
+
 //Função que inicializa o vetor de ponteiro para funções
 //Com cada função sendo acessada pelo opcode correspondente.
 void executarInstrucoes(uint8_t opcode);

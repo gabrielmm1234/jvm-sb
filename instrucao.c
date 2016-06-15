@@ -281,10 +281,16 @@ void iconst_m1(){
  * @return void 
  */
 void iconst_0(){
-	//TODO push 0
+	printf("Entrei no iconst_0\n");
+	push(frameCorrente,(int32_t) 0);
 
-	//TODO atualiza pc.
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 void iconst_1(){
 
@@ -314,9 +320,28 @@ void lconst_1(){
  * @return void 
  */
 void fconst_0(){
-	//TODO push 0.0
-	//TODO atualiza pc.
+	printf("Entrei no fconst_0\n");
+	//Auxiliar para utilizar o memcpy e não perder precisão com cast.
+	int32_t* valPilha;
+	//Float com valor zero para ser empilhado.
+	float valF = 0.0;
+	//Aloca mem para int32.
+	valPilha = (int32_t*) malloc(sizeof(int32_t));
+	//Importante!! -> copia bytes de um float para um int32
+	//para empilhar na forma correta. Ao desempilhar realiza
+	//Memcpy de volta para um float.
+	memcpy(valPilha, &valF, sizeof(int32_t));
+	printf("Valor Empilhado: %d\n",*valPilha);
+	//Empilha float na forma de int32 para se adequar ao tipo da pilha.
+	push(frameCorrente,*valPilha);
 
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 void fconst_1(){
 
@@ -345,12 +370,10 @@ void bipush(){
 	//atualiza pc
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
+	
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 
 void sipush(){
@@ -389,7 +412,6 @@ void ldc(){
 	printf("Entrei no ldc!!\n");
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
 
     // pega indice 
     indice = frameCorrente->code[frameCorrente->pc + 1];
@@ -415,8 +437,6 @@ void ldc(){
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 
 void ldc_w(){
@@ -511,12 +531,10 @@ void aload_0(){
 	//atualiza pc
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
+	
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 void aload_1(){
 
@@ -663,12 +681,10 @@ void pop(){
 	//atualiza pc
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
+	
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 
 void pop2(){
@@ -697,12 +713,10 @@ void dup(){
 	//atualiza pc
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
+	
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 
 void dup_x1(){
@@ -736,18 +750,18 @@ void iadd(){
 	v2 = pop_op(frameCorrente);
 	printf("v1: %d\n",v1);
 	printf("v2: %d\n",v2);
+	printf("Empilhado: %d\n",v1+v2);
 	push(frameCorrente, v1+v2);
 
 	//atualiza pc
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
+	
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
+
 void ladd(){
 
 }
@@ -797,13 +811,12 @@ void imul(){
 	//atualiza pc
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
+	
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
+
 void lmul(){
 
 }
@@ -856,11 +869,13 @@ void _drem(){
  * @return void 
  */
 void ineg(){
+	printf("Entrei no ineg\n");
 	//TODO pop val1
 	//TODO -val1
 	//TODO push val1
 
 	//TODO atualiza pc.
+	exit(0);
 
 }
 void lneg(){
@@ -924,18 +939,27 @@ void i2l(){
 void i2f(){
 	printf("Entrei no i2f\n");
 	
+	//Obtem valor da pilha
+	int32_t val = (int32_t) pop_op(frameCorrente);
+	printf("Val inteiro: %d\n",val);
+
+	//Realiza cast para float
+	float valF = (float) val;
+	printf("Val Float: %f\n",valF);
+
+	//Utiliza um auxiliar para armazenar o valor float e empilha-lo.
+	int32_t valPilha;
+	memcpy(&valPilha, &valF, sizeof(int32_t));
+	printf("Val empilhado %d\n",valPilha);
+	push(frameCorrente,valPilha);
 
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
+	
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
-	exit(0);
-
 }
 
 /**
@@ -1007,17 +1031,45 @@ void lcmp(){
  * @return void 
  */
 void fcmpl(){
-	//TODO pop val1
-	//TODO pop val2
+	//Valores a serem comparadas.
+	float val1,val2;
+	//Valor para receber o pop da pilha e realizar a copia dos bytes para 
+	//os floats.
+	int32_t retPilha;
 
-	//TODO if >
-	//TODO if ==
-	//TODO if <
+	//Desempilha o segundo valor(topo).
+	retPilha = pop_op(frameCorrente);
+	//Copia os bytes do int32 para uma var do tipo float para nao perder precisão.
+	memcpy(&val2,&retPilha,sizeof(float));
 
-	//TODO push resultado
+	//Desempilha o primeiro valor(topo).
+	retPilha = pop_op(frameCorrente);
+	//Copia os bytes do int32 para uma var do tipo float para nao perder precisão.
+	memcpy(&val1,&retPilha,sizeof(float));
 
-	//TODO atualiza pc.
+	//Compara os dois floats e seta o resultado.
+	printf("val1: %f\n",val1);
+	printf("val2: %f\n",val2);
+	if(val1 == val2){
+		printf("val1 == val2 empilhando 0\n");
+		push(frameCorrente,(int32_t)0);
+	}
+	if(val1 > val2){
+		printf("val1 > val2 empilhando 1\n");
+		push(frameCorrente,(int32_t)1);
+	}
+	if(val1 < val2){
+		printf("val1 < val2 empilhando -1\n");
+		push(frameCorrente,(int32_t)-1);
+	}
 
+	//Atualiza PC.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 void fcmpg(){
 
@@ -1037,20 +1089,30 @@ void ifne(){
 
 /**
  * Funcao que realiza um jump se valor desempilhado for menor que 0.
+ * lt -> lower than zero.
  * @param void
  * @return void 
  */
 void iflt(){
-	//TODO pega offset
+	uint8_t offset;
+	//Pega offset para salto.
+	offset = frameCorrente->code[frameCorrente->pc + 2];
+	printf("Offset: %d\n",offset);
 
-	//TODO pop val1
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha = pop_op(frameCorrente);
+	printf("Val: %d\n",retPilha);
 
-	//TODO if val1 < 0
-		//TODO JUMP
-	//TODO else
-		//TODO atualiza pc.
-
+	//Se val menor que zero atualiza pc com offset
+	if(retPilha < 0){
+		frameCorrente->pc += offset;
+		printf("Val < 0 novopc: %d\n",frameCorrente->pc);
+	}else{
+		frameCorrente->pc += 3;
+		printf("Val > 0 novopc: %d\n",frameCorrente->pc);
+	}
 }
+
 void ifge(){
 
 }
@@ -1138,12 +1200,10 @@ void ins_return(){
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
+	
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 	printf("retornando! método acabou!\n");
 }
 void getstatic(){
@@ -1165,13 +1225,12 @@ void getstatic(){
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
+	
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
+
 void putstatic(){
 
 }
@@ -1195,6 +1254,7 @@ void getfield(){
 	//Obtem finalmente o nome e o tipo do field
 	char* nome = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[nomeTipoIndice-1].info.NameAndType.name_index);
 	char* tipo = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[nomeTipoIndice-1].info.NameAndType.descriptor_index);
+	tipoGlobal = tipo;
  	printf("nome: %s\n",nome);
  	printf("tipo: %s\n",tipo);
 
@@ -1218,13 +1278,10 @@ void getfield(){
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
+	
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
-
 }
 
 /**
@@ -1276,13 +1333,11 @@ void putfield(){
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
+	
 
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 
 /**
@@ -1298,16 +1353,16 @@ void invokevirtual(){
     char* nomeMetodo;
     char* descricaoMetodo;
     uint16_t nomeMetodoAux, descricaoMetodoAux,nomeTipoAux,stringAux;
-    uint32_t resultado;
+    int32_t resultado,resultado2;
     int32_t classeIndice;
     uint8_t* string;
+    static int8_t flagAppend = 0;
 
     uint32_t pcAux = frameCorrente->code[frameCorrente->pc + 2];
 
     classeIndice = frameCorrente->constant_pool[pcAux - 1].info.Methodref.class_index;
 
     nomeClasse = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[classeIndice - 1].info.Class.name_index);
-
     nomeTipoAux = frameCorrente->constant_pool[pcAux - 1].info.Methodref.name_and_type_index;
 
     nomeMetodoAux = frameCorrente->constant_pool[nomeTipoAux - 1].info.NameAndType.name_index;
@@ -1319,12 +1374,33 @@ void invokevirtual(){
 
     descricaoMetodo = retornaNome(frameCorrente->classe, descricaoMetodoAux);
 
+    if((strcmp(nomeClasse, "java/lang/StringBuffer") == 0) && (strcmp(nomeMetodo,"append") == 0)){
+			flagAppend++;
+	}
+
 	if((strcmp(nomeClasse, "java/io/PrintStream") == 0) && (strcmp(nomeMetodo,"println") == 0)){
 		if(strstr(descricaoMetodo, "Ljava/lang/String") != NULL) {
+			if(flagAppend == 0){
 			resultado = pop_op(frameCorrente);
 			//resultado = frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1];
 			string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
 			printf("%s\n",string);
+			}
+			else if(flagAppend == 2){
+				resultado = pop_op(frameCorrente);
+				resultado2 = pop_op(frameCorrente);
+
+				string = frameCorrente->constant_pool[resultado2].info.Utf8.bytes;
+				printf("%s",string);
+
+					if(strcmp(tipoGlobal, "F") == 0){
+						float valDesemp;
+						memcpy(&valDesemp,&resultado, sizeof(float));
+						printf("%f\n",valDesemp);
+					}
+
+				flagAppend = 0;
+			}
 		}
 	}
 
@@ -1339,13 +1415,11 @@ void invokevirtual(){
 
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
+	
 
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 
 /**
@@ -1388,9 +1462,9 @@ void invokespecial(){
 		return;
 	}
 
-	if(strcmp("java/util/Scanner",nomeClasse) == 0){
+	if(strcmp("java/lang/StringBuffer",nomeClasse) == 0){
 
-		printf("Método nativo java - java/util/Scanner\n");
+		printf("Método nativo java - java/lang/object\n");
 
 		//Atualiza PC.
 		inicializa_decodificador(dec); 
@@ -1402,6 +1476,21 @@ void invokespecial(){
 			frameCorrente->pc++;
 		printf("novo pc: %d\n",frameCorrente->pc);
 		printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
+
+		return;
+	}
+
+	if(strcmp("java/util/Scanner",nomeClasse) == 0){
+
+		printf("Método nativo java - java/util/Scanner\n");
+
+		//Atualiza PC.
+		inicializa_decodificador(dec); 
+		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+		//proxima instruçao.
+		for(int8_t i = 0; i < num_bytes + 1; i++)
+			frameCorrente->pc++;
 
 		return;
 	}
@@ -1449,13 +1538,10 @@ void invokespecial(){
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
 
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 
 /**
@@ -1466,16 +1552,49 @@ void invokespecial(){
 void invokestatic(){
 	printf("Entrei no invokestatic\n");
 
+    char* nomeMetodo;
+    char* descricaoMetodo;
+    uint16_t nomeMetodoAux, descricaoMetodoAux,nomeTipoAux,stringAux;
+
+	//Pega indice no argumento da instrução.
+	uint32_t indice = frameCorrente->code[frameCorrente->pc + 2];
+	printf("indice: %d\n",indice);
+
+	//Pega o indice do nome da classe na CP pelo indice anterior.
+	uint32_t indiceClasse = (frameCorrente->constant_pool[indice-1]).info.Methodref.class_index;
+	printf("indiceClasse: %d\n",indiceClasse);
+
+	//Pega nome da classe.
+	char* nomeClasse = retornaNome(frameCorrente->classe,(frameCorrente->constant_pool[indiceClasse-1]).info.Class.name_index);
+	printf("nomeClasse: %s\n",nomeClasse);
+
+	nomeTipoAux = frameCorrente->constant_pool[indice - 1].info.Methodref.name_and_type_index;
+
+    nomeMetodoAux = frameCorrente->constant_pool[nomeTipoAux - 1].info.NameAndType.name_index;
+
+	descricaoMetodoAux = frameCorrente->constant_pool[nomeTipoAux - 1].info.NameAndType.descriptor_index;
+	
+
+    nomeMetodo = retornaNome(frameCorrente->classe, nomeMetodoAux);
+
+    descricaoMetodo = retornaNome(frameCorrente->classe, descricaoMetodoAux);
+
+	if((strcmp(nomeClasse, "java/lang/System") == 0) && (strcmp(nomeMetodo,"exit") == 0)){
+		if(strstr(descricaoMetodo, "(I)V") != NULL) {
+			printf("Saindo do programa!\n");
+			int32_t retPilha = pop_op(frameCorrente);
+			printf("cod retorno: %d\n",retPilha);
+			exit(retPilha);
+		}
+	}
+
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
 
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
 void invokeinterface(){
 
@@ -1508,14 +1627,26 @@ void ins_new(){
 		//Atualiza PC.
 		inicializa_decodificador(dec); 
 		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-		printf("num_bytes: %d\n",num_bytes);
 
 		//proxima instruçao.
 		for(int8_t i = 0; i < num_bytes + 1; i++)
 			frameCorrente->pc++;
-		printf("novo pc: %d\n",frameCorrente->pc);
-		printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
+		
+		return;
+	}
 
+	if(strcmp("java/lang/StringBuffer",nomeClasse) == 0){
+
+		printf("Método nativo java - java/util/Scanner\n");
+
+		//Atualiza PC.
+		inicializa_decodificador(dec); 
+		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+		//proxima instruçao.
+		for(int8_t i = 0; i < num_bytes + 1; i++)
+			frameCorrente->pc++;
+		
 		return;
 	}
 	//Busca indice da classe no array de classeFiles
@@ -1534,14 +1665,12 @@ void ins_new(){
 	//atualia pc.
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	printf("num_bytes: %d\n",num_bytes);
 
 	//proxima instruçao.
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
-	printf("novo pc: %d\n",frameCorrente->pc);
-	printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
 }
+
 void newarray(){
 
 }

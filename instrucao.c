@@ -264,17 +264,42 @@ void newInstrucoes()
 
 //Implementação de cada instrução.
 
-//NOP -> Não realiza nada da pilha de operandos nem no array de var local.
-//Somente pula para a proxima instrucao.
+/**
+ * funcao que nao realiza nada na pilha de operandos nem no array de var local 
+ * @param void 
+ * @return void 
+ */
 void nop(){
+
+    // pula para proxima instrucao, atualizando pc
 	frameCorrente->pc++;
 }
 
+/**
+ * funcao que poe o valor a referencia null na pilha de operandos 
+ * @param void 
+ * @return void 
+ */
 void aconst_null(){
 
+    // poe a refererencia null na pilha 
+    push(frameCorrente, NULL_REF);
+    
+    // atualiza pc 
+	frameCorrente->pc++;
 }
-void iconst_m1(){
 
+/**
+ * funcao que poe a constante inteira -1 na pilha de operandos 
+ * @param void 
+ * @return void 
+ */
+void iconst_m1(){
+    // poe -1 na pilha de operandos
+    push(frameCorrente, -1);
+    
+    // atualiza pc 
+    frameCorrente->pc++;
 }
 
 /**
@@ -283,6 +308,12 @@ void iconst_m1(){
  * @return void 
  */
 void iconst_0(){
+
+    // poe 0 na pilha de operandos
+    push(frameCorrente, 0);
+    
+    // atualiza pc 
+    frameCorrente->pc++;
 	printf("Entrei no iconst_0\n");
 	push(frameCorrente,(int32_t) 0);
 
@@ -294,18 +325,67 @@ void iconst_0(){
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
 }
+
+/**
+ * Funcao que empilha 1 na pilha de operandos.
+ * @param void
+ * @return void 
+ */
 void iconst_1(){
 
+    // poe 1 na pilha de operandos
+    push(frameCorrente, 1);
+    
+    // atualiza pc 
+    frameCorrente->pc++;
+
 }
+
+/**
+ * Funcao que empilha 2 na pilha de operandos.
+ * @param void
+ * @return void 
+ */
 void iconst_2(){
 
+    // poe 2 na pilha de operandos
+    push(frameCorrente, 2);
+    
+    // atualiza pc 
+    frameCorrente->pc++;
+
 }
+
+/**
+ * Funcao que empilha 3 na pilha de operandos.
+ * @param void
+ * @return void 
+ */
 void iconst_3(){
 
-}
-void iconst_4(){
+    // poe 3 na pilha de operandos
+    push(frameCorrente, 3);
+    
+    // atualiza pc 
+    frameCorrente->pc++;
 
 }
+
+/**
+ * Funcao que empilha 4 na pilha de operandos.
+ * @param void
+ * @return void 
+ */
+void iconst_4(){
+
+    // poe 4 na pilha de operandos
+    push(frameCorrente, 4);
+    
+    // atualiza pc 
+    frameCorrente->pc++;
+
+}
+
 void iconst_5(){
 
 }

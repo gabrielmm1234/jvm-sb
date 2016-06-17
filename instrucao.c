@@ -27,6 +27,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+ #define NULL_REF NULL
+
 //OBS: Alternativa para memcpy no manipulação de ponto flutuante -> UNION.
 
 
@@ -287,7 +289,7 @@ void nop(){
 void aconst_null(){
 
     // poe a refererencia null na pilha 
-    push(frameCorrente, NULL_REF);
+    push((int32_t)NULL_REF);
     
     // atualiza pc 
 	frameCorrente->pc++;
@@ -300,7 +302,7 @@ void aconst_null(){
  */
 void iconst_m1(){
     // poe -1 na pilha de operandos
-    push(frameCorrente, -1);
+    push( -1);
     
     // atualiza pc 
     frameCorrente->pc++;
@@ -314,7 +316,7 @@ void iconst_m1(){
 void iconst_0(){
 
     // poe 0 na pilha de operandos
-    push(frameCorrente, 0);
+    push( 0);
     
     // atualiza pc 
     frameCorrente->pc++;
@@ -339,7 +341,7 @@ void iconst_0(){
 void iconst_1(){
 
     // poe 1 na pilha de operandos
-    push(frameCorrente, 1);
+    push( 1);
     
     // atualiza pc 
     frameCorrente->pc++;
@@ -354,7 +356,7 @@ void iconst_1(){
 void iconst_2(){
 
     // poe 2 na pilha de operandos
-    push(frameCorrente, 2);
+    push( 2);
     
     // atualiza pc 
     frameCorrente->pc++;
@@ -369,7 +371,7 @@ void iconst_2(){
 void iconst_3(){
 
     // poe 3 na pilha de operandos
-    push(frameCorrente, 3);
+    push( 3);
     
     // atualiza pc 
     frameCorrente->pc++;
@@ -384,7 +386,7 @@ void iconst_3(){
 void iconst_4(){
 
     // poe 4 na pilha de operandos
-    push(frameCorrente, 4);
+    push( 4);
     
     // atualiza pc 
     frameCorrente->pc++;
@@ -399,7 +401,7 @@ void iconst_4(){
 void iconst_5(){
 
     // poe 5 na pilha de operandos
-    push(frameCorrente, 5);
+    push( 5);
     
     // atualiza pc 
     frameCorrente->pc++;
@@ -495,7 +497,7 @@ void fconst_1(){
 	printf("Valor Empilhado: %d\n",*valPilha);
 
 	//Empilha float na forma de int32 para se adequar ao tipo da pilha.
-	push(frameCorrente,*valPilha);
+	push(*valPilha);
 
 	//atualiza pc
 	inicializa_decodificador(dec); 
@@ -530,7 +532,7 @@ void fconst_2(){
 	printf("Valor Empilhado: %d\n",*valPilha);
 
 	//Empilha float na forma de int32 para se adequar ao tipo da pilha.
-	push(frameCorrente,*valPilha);
+	push(*valPilha);
 
 	//atualiza pc
 	inicializa_decodificador(dec); 

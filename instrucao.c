@@ -1836,11 +1836,37 @@ void land(){
 }
 void ior(){
 
+	printf("Entrei no ior\n");
+
+	int32_t pop1 = pop_op();
+
+	int32_t pop2 = pop_op();
+
+	int32_t aux = pop1 | pop2;
+
+	push(aux);
+
+	//atualiza pc
+	frameCorrente->pc++;
+
 }
 void lor(){
 
 }
 void ixor(){
+
+	printf("Entrei no ixor\n");
+
+	int32_t pop1 = pop_op();
+
+	int32_t pop2 = pop_op();
+
+	int32_t aux = pop1 ^ pop2;
+
+	push(aux);
+
+	//atualiza pc
+	frameCorrente->pc++;
 
 }
 void lxor(){
@@ -2487,7 +2513,7 @@ void invokespecial(){
 
 	if(strcmp("java/lang/Object",nomeClasse) == 0){
 
-		//carregaMemClasse(nomeClasse);
+		carregaMemClasse(nomeClasse);
 
 		//Atualiza PC.
 		inicializa_decodificador(dec); 

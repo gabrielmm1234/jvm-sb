@@ -2226,16 +2226,97 @@ void tableswitch(){
 void lookupswitch(){
 
 }
+
+/**
+ * Retira um valor da pilha(inteiro) e empilha no frame chamador.
+ * @param void
+ * @return void 
+ */
 void ireturn(){
+	int32_t retorno = pop_op();
+	flagRet = 1;
+
+	//Atualiza PC.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("retornando! método acabou!\n");
 
 }
+
+/**
+ * Retira dois valores da pilha(long) e empilha na função chamadora.
+ * @param void
+ * @return void 
+ */
 void lreturn(){
+	int32_t alta,baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	flagRet = 2;
+
+	retAlta = alta;
+	retBaixa = baixa;
+
+	//Atualiza PC.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("retornando! método acabou!\n");
 
 }
+
+/**
+ * Retira um valor float da pilha e empilha no frame chamador.
+ * @param void
+ * @return void 
+ */
 void freturn(){
+	int32_t retorno = pop_op();
+	flagRet = 1;
+	//Atualiza PC.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("retornando! método acabou!\n");
 
 }
+
+/**
+ * Retira dois valores(double) da pilha e empilha no frame chamador.
+ * @param void
+ * @return void 
+ */
 void dreturn(){
+	int32_t alta,baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	flagRet = 2;
+
+	retAlta = alta;
+	retBaixa = baixa;
+
+	//Atualiza PC.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+	printf("retornando! método acabou!\n");
 
 }
 void areturn(){
@@ -2243,15 +2324,17 @@ void areturn(){
 }
 
 /**
- * Funcao retorna 0
+ * Empilha o valor 0 no frame chamador.
  * @param void
  * @return void 
  */
 void ins_return(){
 	printf("entrei no ins_return!!\n");
 
-	//TODO setar variaveis globais de retorno para 0.
+	//setar variaveis globais de retorno para 0.
 	retorno = 0;
+	flagRet = 1;
+
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;

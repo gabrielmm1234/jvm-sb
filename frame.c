@@ -81,12 +81,26 @@ void criaFrame(cp_info* cp, classFile* classe, code_attribute* code){
 void desalocaFrame(){
 	struct stackFrame *anterior;
 
+	push(retorno);
+
 	printf("desalocando Frame!\n");
 	//se topo->next diferente de null -> existe outros frames para executar.
 	//Atualiza o frame corrente para prosseguir a execução.
 	if (topo->next != NULL) {
 		printf("Execução prossegue para proximo frame!\n");
 		frameCorrente = topo->next->refFrame;
+
+		//Empilha valor de retorno do frame anterior na pilha do proximo frame.
+		//Salvo numa var global.
+		if(flagRet == 1){
+			push(retorno);
+		}else if(flagRet == 2){
+			push(retAlta);
+			push(retBaixa);
+		}
+
+		flagRet = 0;
+		
 	} else {
 		printf("Execução Acabou - Não há mais frames!\n");
 		frameCorrente = NULL;
@@ -103,7 +117,6 @@ void desalocaFrame(){
 	free(topo);
 	//Atualiza topo com o proximo frame a ser executado.
 	topo = anterior;
-
 }
 
 /**
@@ -114,8 +127,9 @@ void desalocaFrame(){
  */
 void push(int32_t valor)
 {	
-	printf("depth: %d\n",frameCorrente->pilha_op->depth);
-	printf("max_stack: %d\n",frameCorrente->max_stack);
+	//printf("depth: %d\n",frameCorrente->pilha_op->depth);
+	//printf("max_stack: %d\n",frameCorrente->max_stack);
+
 	if(frameCorrente->pilha_op->depth >= frameCorrente->max_stack){
 		printf("Overflow na pilha de operandos!\n");
 		exit(0);
@@ -126,7 +140,7 @@ void push(int32_t valor)
 
     // incrementa profundidade da pilha 
     frameCorrente->pilha_op->depth += 1;
-    dumpStack();
+    //dumpStack();
 }
 
 /**

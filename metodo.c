@@ -88,10 +88,6 @@ void executaFrameCorrente(){
 		executarInstrucoes(frameCorrente->code[frameCorrente->pc]);
 	}
 	desalocaFrame();
-
-	//Empilha valor de retorno do frame anterior na pilha do proximo frame.
-	//Salvo numa var global.
-	//push(frameCorrente,retorno);
 }
 
 /**

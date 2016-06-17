@@ -53,6 +53,10 @@ struct frame *frameCorrente;
 
 //Var globar para guardar retorno de um metodo e empilhar no proximo metodo.
 int32_t retorno;
+int32_t retAlta,retBaixa;
+
+//Flag para empilhar 1 slot ou 2(double e long).
+int8_t flagRet;
 
 void push(int32_t valor); 
 int32_t pop_op();

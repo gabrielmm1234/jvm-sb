@@ -1907,8 +1907,6 @@ void invokespecial(){
 
 	if(strcmp("java/lang/Object",nomeClasse) == 0){
 
-		printf("Método nativo java - java/lang/object\n");
-
 		//carregaMemClasse(nomeClasse);
 		//Atualiza PC.
 		inicializa_decodificador(dec); 

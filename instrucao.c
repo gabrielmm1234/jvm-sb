@@ -1292,7 +1292,27 @@ void dadd(){
 		frameCorrente->pc++;
 }
 
+/**
+ * Funcao desempilha dois valores inteiros, subtrai e empilha resultado.
+ * @param void
+ * @return void 
+ */
 void isub(){
+	int32_t v1,v2;
+	v1 = pop_op();
+	v2 = pop_op();
+	printf("v1: %d\n",v1);
+	printf("v2: %d\n",v2);
+	printf("Empilhado: %d\n",v1-v2);
+	push(v1-v2);
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
 void lsub(){
@@ -1492,8 +1512,24 @@ void dmul(){
 		frameCorrente->pc++;
 }
 
+/**
+ * Desempilha 2 valores da pilha, divide-os e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void idiv(){
+	 int32_t v1 = pop_op();
+	 int32_t v2 = pop_op();
+	 push((int32_t)(v1 / v2));
+	 printf("Valor empilhado: %d\n",v1/v2);
 
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 void ins_ldiv(){
 
@@ -1576,7 +1612,25 @@ void ddiv(){
 		frameCorrente->pc++;
 
 }
+
+/**
+ * Desempilha 2 valores da pilha, obtem o resto da divisao e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void irem(){
+	 int32_t v1 = pop_op();
+	 int32_t v2 = pop_op();
+	 push((int32_t)(v1 % v2));
+	 printf("Valor empilhado: %d\n",v1%v2);
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
 void lrem(){

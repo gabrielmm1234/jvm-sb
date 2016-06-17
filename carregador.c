@@ -85,11 +85,11 @@ int32_t carregaMemClasse(char* nomeClass){
 	}
 
 	printf("destino: %s\n",destino);
-    area_met.array_classes[aux - 1] = leitorClasse(destino);  
+    area_met.array_classes[area_met.num_classes - 1] = leitorClasse(destino);  
 
     printf("Carregou no array!\n");
     
-	if(area_met.array_classes[aux -1] == NULL){
+	if(area_met.array_classes[area_met.num_classes -1] == NULL){
 		printf("Erro ao carregar classe!\n");
 		exit(0);
 	}

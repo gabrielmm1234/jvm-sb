@@ -597,7 +597,7 @@ void dconst_0(){
  * @return void
  */
 void dconst_1(){
-    double double1 = 0.0; 
+    double double1 = 1.0; 
     int64_t temp; 
     int32_t parte_alta;
     int32_t parte_baixa;
@@ -638,9 +638,36 @@ void bipush(){
 		frameCorrente->pc++;
 }
 
+/**
+ * le dois bytes e poe resultado da concantenacao deles na pilha
+ * @param void
+ * @return void
+ */
 void sipush(){
+    int32_t byte1, byte2;
+    int32_t valor; 
 
+    // pega primeiro byte
+	byte1 = frameCorrente->code[(frameCorrente->pc + 1)];
+    
+    // pega segundo byte
+	byte2 = frameCorrente->code[(frameCorrente->pc + 2)];
+    
+    // obtem short 
+    valor = (byte1 << 8) + byte2;
+    
+    // poe valor no stack de operandos
+    push(valor);
+    
+    // atualiza pc 
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
+
 
 int obtem_utf_eq(cp_info* cp, int pos_pool)
 {
@@ -666,10 +693,16 @@ int obtem_utf_eq(cp_info* cp, int pos_pool)
 
         case CONSTANT_String:
             return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
+        case CONSTANT_Integer: 
+            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
+        case CONSTANT_Float: 
+            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
     }
 }
+
 void ldc(){
-    uint8_t indice, indice_utf;
+    uint32_t indice;
+    uint32_t indice_utf;
     
 	printf("Entrei no ldc!!\n");
 	inicializa_decodificador(dec); 
@@ -677,26 +710,23 @@ void ldc(){
 
     // pega indice 
     indice = frameCorrente->code[frameCorrente->pc + 1];
-    indice_utf = obtem_utf_eq(frameCorrente->constant_pool, indice-1); 
 
-    // se o indice para a constant pool for um int
-    //if (frameCorrente->cp_info[indice].tag == CONSTANT_Integer)
-    //{
-        
-    //}
-
-    // se o indice para a constant pool for um float 
-    //if (frameCorrente->cp_info[indice].tag == CONSTANT_Float)
-
-    // se o indice para a constant pool for para uma string
-    if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String)
+    // se o indice para a constant pool for para um int ou float
+    if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Float || \
+            frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Integer)
     {
-        push( (int32_t) indice_utf);
-        printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
-
+        push(indice);
+    }
+    
+    // se o indice para a constant pool for para uma string, int ou float
+    if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String) 
+    {
+        indice_utf = obtem_utf_eq(frameCorrente->constant_pool, indice-1); 
+        push(indice_utf);
+        printf("Valor %d empilhado\n", frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
     }
 
-	//proxima instruçao.
+	// atualiza proxima instrucao 
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
 }

@@ -74,8 +74,21 @@ int32_t carregaMemClasse(char* nomeClass){
 
     area_met.array_classes = (classFile**) calloc(1, sizeof(classFile*));
     area_met.array_classes = arrayClassesTemp;
-    area_met.array_classes[aux - 1] = leitorClasse(nomeClass);  
 
+    //Atualiza o nome do path para adicionar .class a um path
+    //Aloca espaço do tamanho do nome da classe mais espaço para .class /0 e ./
+    char* destino = malloc(strlen(nomeClass) + 10);
+    if (strstr(nomeClass,".class") != NULL) {
+		sprintf(destino, "%s", nomeClass);
+	} else {
+		sprintf(destino, "./%s.class",nomeClass);
+	}
+
+	printf("destino: %s\n",destino);
+    area_met.array_classes[aux - 1] = leitorClasse(destino);  
+
+    printf("Carregou no array!\n");
+    
 	if(area_met.array_classes[aux -1] == NULL){
 		printf("Erro ao carregar classe!\n");
 		exit(0);

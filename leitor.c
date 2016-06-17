@@ -171,13 +171,27 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
         cf->methods = (method_info*) malloc(methods_count*sizeof(method_info));
         method_info* cp = cf->methods;
         for(int i = 0; i < methods_count; cp++){
+
             cp->access_flags = le2Bytes(file);
+
+            printf("access_flags: %0x\n",cp->access_flags);
+            if(cp->access_flags == 0x010a ||cp->access_flags == 0x0101||cp->access_flags == 0x0111){
+                cp->name_index = le2Bytes(file);
+                printf("name_index: %d\n",cp->name_index);
+                cp->descriptor_index = le2Bytes(file);
+                printf("descriptor_index: %d\n",cp->descriptor_index);
+                cp->attributes_count = le2Bytes(file);
+                printf("attributes_count: %d\n",cp->attributes_count);
+            }
+
             cp->name_index = le2Bytes(file);
             cp->descriptor_index = le2Bytes(file);
             cp->attributes_count = le2Bytes(file);
-
             for(int j = 0; j < cp->attributes_count; j++)
             {
+                if(cp->access_flags == 0x010a ||cp->access_flags == 0x0101||cp->access_flags == 0x0111){
+                    
+                }
                 // pega nome e indice 
                 name_ind = le2Bytes(file);
                 att_len = le4Bytes(file); 
@@ -200,12 +214,6 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 
                     // le exceptions
                     le_exc(&(cp->exc_atrb), name_ind, att_len, file);
-                }
-
-                // senao, nao eh um atributo valido 
-                else
-                {
-                    exit(1); 
                 }
             }
             i++;
@@ -520,7 +528,7 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 
 	cf->methods_count = le2Bytes(file);
 	methodInfo(cf,file,cf->methods_count);
-
+    printf("Passei do methods\n");
 	cf->attributes_count = le2Bytes(file);
 	attributeInfo(cf,file,cf->attributes_count);
 }

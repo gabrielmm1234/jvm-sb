@@ -316,10 +316,8 @@ void iconst_m1(){
 void iconst_0(){
 
     // poe 0 na pilha de operandos
-    push( 0);
-    
-    // atualiza pc 
-    frameCorrente->pc++;
+    push(0);
+
 	printf("Entrei no iconst_0\n");
 	push((int32_t) 0);
 
@@ -341,7 +339,7 @@ void iconst_0(){
 void iconst_1(){
 
     // poe 1 na pilha de operandos
-    push( 1);
+    push(1);
     
     // atualiza pc 
     frameCorrente->pc++;
@@ -356,7 +354,7 @@ void iconst_1(){
 void iconst_2(){
 
     // poe 2 na pilha de operandos
-    push( 2);
+    push(2);
     
     // atualiza pc 
     frameCorrente->pc++;
@@ -371,7 +369,7 @@ void iconst_2(){
 void iconst_3(){
 
     // poe 3 na pilha de operandos
-    push( 3);
+    push(3);
     
     // atualiza pc 
     frameCorrente->pc++;
@@ -386,7 +384,7 @@ void iconst_3(){
 void iconst_4(){
 
     // poe 4 na pilha de operandos
-    push( 4);
+    push(4);
     
     // atualiza pc 
     frameCorrente->pc++;
@@ -401,7 +399,7 @@ void iconst_4(){
 void iconst_5(){
 
     // poe 5 na pilha de operandos
-    push( 5);
+    push(5);
     
     // atualiza pc 
     frameCorrente->pc++;
@@ -1003,6 +1001,33 @@ void ladd(){
 
 }
 void fadd(){
+	float fVal1,fVal2;
+
+	//Desempilha os dois valores
+	int32_t aux1 = pop_op();
+	int32_t aux2 = pop_op();
+
+	//Converte para float e nao perde precisao
+	memcpy(&fVal1, &aux1, sizeof(int32_t));
+	memcpy(&fVal2, &aux2, sizeof(int32_t));
+
+	//Soma os dois valores em float
+	float resultado = fVal1 + fVal2;
+
+	//copia para um int32_t
+	int32_t retPilha;
+	memcpy(&retPilha, &resultado, sizeof(int32_t));
+
+	//Empilha
+	push(retPilha);
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
 
@@ -1408,13 +1433,134 @@ void ineg(){
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
 }
+
+/**
+ * Desempilha um long(do java -> no c long tem 32bits), negativa e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void lneg(){
+	int32_t baixa,alta;
+
+	//Desempilha parte alta e baixa de um long da pilha
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	//Negativa o valor
+	lVal = - lVal;
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = lVal >> 32;
+	baixa = lVal & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
+
+/**
+ * Desempilha um float ,negativa e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void fneg(){
+	float fVal;
+	//Obtem valor da pilha em int32_t
+	int32_t retPilha = pop_op();
 
+	//Copia bits para um float para nao perder precisao -> Alternativa UNION
+	memcpy(&fVal,&retPilha,sizeof(float));
+
+	//Negativa o valor.
+	fVal = - fVal;
+
+	//Copia  bits para um int32_t para empilhar corretamente e n perder precisao.
+	memcpy(&retPilha,&fVal,sizeof(int32_t));
+
+	//Empilha valor de ponto flutuante em int32_t
+	push(retPilha);
+
+	//Atualiza PC.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
+
+/**
+ * Desempilha um double ,negativa e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void dneg(){
+
+	int32_t baixa,alta;
+
+	//Desempilha parte alta e baixa do valor double
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(double)
+
+	//Atribui parte alta primeiro
+	int64_t dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble1.
+	double valorDouble1;
+	memcpy(&valorDouble1, &dVal, sizeof(int64_t));
+
+	//Negativo o valor double
+	valorDouble1 = - valorDouble1;
+
+	//Copio os bytes para um int64_t para nao perder precisao.
+	memcpy(&dVal, &valorDouble1, sizeof(int64_t));
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = dVal >> 32;
+	baixa = dVal & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
 void ishl(){
@@ -2095,6 +2241,7 @@ void invokespecial(){
 	if(strcmp("java/lang/Object",nomeClasse) == 0){
 
 		//carregaMemClasse(nomeClasse);
+
 		//Atualiza PC.
 		inicializa_decodificador(dec); 
 		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;

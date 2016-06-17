@@ -182,6 +182,27 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
                 printf("descriptor_index: %d\n",cp->descriptor_index);
                 cp->attributes_count = le2Bytes(file);
                 printf("attributes_count: %d\n",cp->attributes_count);
+                
+                i++;
+                for (int j = 0; j < cp->attributes_count; j++)
+                {
+                    int64_t temp, temp2; 
+
+                    // pega atributo name index do metodo 
+                    temp = le2Bytes(file); 
+                    
+                    // pega attributo length do metodo 
+                    temp = le4Bytes(file); 
+
+                    // vai lendo info 
+                    for (int k = 0; k < temp; k++)
+                    {
+                        temp2 = le1Byte(file);
+                    }
+                    
+                    
+                }
+                continue; 
             }
 
             cp->name_index = le2Bytes(file);
@@ -189,9 +210,6 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
             cp->attributes_count = le2Bytes(file);
             for(int j = 0; j < cp->attributes_count; j++)
             {
-                if(cp->access_flags == 0x010a ||cp->access_flags == 0x0101||cp->access_flags == 0x0111){
-                    
-                }
                 // pega nome e indice 
                 name_ind = le2Bytes(file);
                 att_len = le4Bytes(file); 

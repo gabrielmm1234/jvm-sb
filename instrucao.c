@@ -2342,7 +2342,7 @@ void invokespecial(){
 
 	if(strcmp("java/lang/Object",nomeClasse) == 0){
 
-		//carregaMemClasse(nomeClasse);
+		carregaMemClasse(nomeClasse);
 
 		//Atualiza PC.
 		inicializa_decodificador(dec); 

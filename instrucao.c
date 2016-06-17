@@ -27,11 +27,15 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+//OBS: Alternativa para memcpy no manipulação de ponto flutuante -> UNION.
+
 
 /**
  * Acesso ao frame corrente declarado no modulo frame.h
  */
 extern struct frame* frameCorrente;
+
+int naoEmpilhaFlag = 0;
 
 /**
  * o decodificador permite eh um array com informacoes das varias instrucoes\n
@@ -284,7 +288,8 @@ void iconst_m1(){
  */
 void iconst_0(){
 	printf("Entrei no iconst_0\n");
-	push(frameCorrente,(int32_t) 0);
+	push((int32_t) 0);
+
 
 	//atualiza pc
 	inicializa_decodificador(dec); 
@@ -335,7 +340,7 @@ void fconst_0(){
 	memcpy(valPilha, &valF, sizeof(int32_t));
 	printf("Valor Empilhado: %d\n",*valPilha);
 	//Empilha float na forma de int32 para se adequar ao tipo da pilha.
-	push(frameCorrente,*valPilha);
+	push(*valPilha);
 
 	//atualiza pc
 	inicializa_decodificador(dec); 
@@ -367,7 +372,7 @@ void bipush(){
 	printf("Entrei no bipush\n");
 	int8_t argumento = (int8_t) frameCorrente->code[(++frameCorrente->pc)];
 	printf("argumento empilhado: %d\n",argumento);
-	push(frameCorrente,(int32_t)argumento);
+	push((int32_t)argumento);
 	
 	//atualiza pc
 	inicializa_decodificador(dec); 
@@ -431,7 +436,7 @@ void ldc(){
     // se o indice para a constant pool for para uma string
     if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String)
     {
-        push(frameCorrente, (int32_t) indice_utf);
+        push( (int32_t) indice_utf);
         printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 
     }
@@ -470,8 +475,8 @@ void ldc2_w(){
 		uint32_t baixa = frameCorrente->constant_pool[indice-1].info.Double.low_bytes;
 		printf("Parte alta empilhada: %d\n",alta);
 		printf("Parte baixa empilhada: %d\n",baixa);
-		push(frameCorrente,alta);
-		push(frameCorrente,baixa);
+		push(alta);
+		push(baixa);
 	}
 
 	//atualiza pc
@@ -556,7 +561,7 @@ void aload_0(){
 	printf("Entrei aload_0\n");
 
 	//Empilha a posição 0 do vetor de variáveis locais.
-	push(frameCorrente,frameCorrente->fields[0]);
+	push(frameCorrente->fields[0]);
 	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 
 
@@ -708,7 +713,7 @@ void sastore(){
  */
 void pop(){
 	printf("Entrei no pop\n");
-	pop_op(frameCorrente);
+	pop_op();
 
 	//atualiza pc
 	inicializa_decodificador(dec); 
@@ -732,13 +737,26 @@ void dup(){
 	printf("Entrei no dup\n");
 	int32_t aux;
 
+	if(naoEmpilhaFlag){
+		//atualiza pc
+		inicializa_decodificador(dec); 
+		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+		
+		//proxima instruçao.
+		for(int8_t i = 0; i < num_bytes + 1; i++)
+			frameCorrente->pc++;
+
+		naoEmpilhaFlag = 0;
+		return;
+	}
+
 	//Desempilha
-	aux = pop_op(frameCorrente);
+	aux = pop_op();
 
 	//Duplica
-	push(frameCorrente,aux);
+	push(aux);
 	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
-	push(frameCorrente,aux);
+	push(aux);
 	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 
 
@@ -778,12 +796,12 @@ void swap(){
 void iadd(){
 	printf("Entrei no iadd\n");
 	int32_t v1,v2;
-	v1 = pop_op(frameCorrente);
-	v2 = pop_op(frameCorrente);
+	v1 = pop_op();
+	v2 = pop_op();
 	printf("v1: %d\n",v1);
 	printf("v2: %d\n",v2);
 	printf("Empilhado: %d\n",v1+v2);
-	push(frameCorrente, v1+v2);
+	push( v1+v2);
 
 	//atualiza pc
 	inicializa_decodificador(dec); 
@@ -814,8 +832,8 @@ void dadd(){
 	int32_t baixa;
 
 	//Obtem parte baixa primeiro -> Foi empilhada por ultimo(topo)
-	baixa = pop_op(frameCorrente);
-	alta = pop_op(frameCorrente);
+	baixa = pop_op();
+	alta = pop_op();
 
 	//Converter os numeros 32 bits para 64 bits(double)
 
@@ -834,8 +852,8 @@ void dadd(){
 
 
 	//Obtem parte baixa primeiro -> Foi empilhada por ultimo(topo)
-	baixa = pop_op(frameCorrente);
-	alta = pop_op(frameCorrente);
+	baixa = pop_op();
+	alta = pop_op();
 
 	//Converter os numeros 32 bits para 64 bits(double)
 
@@ -870,8 +888,8 @@ void dadd(){
 	//finalmente empilha.
 	printf("Parte alta empilhada: %d\n",alta);
 	printf("Parte baixa empilhada: %d\n",baixa);
-	push(frameCorrente,alta);
-	push(frameCorrente,baixa);
+	push(alta);
+	push(baixa);
 
 	//atualiza pc
 	inicializa_decodificador(dec); 
@@ -898,7 +916,79 @@ void fsub(){
  * @return void 
  */
 void dsub(){
+	printf("Entrei no dsub\n");
 
+	//Parte alta e baixa do double.
+	int32_t alta;
+	int32_t baixa;
+
+	//Obtem parte baixa primeiro -> Foi empilhada por ultimo(topo)
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(double)
+
+	//Atribui parte alta primeiro
+	int64_t dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble1.
+	double valorDouble1;
+	memcpy(&valorDouble1, &dVal, sizeof(int64_t));
+
+
+	//Obtem parte baixa primeiro -> Foi empilhada por ultimo(topo)
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(double)
+
+	//Atribui parte alta primeiro
+	dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble2.
+	double valorDouble2;
+	memcpy(&valorDouble2, &dVal, sizeof(int64_t));
+
+	//Soma os dois valores double
+	printf("Valor1 double: %f\n",valorDouble1);
+	printf("Valor2 double: %f\n",valorDouble2);
+	double doubleSubtraido = valorDouble1 - valorDouble2;
+	printf("Valor subtraido: %f\n",doubleSubtraido);
+
+	//Necessario converter mais uma vez o double somado para int64 para 
+	//empilhar corretamente.
+	int64_t valorPilha;
+	memcpy(&valorPilha, &doubleSubtraido, sizeof(int64_t));
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = valorPilha >> 32;
+	baixa = valorPilha & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 
 /**
@@ -908,9 +998,9 @@ void dsub(){
  */
 void imul(){
 	printf("Entrei no imul\n");
-	 int32_t v1 = pop_op(frameCorrente);
-	 int32_t v2 = pop_op(frameCorrente);
-	 push(frameCorrente,(int32_t)(v1 * v2));
+	 int32_t v1 = pop_op();
+	 int32_t v2 = pop_op();
+	 push((int32_t)(v1 * v2));
 	 printf("Valor empilhado: %d\n",v1*v2);
 
 	//atualiza pc
@@ -935,8 +1025,81 @@ void fmul(){
  * @return void 
  */
 void dmul(){
+	printf("Entrei no dmul\n");
 
+	//Parte alta e baixa do double.
+	int32_t alta;
+	int32_t baixa;
+
+	//Obtem parte baixa primeiro -> Foi empilhada por ultimo(topo)
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(double)
+
+	//Atribui parte alta primeiro
+	int64_t dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble1.
+	double valorDouble1;
+	memcpy(&valorDouble1, &dVal, sizeof(int64_t));
+
+
+	//Obtem parte baixa primeiro -> Foi empilhada por ultimo(topo)
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(double)
+
+	//Atribui parte alta primeiro
+	dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble2.
+	double valorDouble2;
+	memcpy(&valorDouble2, &dVal, sizeof(int64_t));
+
+	//Soma os dois valores double
+	printf("Valor1 double: %f\n",valorDouble1);
+	printf("Valor2 double: %f\n",valorDouble2);
+	double doubleMultiplicado = valorDouble1 * valorDouble2;
+	printf("Valor multiplicado: %f\n",doubleMultiplicado);
+
+	//Necessario converter mais uma vez o double somado para int64 para 
+	//empilhar corretamente.
+	int64_t valorPilha;
+	memcpy(&valorPilha, &doubleMultiplicado, sizeof(int64_t));
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = valorPilha >> 32;
+	baixa = valorPilha & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
+
 void idiv(){
 
 }
@@ -958,11 +1121,11 @@ void ddiv(){
 	//Partes altas e baixas dos dois doubles.
 	int32_t alta,baixa,alta1,baixa1;
 
-	baixa1 = pop_op(frameCorrente);
-	alta1 = pop_op(frameCorrente);
+	baixa1 = pop_op();
+	alta1 = pop_op();
 
-	baixa = pop_op(frameCorrente);
-	alta = pop_op(frameCorrente);
+	baixa = pop_op();
+	alta = pop_op();
 
 	//Converter os numeros 32 bits para 64 bits(double)
 
@@ -1009,11 +1172,17 @@ void ddiv(){
 	//finalmente empilha.
 	printf("Parte alta empilhada: %d\n",alta);
 	printf("Parte baixa empilhada: %d\n",baixa);
-	push(frameCorrente,alta);
-	push(frameCorrente,baixa);
+	push(alta);
+	push(baixa);
 
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
-	exit(0);
 }
 void irem(){
 
@@ -1037,12 +1206,12 @@ void ineg(){
 	printf("Entrei no ineg\n");
 		
 	//Desempilha valor da pilha
-	int32_t retPilha = pop_op(frameCorrente);
+	int32_t retPilha = pop_op();
 	//Negativa.
 	int32_t aux = -retPilha;
 	printf("Valor empilhado: %d\n",aux);
 	//Empilha valor negativado.
-	push(frameCorrente,aux);
+	push(aux);
 
 	//atualiza pc
 	inicializa_decodificador(dec); 
@@ -1114,7 +1283,7 @@ void i2f(){
 	printf("Entrei no i2f\n");
 	
 	//Obtem valor da pilha
-	int32_t val = (int32_t) pop_op(frameCorrente);
+	int32_t val = (int32_t) pop_op();
 	printf("Val inteiro: %d\n",val);
 
 	//Realiza cast para float
@@ -1125,7 +1294,7 @@ void i2f(){
 	int32_t valPilha;
 	memcpy(&valPilha, &valF, sizeof(int32_t));
 	printf("Val empilhado %d\n",valPilha);
-	push(frameCorrente,valPilha);
+	push(valPilha);
 
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
@@ -1144,7 +1313,7 @@ void i2f(){
 void i2d(){
 	printf("Entrei no i2d\n");
 	//Desempilha valor da pilha
-	int32_t retPilha = pop_op(frameCorrente);
+	int32_t retPilha = pop_op();
 
 	//Cast para double
 	double dVal = (double) retPilha;
@@ -1167,8 +1336,8 @@ void i2d(){
 	//Empilha parte alta e baixa.
 	printf("Parte alta empilhada: %d\n",alta);
 	printf("Parte baixa empilhada: %d\n",baixa);
-	push(frameCorrente,alta);
-	push(frameCorrente,baixa);
+	push(alta);
+	push(baixa);
 
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
@@ -1202,7 +1371,7 @@ void f2l(){
 void f2d(){
 	printf("Entrei no f2d\n");
 	//Desempilha valor da pilha
-	int32_t retPilha = pop_op(frameCorrente);
+	int32_t retPilha = pop_op();
 	float fVal;
 	//Copia os bytes do retPilha para uma var float -> Nao perder precisao
 	memcpy(&fVal, &retPilha, sizeof(int32_t));
@@ -1228,8 +1397,8 @@ void f2d(){
 	//Empilha parte alta e baixa.
 	printf("Parte alta empilhada: %d\n",alta);
 	printf("Parte baixa empilhada: %d\n",baixa);
-	push(frameCorrente,alta);
-	push(frameCorrente,baixa);
+	push(alta);
+	push(baixa);
 
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
@@ -1252,7 +1421,42 @@ void d2l(){
  * @return void 
  */
 void d2f(){
+	printf("Entrei no d2f\n");
+	int32_t alta,baixa;
+	baixa = pop_op();
+	alta = pop_op();
 
+	//Atribui parte alta primeiro
+	int64_t dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble1. -> Não perder a
+	//Precisão. Alternativa UNION!!
+	double v1;
+	memcpy(&v1, &dVal, sizeof(double));
+
+	//Realiza cast
+	float fVal = (float) v1;
+	printf("Valor float: %f\n",fVal);
+
+	//Copia valor castado para um int32_T para ser empilhado.
+	int32_t pilhaVal;
+	memcpy(&pilhaVal,&fVal,sizeof(float));
+	printf("Valor Empilhado: %d\n",pilhaVal);
+	push(pilhaVal);
+
+	//Atualiza PC.
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 void i2b(){
 
@@ -1283,12 +1487,12 @@ void fcmpl(){
 	int32_t retPilha;
 
 	//Desempilha o segundo valor(topo).
-	retPilha = pop_op(frameCorrente);
+	retPilha = pop_op();
 	//Copia os bytes do int32 para uma var do tipo float para nao perder precisão.
 	memcpy(&val2,&retPilha,sizeof(float));
 
 	//Desempilha o primeiro valor(topo).
-	retPilha = pop_op(frameCorrente);
+	retPilha = pop_op();
 	//Copia os bytes do int32 para uma var do tipo float para nao perder precisão.
 	memcpy(&val1,&retPilha,sizeof(float));
 
@@ -1297,15 +1501,15 @@ void fcmpl(){
 	printf("val2: %f\n",val2);
 	if(val1 == val2){
 		printf("val1 == val2 empilhando 0\n");
-		push(frameCorrente,(int32_t)0);
+		push((int32_t)0);
 	}
 	if(val1 > val2){
 		printf("val1 > val2 empilhando 1\n");
-		push(frameCorrente,(int32_t)1);
+		push((int32_t)1);
 	}
 	if(val1 < val2){
 		printf("val1 < val2 empilhando -1\n");
-		push(frameCorrente,(int32_t)-1);
+		push((int32_t)-1);
 	}
 
 	//Atualiza PC.
@@ -1345,7 +1549,7 @@ void iflt(){
 	printf("Offset: %d\n",offset);
 
 	//Pega valor a ser comparado na pilha.
-	int32_t retPilha = pop_op(frameCorrente);
+	int32_t retPilha = pop_op();
 	printf("Val: %d\n",retPilha);
 
 	//Se val menor que zero atualiza pc com offset
@@ -1398,9 +1602,11 @@ void if_acmpne(){
  * @return void 
  */
 void ins_goto(){
-	//TODO obtém offset
+	//obtém offset que vem da instruçao.
+	int8_t offset = frameCorrente->code[frameCorrente->pc + 2];
 
 	//TODO pc = pc + offset
+	frameCorrente->pc += offset;
 }
 void jsr(){
 
@@ -1438,10 +1644,8 @@ void areturn(){
 void ins_return(){
 	printf("entrei no ins_return!!\n");
 
-	//Executa instrução.
-
 	//TODO setar variaveis globais de retorno para 0.
-
+	retorno = 0;
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
@@ -1503,7 +1707,19 @@ void getfield(){
  	printf("nome: %s\n",nome);
  	printf("tipo: %s\n",tipo);
 
- 	objeto* obj = (objeto*) pop_op(frameCorrente);
+ 	if((strcmp(tipo, "Ljava/util/Scanner;") == 0)){
+ 		//Atualiza PC.
+		inicializa_decodificador(dec); 
+		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+		
+		//proxima instruçao.
+		for(int8_t i = 0; i < num_bytes + 1; i++)
+			frameCorrente->pc++;
+
+		return;
+ 	}
+
+ 	objeto* obj = (objeto*) pop_op();
 
  	//Obtem indice do field utilizando as informações anteriores.
  	int32_t indiceField = buscaCampo(nomeClasse,nome,tipo);
@@ -1518,7 +1734,7 @@ void getfield(){
  	//Pega o field do objeto e empilha.
  	uint32_t val = obj->campos[i];
  	printf("val empilhado: %d\n",val);
- 	push(frameCorrente,val);
+ 	push(val);
 
 	//Atualiza PC.
 	inicializa_decodificador(dec); 
@@ -1566,9 +1782,9 @@ void putfield(){
  	printf("indiceNome: %d\n",indiceNome);
 
  	//obtem valor e objeto da pilha e seta o valor no field do objeto.
- 	int32_t val = pop_op(frameCorrente);
+ 	int32_t val = pop_op();
  	printf("valor desempilhado: %d\n",val);
- 	objeto* obj = (objeto*)pop_op(frameCorrente);
+ 	objeto* obj = (objeto*)pop_op();
 
  	int i;
  	for(i = 0; obj->indiceCampos[i] != indiceNome; i++);
@@ -1626,14 +1842,14 @@ void invokevirtual(){
 	if((strcmp(nomeClasse, "java/io/PrintStream") == 0) && (strcmp(nomeMetodo,"println") == 0)){
 		if(strstr(descricaoMetodo, "Ljava/lang/String") != NULL) {
 			if(flagAppend == 0){
-			resultado = pop_op(frameCorrente);
+			resultado = pop_op();
 			//resultado = frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1];
 			string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
 			printf("%s\n",string);
 			}
 			else if(flagAppend == 2){
-				resultado = pop_op(frameCorrente);
-				resultado2 = pop_op(frameCorrente);
+				resultado = pop_op();
+				resultado2 = pop_op();
 
 				string = frameCorrente->constant_pool[resultado2].info.Utf8.bytes;
 				printf("%s",string);
@@ -1652,7 +1868,7 @@ void invokevirtual(){
 	if((strcmp(nomeClasse, "java/util/Scanner") == 0) && (strcmp(nomeMetodo,"next") == 0)){
 		int32_t aux;
 		scanf("%d",&aux);
-		push(frameCorrente,aux);
+		push(aux);
 		printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 	}
 
@@ -1693,6 +1909,7 @@ void invokespecial(){
 
 		printf("Método nativo java - java/lang/object\n");
 
+		//carregaMemClasse(nomeClasse);
 		//Atualiza PC.
 		inicializa_decodificador(dec); 
 		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
@@ -1767,7 +1984,7 @@ void invokespecial(){
 
 	//Desempilha os parametros da pilha.
 	for(int32_t i = 0; i <= numeroParametros; i++)
-		fields[i] = pop_op(frameCorrente);
+		fields[i] = pop_op();
 
 	//inicia método
 	iniciaMetodo(metodoInvocado, classe);
@@ -1827,16 +2044,23 @@ void invokestatic(){
 	if((strcmp(nomeClasse, "java/lang/System") == 0) && (strcmp(nomeMetodo,"exit") == 0)){
 		if(strstr(descricaoMetodo, "(I)V") != NULL) {
 			printf("Saindo do programa!\n");
-			int32_t retPilha = pop_op(frameCorrente);
+			int32_t retPilha = pop_op();
 			printf("cod retorno: %d\n",retPilha);
 			exit(retPilha);
 		}
 	}
 
+	if((strcmp(nomeClasse, "java/lang/Integer") == 0) && (strcmp(nomeMetodo,"parseInt") == 0)){
+		
+			int32_t retPilha = pop_op();
+			pop_op();
+			push(retPilha);
+	}
+
 	if((strcmp(nomeClasse, "java/lang/Math") == 0) && (strcmp(nomeMetodo,"sqrt") == 0)){
 		if(strstr(descricaoMetodo, "(D)D") != NULL) {
-			int32_t baixa = pop_op(frameCorrente);
-			int32_t alta = pop_op(frameCorrente);
+			int32_t baixa = pop_op();
+			int32_t alta = pop_op();
 
 			//Atribui parte alta primeiro
 			int64_t dVal = alta;
@@ -1863,8 +2087,8 @@ void invokestatic(){
 			alta = aux >> 32;
 			baixa = aux & 0xffffffff;
 
-			push(frameCorrente,alta);
-			push(frameCorrente,baixa);
+			push(alta);
+			push(baixa);
 		}
 	}
 
@@ -1903,7 +2127,7 @@ void ins_new(){
 	if(strcmp("java/util/Scanner",nomeClasse) == 0){
 
 		printf("Método nativo java - java/util/Scanner\n");
-
+		naoEmpilhaFlag = 1;
 		//Atualiza PC.
 		inicializa_decodificador(dec); 
 		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
@@ -1918,7 +2142,7 @@ void ins_new(){
 	if(strcmp("java/lang/StringBuffer",nomeClasse) == 0){
 
 		printf("Método nativo java - java/util/Scanner\n");
-
+		naoEmpilhaFlag = 1;
 		//Atualiza PC.
 		inicializa_decodificador(dec); 
 		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
@@ -1938,8 +2162,12 @@ void ins_new(){
 	//Cria um objeto a partir do classFile.
 	objeto = criaObjeto(classe);
 
+	if(objeto == NULL){
+		printf("Objeto não foi corretamente alocado\n");
+	}
+
 	//empilha objeto na pilha de operandos (push)
-	push(frameCorrente,(int32_t) objeto);
+	push((int32_t) objeto);
 	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 
 	//atualia pc.

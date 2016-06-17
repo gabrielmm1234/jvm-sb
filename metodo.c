@@ -88,6 +88,10 @@ void executaFrameCorrente(){
 		executarInstrucoes(frameCorrente->code[frameCorrente->pc]);
 	}
 	desalocaFrame();
+
+	//Empilha valor de retorno do frame anterior na pilha do proximo frame.
+	//Salvo numa var global.
+	//push(frameCorrente,retorno);
 }
 
 /**
@@ -117,8 +121,8 @@ objeto* criaObjeto(classFile* classe){
 	}
 
 	//Coloca no heap
-	heap[numObjetos] = objeto;
-	numObjetos++;
+	//heap[numObjetos] = objeto;
+	//numObjetos++;
 	//retorna objeto
 	return objeto;
 }

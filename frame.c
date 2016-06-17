@@ -101,7 +101,6 @@ void desalocaFrame(){
     free(topo->refFrame->pilha_op);
 	free(topo->refFrame);
 	free(topo);
-
 	//Atualiza topo com o proximo frame a ser executado.
 	topo = anterior;
 
@@ -113,13 +112,21 @@ void desalocaFrame(){
  * @param int32_t valor, o valor a ser colocado na pilha
  * @return void
  */
-void push(frame* frame_corrente, int32_t valor)
-{
+void push(int32_t valor)
+{	
+	printf("depth: %d\n",frameCorrente->pilha_op->depth);
+	printf("max_stack: %d\n",frameCorrente->max_stack);
+	if(frameCorrente->pilha_op->depth >= frameCorrente->max_stack){
+		printf("Overflow na pilha de operandos!\n");
+		exit(0);
+	}
+
     // poe valor no frame
-    frame_corrente->pilha_op->operandos[frame_corrente->pilha_op->depth] = valor; 
+    frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth] = valor; 
 
     // incrementa profundidade da pilha 
-    frame_corrente->pilha_op->depth += 1;
+    frameCorrente->pilha_op->depth += 1;
+    dumpStack();
 }
 
 /**
@@ -127,12 +134,19 @@ void push(frame* frame_corrente, int32_t valor)
  * @param frame* frame_corrente, uma referencia ao frame atual
  * @return int32_t valor, o valor a ser colocado na pilha
  */
-int32_t pop_op(frame* frame_corrente)
+int32_t pop_op()
 {
     // decrementa profundidade da pilha 
-    frame_corrente->pilha_op->depth -= 1;
+    frameCorrente->pilha_op->depth -= 1;
 
     // retorna valor. o +1 se deve ao fato de ja termos decrementado o topo da pilha
-    return frame_corrente->pilha_op->operandos[frame_corrente->pilha_op->depth];  
+    return frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth];  
 
+}
+
+void dumpStack(){
+	int i;
+	for(i = 0; i < frameCorrente->pilha_op->depth; i++){
+		printf("valor: %d\n",frameCorrente->pilha_op->operandos[i]);
+	}
 }

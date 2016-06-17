@@ -51,6 +51,10 @@ struct stackFrame{
 //Salva o frame que está sendo executado.
 struct frame *frameCorrente;
 
-void push(frame* frame_corrente, int32_t valor); 
-int32_t pop_op(frame* frame_corrente);
+//Var globar para guardar retorno de um metodo e empilhar no proximo metodo.
+int32_t retorno;
+
+void push(int32_t valor); 
+int32_t pop_op();
+void dumpStack();
 #endif

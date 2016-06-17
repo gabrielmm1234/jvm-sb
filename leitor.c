@@ -174,14 +174,10 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
 
             cp->access_flags = le2Bytes(file);
 
-            printf("access_flags: %0x\n",cp->access_flags);
             if(cp->access_flags == 0x010a ||cp->access_flags == 0x0101||cp->access_flags == 0x0111){
                 cp->name_index = le2Bytes(file);
-                printf("name_index: %d\n",cp->name_index);
                 cp->descriptor_index = le2Bytes(file);
-                printf("descriptor_index: %d\n",cp->descriptor_index);
                 cp->attributes_count = le2Bytes(file);
-                printf("attributes_count: %d\n",cp->attributes_count);
                 
                 i++;
                 for (int j = 0; j < cp->attributes_count; j++)
@@ -256,7 +252,7 @@ void le_exc(exceptions_attribute** exc_atrb, uint16_t name_ind, uint32_t att_len
     for (int k = 0; k < (*exc_atrb)->number_of_exceptions; k++)
     {
         (*exc_atrb)->exception_index_table[k] = le2Bytes(file);
-        printf("%d -  %d", k, (*exc_atrb)->exception_index_table[k]);
+        //printf("%d -  %d", k, (*exc_atrb)->exception_index_table[k]);
     }
 }
 
@@ -546,7 +542,6 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 
 	cf->methods_count = le2Bytes(file);
 	methodInfo(cf,file,cf->methods_count);
-    printf("Passei do methods\n");
 	cf->attributes_count = le2Bytes(file);
 	attributeInfo(cf,file,cf->attributes_count);
 }

@@ -410,32 +410,49 @@ void iconst_5(){
 
 /*
  * a funcao coloca a constante long 0 na pilha de operandos
+ * ocupa 2 espacos na pilha 
  * @param void 
  * @return void
  */
 void lconst_0(){
 
-    // poe a constante long 0 na pilha - como long eh 64 bits, ocupa dois slots
+    int64_t long0 = 0; 
+    int32_t parte_alta;
+    int32_t parte_baixa; 
+
+    // pega parte alta e parte baixa do long
+    parte_alta = (int32_t) (long0 >> 32);
+    parte_baixa = (int32_t) long0; 
     
-    // copia bloco de 32 bits correspondente a primeira parte
-    
-    // copia bloco de 32 bits correspondente a segunda parte para a pilha 
+    // pela convencao, empilha a parte alta primeiro
+    push(parte_alta);
+
+    // pela convencao, empilha a parte baixa depois
+    push(parte_baixa);
     
 }
 
 /*
  * a funcao coloca a constante long 1 na pilha de operandos
+ * ocupa 2 espacos na pilha
  * @param void
  * @return void
  */
 void lconst_1(){
 
-    // poe a constante long 0 na pilha - como long eh 64 bits, ocupa dois slots
-    
-    // copia bloco de 32 bits correspondente a primeira parte
-    
-    // copia bloco de 32 bits correspondente a segunda parte para a pilha 
+    int64_t long1 = 1; 
+    int32_t parte_alta;
+    int32_t parte_baixa; 
 
+    // pega parte alta e parte baixa do long
+    parte_alta = (int32_t) (long1 >> 32);
+    parte_baixa = (int32_t) long1; 
+    
+    // pela convencao, empilha a parte alta primeiro
+    push(parte_alta);
+
+    // pela convencao, empilha a parte baixa depois
+    push(parte_baixa);
 }
 
 /**
@@ -543,7 +560,22 @@ void fconst_2(){
 		frameCorrente->pc++;
 }
 
+/*
+ * funcao que empilha o double 0.0 na pilha
+ * @param void
+ * @return void
+ */
 void dconst_0(){
+    double double0 = 0.0; 
+    int64_t temp; 
+
+    // copia valor de double para o int temp
+	memcpy(&temp, &double0, sizeof(int64_t));
+    
+    // divide temp em parte alta e parte baixa
+    
+    // empilha a parte alta primeiro e depois a baixa
+
 
 }
 void dconst_1(){

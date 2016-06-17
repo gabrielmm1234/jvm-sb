@@ -677,6 +677,25 @@ void ldc2_w(){
 }
 void iload(){
 
+	// TODO: The iload opcode can be used in conjunction with the wide
+	// instruction (§wide) to access a local variable using a two-byte
+	// bunsigned index.
+
+
+	printf("Entrei no iload\n");
+	int32_t argumento = (int32_t) frameCorrente->code[(++frameCorrente->pc)];
+	int32_t aux = frameCorrente->fields[argumento];
+	printf("argumento empilhado: %d\n",argumento);
+	push(aux);
+
+	//atualiza pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+
 }
 void lload(){
 
@@ -1436,6 +1455,19 @@ void lushr(){
 
 }
 void iand(){
+
+	printf("Entrei no iand\n");
+
+	int32_t pop1 = pop_op();
+
+	int32_t pop2 = pop_op();
+
+	int32_t aux = pop1 & pop2;
+
+	push(aux);
+
+	//atualiza pc
+	frameCorrente->pc++;
 
 }
 void land(){

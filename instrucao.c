@@ -386,13 +386,48 @@ void iconst_4(){
 
 }
 
+/**
+ * Funcao que empilha 5 na pilha de operandos.
+ * @param void
+ * @return void 
+ */
 void iconst_5(){
 
-}
-void lconst_0(){
+    // poe 5 na pilha de operandos
+    push(frameCorrente, 5);
+    
+    // atualiza pc 
+    frameCorrente->pc++;
 
 }
+
+/*
+ * a funcao coloca a constante long 0 na pilha de operandos
+ * @param void 
+ * @return void
+ */
+void lconst_0(){
+
+    // poe a constante long 0 na pilha - como long eh 64 bits, ocupa dois slots
+    
+    // copia bloco de 32 bits correspondente a primeira parte
+    
+    // copia bloco de 32 bits correspondente a segunda parte para a pilha 
+    
+}
+
+/*
+ * a funcao coloca a constante long 1 na pilha de operandos
+ * @param void
+ * @return void
+ */
 void lconst_1(){
+
+    // poe a constante long 0 na pilha - como long eh 64 bits, ocupa dois slots
+    
+    // copia bloco de 32 bits correspondente a primeira parte
+    
+    // copia bloco de 32 bits correspondente a segunda parte para a pilha 
 
 }
 
@@ -403,17 +438,22 @@ void lconst_1(){
  */
 void fconst_0(){
 	printf("Entrei no fconst_0\n");
+
 	//Auxiliar para utilizar o memcpy e não perder precisão com cast.
 	int32_t* valPilha;
+
 	//Float com valor zero para ser empilhado.
 	float valF = 0.0;
+
 	//Aloca mem para int32.
 	valPilha = (int32_t*) malloc(sizeof(int32_t));
+
 	//Importante!! -> copia bytes de um float para um int32
 	//para empilhar na forma correta. Ao desempilhar realiza
 	//Memcpy de volta para um float.
 	memcpy(valPilha, &valF, sizeof(int32_t));
 	printf("Valor Empilhado: %d\n",*valPilha);
+
 	//Empilha float na forma de int32 para se adequar ao tipo da pilha.
 	push(frameCorrente,*valPilha);
 
@@ -425,12 +465,77 @@ void fconst_0(){
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
 }
+
+/**
+ * Funcao que coloca 1.0 na pilha.
+ * @param void
+ * @return void 
+ */
 void fconst_1(){
+	printf("Entrei no fconst_1\n");
 
+	//Auxiliar para utilizar o memcpy e não perder precisão com cast.
+	int32_t* valPilha;
+
+	//Float com valor zero para ser empilhado.
+	float valF = 1.0;
+
+	//Aloca mem para int32.
+	valPilha = (int32_t*) malloc(sizeof(int32_t));
+
+	//Importante!! -> copia bytes de um float para um int32
+	//para empilhar na forma correta. Ao desempilhar realiza
+	//Memcpy de volta para um float.
+	memcpy(valPilha, &valF, sizeof(int32_t));
+	printf("Valor Empilhado: %d\n",*valPilha);
+
+	//Empilha float na forma de int32 para se adequar ao tipo da pilha.
+	push(frameCorrente,*valPilha);
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
+
+/**
+ * Funcao que coloca 2.0 na pilha.
+ * @param void
+ * @return void 
+ */
 void fconst_2(){
+	printf("Entrei no fconst_2\n");
 
+	//Auxiliar para utilizar o memcpy e não perder precisão com cast.
+	int32_t* valPilha;
+
+	//Float com valor zero para ser empilhado.
+	float valF = 2.0;
+
+	//Aloca mem para int32.
+	valPilha = (int32_t*) malloc(sizeof(int32_t));
+
+	//Importante!! -> copia bytes de um float para um int32
+	//para empilhar na forma correta. Ao desempilhar realiza
+	//Memcpy de volta para um float.
+	memcpy(valPilha, &valF, sizeof(int32_t));
+	printf("Valor Empilhado: %d\n",*valPilha);
+
+	//Empilha float na forma de int32 para se adequar ao tipo da pilha.
+	push(frameCorrente,*valPilha);
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
+
 void dconst_0(){
 
 }

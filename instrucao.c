@@ -302,7 +302,7 @@ void aconst_null(){
  */
 void iconst_m1(){
     // poe -1 na pilha de operandos
-    push( -1);
+    push(-1);
     
     // atualiza pc 
     frameCorrente->pc++;
@@ -998,8 +998,24 @@ void pop(){
 		frameCorrente->pc++;
 }
 
+/**
+ * Funcao que desempilha dois valores da pilha de operandos.
+ * @param void
+ * @return void 
+ */
 void pop2(){
 
+	//Desempilha os dois valores
+	pop_op();
+	pop_op();
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 
 /**
@@ -1058,7 +1074,30 @@ void dup2_x1(){
 void dup2_x2(){
 
 }
+
+/**
+ * Desempilha dois valores da pilha e troca de posição um com o outro.
+ * @param void
+ * @return void 
+ */
 void swap(){
+	int32_t val1,val2;
+
+	//Desempilha os dois valores
+	val1 = pop_op();
+	val2 = pop_op();
+
+	//Troca sua posições.
+	push(val1);
+	push(val2);
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
 
@@ -1075,7 +1114,7 @@ void iadd(){
 	printf("v1: %d\n",v1);
 	printf("v2: %d\n",v2);
 	printf("Empilhado: %d\n",v1+v2);
-	push( v1+v2);
+	push(v1+v2);
 
 	//atualiza pc
 	inicializa_decodificador(dec); 
@@ -1086,9 +1125,61 @@ void iadd(){
 		frameCorrente->pc++;
 }
 
+/**
+ * Funcao desempilha dois valores long, soma-os e empilha resultado.
+ * @param void
+ * @return void 
+ */
 void ladd(){
+	int32_t baixa,alta;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal1 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal1 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal1 = lVal1 + baixa;
+
+	//Soma os dois valores
+	int64_t resultado = lVal1 + lVal;
+	//Empilha o resultado
+	push(resultado);
+
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
+
+/**
+ * Funcao desempilha dois valores float, soma-os e empilha resultado.
+ * @param void
+ * @return void 
+ */
 void fadd(){
 	float fVal1,fVal2;
 
@@ -1691,11 +1782,37 @@ void land(){
 }
 void ior(){
 
+	printf("Entrei no ior\n");
+
+	int32_t pop1 = pop_op();
+
+	int32_t pop2 = pop_op();
+
+	int32_t aux = pop1 | pop2;
+
+	push(aux);
+
+	//atualiza pc
+	frameCorrente->pc++;
+
 }
 void lor(){
 
 }
 void ixor(){
+
+	printf("Entrei no ixor\n");
+
+	int32_t pop1 = pop_op();
+
+	int32_t pop2 = pop_op();
+
+	int32_t aux = pop1 ^ pop2;
+
+	push(aux);
+
+	//atualiza pc
+	frameCorrente->pc++;
 
 }
 void lxor(){

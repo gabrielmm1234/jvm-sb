@@ -421,14 +421,17 @@ void lconst_0(){
     int32_t parte_baixa; 
 
     // pega parte alta e parte baixa do long
-    parte_alta = (int32_t) (long0 >> 32);
-    parte_baixa = (int32_t) long0; 
+	parte_alta = long0 >> 32;
+	parte_baixa = long0 & 0xffffffff;
     
     // pela convencao, empilha a parte alta primeiro
     push(parte_alta);
 
     // pela convencao, empilha a parte baixa depois
     push(parte_baixa);
+
+    // atualiza pc 
+    frameCorrente->pc++;
     
 }
 
@@ -445,14 +448,17 @@ void lconst_1(){
     int32_t parte_baixa; 
 
     // pega parte alta e parte baixa do long
-    parte_alta = (int32_t) (long1 >> 32);
-    parte_baixa = (int32_t) long1; 
+	parte_alta = long1 >> 32;
+	parte_baixa = long1 & 0xffffffff;
     
     // pela convencao, empilha a parte alta primeiro
     push(parte_alta);
 
     // pela convencao, empilha a parte baixa depois
     push(parte_baixa);
+
+    // atualiza pc 
+    frameCorrente->pc++;
 }
 
 /**
@@ -568,17 +574,49 @@ void fconst_2(){
 void dconst_0(){
     double double0 = 0.0; 
     int64_t temp; 
+    int32_t parte_alta;
+    int32_t parte_baixa;
 
     // copia valor de double para o int temp
 	memcpy(&temp, &double0, sizeof(int64_t));
     
     // divide temp em parte alta e parte baixa
+	parte_alta = temp >> 32;
+	parte_baixa = temp & 0xffffffff;
     
     // empilha a parte alta primeiro e depois a baixa
+    push(parte_alta);
+    push(parte_baixa);
 
+    // atualiza pc 
+    frameCorrente->pc++;
 
 }
+
+/*
+ * funcao que empilha o double 1.0 na pilha
+ * @param void
+ * @return void
+ */
 void dconst_1(){
+    double double1 = 0.0; 
+    int64_t temp; 
+    int32_t parte_alta;
+    int32_t parte_baixa;
+
+    // copia valor de double para o int temp
+	memcpy(&temp, &double1, sizeof(int64_t));
+    
+    // divide temp em parte alta e parte baixa
+	parte_alta = temp >> 32;
+	parte_baixa = temp & 0xffffffff;
+    
+    // empilha a parte alta primeiro e depois a baixa
+    push(parte_alta);
+    push(parte_baixa);
+
+    // atualiza pc 
+    frameCorrente->pc++;
 
 }
 

@@ -1281,8 +1281,17 @@ void ladd(){
 	//Soma os dois valores
 	int64_t resultado = lVal1 + lVal;
 	//Empilha o resultado
-	push(resultado);
 
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = resultado >> 32;
+	baixa = resultado & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
 
 	//atualiza pc
 	inicializa_decodificador(dec); 

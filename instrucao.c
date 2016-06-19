@@ -668,7 +668,13 @@ void sipush(){
 		frameCorrente->pc++;
 }
 
-
+/*
+ * a funcao recebe uma referencia para a constant pool e a posicao que se deseja acessar
+ * a funcao retorna o indice da CONSTANT_UTF8 associada a CONSTANT da posicao passada na constant pool 
+ * @param cp_info* uma referencia a constant pool 
+ * @param int um indice para a constant pool 
+ * @return int indice da CONSTANT_UTF8 associada 
+ */
 int obtem_utf_eq(cp_info* cp, int pos_pool)
 {
     int tag;
@@ -676,7 +682,7 @@ int obtem_utf_eq(cp_info* cp, int pos_pool)
     // pega tag 
     tag = cp[pos_pool].tag;
 
-    // se a tag for o de um class info 
+    // se a tag for o de uma UTF8
     if (tag == CONSTANT_Utf8)
     {
         // imprime informacao e sai
@@ -686,11 +692,8 @@ int obtem_utf_eq(cp_info* cp, int pos_pool)
     // senao, de acordo com a tag, decide qual sera a proxima posicao da cte pool que iremos olhar
     switch(tag)
     {
-        // para fieldref e outros ele bifurcava e seguia dois 
-        // como fazer nesses casos?
         case CONSTANT_Class:
             return obtem_utf_eq(cp, cp[pos_pool].info.Class.name_index - 1);
-
         case CONSTANT_String:
             return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
         case CONSTANT_Integer: 
@@ -700,9 +703,13 @@ int obtem_utf_eq(cp_info* cp, int pos_pool)
     }
 }
 
+/*
+ * a funcao coloca um item da run-time constan pool na pilha 
+ * @param void
+ * @return void
+ */
 void ldc(){
     uint32_t indice;
-    uint32_t indice_utf;
     
 	printf("Entrei no ldc!!\n");
 	inicializa_decodificador(dec); 
@@ -715,15 +722,38 @@ void ldc(){
     if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Float || \
             frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Integer)
     {
-        push(indice);
+        // empilha valor correto
+        if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Float)
+        {
+            push(frameCorrente->constant_pool[indice - 1].info.Float.bytes);
+        }
+        else
+        {
+            push(frameCorrente->constant_pool[indice - 1].info.Integer.bytes);
+        }
     }
     
-    // se o indice para a constant pool for para uma string, int ou float
-    if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String) 
+    // se o indice para a constant pool for para uma string
+    else if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String) 
     {
+        uint32_t indice_utf;
         indice_utf = obtem_utf_eq(frameCorrente->constant_pool, indice-1); 
         push(indice_utf);
         printf("Valor %d empilhado\n", frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
+    }
+
+    // se o indice para a constant pool for uma referencia a uma classe 
+    else if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String) 
+    {
+        // poe referencia para a classe na constant pool 
+        // TODO Resolve nome da classe 
+    }
+
+    // se nao for nenhum dos acima, reporta erro e sai
+    else
+    {
+        printf("erro na instrucao ldc\n");
+        exit(1);
     }
 
 	// atualiza proxima instrucao 
@@ -731,7 +761,65 @@ void ldc(){
 		frameCorrente->pc++;
 }
 
+
+/**
+ * a funcao coloca um item da run-time constan pool na pilha 
+ * eh semelhante a ldc, mas o indice lido eh um numero de 16 bits ao 
+ * inves de 8 
+ * @param void
+ * @return void
+ */
 void ldc_w(){
+    uint32_t indice;
+    
+	printf("Entrei no ldc!!\n");
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+    // pega indice 
+    indice = (frameCorrente->code[frameCorrente->pc + 1] << 8 + frameCorrente->code[frameCorrente->pc + 2]);
+
+    // se o indice para a constant pool for para um int ou float
+    if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Float || \
+            frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Integer)
+    {
+        // empilha valor correto
+        if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Float)
+        {
+            push(frameCorrente->constant_pool[indice - 1].info.Float.bytes);
+        }
+        else
+        {
+            push(frameCorrente->constant_pool[indice - 1].info.Integer.bytes);
+        }
+    }
+    
+    // se o indice para a constant pool for para uma string
+    else if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String) 
+    {
+        uint32_t indice_utf;
+        indice_utf = obtem_utf_eq(frameCorrente->constant_pool, indice-1); 
+        push(indice_utf);
+        printf("Valor %d empilhado\n", frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
+    }
+
+    // se o indice para a constant pool for uma referencia a uma classe 
+    else if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String) 
+    {
+        // poe referencia para a classe na constant pool 
+        // TODO Resolve nome da classe 
+    }
+
+    // se nao for nenhum dos acima, reporta erro e sai
+    else
+    {
+        printf("erro na instrucao ldc\n");
+        exit(1);
+    }
+
+	// atualiza proxima instrucao 
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
 
@@ -773,6 +861,7 @@ void ldc2_w(){
 		frameCorrente->pc++;
 
 }
+
 void iload(){
 
 	// TODO: The iload opcode can be used in conjunction with the wide
@@ -2843,7 +2932,6 @@ void ins_new(){
 	nomeClasse = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[indice-1].info.Class.name_index);
 
 	if(strcmp("java/util/Scanner",nomeClasse) == 0){
-
 		printf("Método nativo java - java/util/Scanner\n");
 		naoEmpilhaFlag = 1;
 		//Atualiza PC.
@@ -2858,7 +2946,6 @@ void ins_new(){
 	}
 
 	if(strcmp("java/lang/StringBuffer",nomeClasse) == 0){
-
 		printf("Método nativo java - java/util/Scanner\n");
 		naoEmpilhaFlag = 1;
 		//Atualiza PC.

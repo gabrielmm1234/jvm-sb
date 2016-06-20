@@ -61,4 +61,10 @@ int8_t flagRet;
 void push(int32_t valor); 
 int32_t pop_op();
 void dumpStack();
+void pushFrame(cp_info*, classFile*, code_attribute*,struct stackFrame*);
+void popFrame();
+
+//Refencia ao topo da pilha de frames. Essencial para Empilhar e desempilhar os frames.
+static struct stackFrame* topo = NULL;
+
 #endif

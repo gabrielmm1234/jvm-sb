@@ -15,5 +15,6 @@ int32_t carregaMemClasse(char* );
 char* retornaNomeClasse(classFile* );
 classFile* buscaClasseIndice(int );
 char * retornaNome(classFile* cf, uint16_t indiceNome);
+int32_t carregaObjectClasse();
 
 #endif

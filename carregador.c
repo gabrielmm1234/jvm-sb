@@ -13,7 +13,9 @@
  * Professor: Marcelo Ladeira\n\n
  *
  * Arquivo que contém funções para carregar classes nas estruturas adequadas.
- * 
+ * Além de funções auxiliares que retornam nome de classe, nome em um utf8 e
+ * a partir da posição de uma classe no array de classes dentro da area de métodos
+ * retorna uma referencia a essa classe.
  */
 
 #include "carregador.h"
@@ -32,6 +34,73 @@ area_metodos area_met;
  *Quantidade de classes já carregadas pelo carregador.
  */
 bool ja_carregou = false;
+
+/**
+ * É passado o path para o object.class a ser carregado.\n
+ * 
+ * Se ainda não foi carregado carrega no array de classes.
+ * @param path do "object.class" a ser carregado no array de classes.
+ * @return posição da classe alocada no array de classes.
+ */
+int32_t carregaObjectClasse(char* ObjectClass){
+
+	int aux;
+
+	// se eh a primeira classe a ser carregada
+    if (ja_carregou == false)
+    {
+        area_met.num_classes = 0;
+        ja_carregou = true; 
+    }
+
+    //Se ja esta carregado retorna posição no array de classes.
+	for (int32_t i = 0; i < area_met.num_classes; i++) {
+		if (strcmp(ObjectClass, retornaNomeClasse(area_met.array_classes[i])) == 0){
+			return i;
+		}
+	}
+
+	//Se não está carregado carrega e salva no array de classes.
+
+	printf("Carregando classe: %s\n", ObjectClass);
+
+	//uma classe nova vai entrar na lista de classes carregadas.
+	area_met.num_classes++;
+	aux = area_met.num_classes;
+
+	classFile** arrayClassesTemp = NULL;
+
+	//Realoca o tamanho do vetor para adicionar a nova classe carregada.
+	//Classes previamente carregas não são perdidas com o realloc.
+	arrayClassesTemp = (classFile**) realloc(area_met.array_classes, (aux*sizeof(classFile *)));
+	//printf("ponteiro tempo: %d\n",*arrayClassesTemp);
+
+    area_met.array_classes = (classFile**) calloc(1, sizeof(classFile*));
+    area_met.array_classes = arrayClassesTemp;
+
+    //Atualiza o nome do path para adicionar .class a um path
+    //Aloca espaço do tamanho do nome da classe mais espaço para .class /0 e ./
+    char* destino = malloc(strlen(ObjectClass) + 10);
+    if (strstr(ObjectClass,".class") != NULL) {
+		sprintf(destino, "%s", ObjectClass);
+	} else {
+		sprintf(destino, "./%s.class",ObjectClass);
+	}
+
+	//printf("destino: %s\n",destino);
+
+    area_met.array_classes[area_met.num_classes - 1] = leitorClasse(destino);  
+    printf("Carregou no array!\n");
+    
+	if(area_met.array_classes[area_met.num_classes -1] == NULL){
+		printf("Erro ao carregar classe!\n");
+		exit(0);
+	}
+
+	return aux - 1;
+
+
+}
 
 /**
  * É passado o nome do arquivo .class a ser carregado.\n
@@ -84,7 +153,8 @@ int32_t carregaMemClasse(char* nomeClass){
 		sprintf(destino, "./%s.class",nomeClass);
 	}
 
-	printf("destino: %s\n",destino);
+	//printf("destino: %s\n",destino);
+
     area_met.array_classes[area_met.num_classes - 1] = leitorClasse(destino);  
     printf("Carregou no array!\n");
     
@@ -111,9 +181,10 @@ char* retornaNomeClasse(classFile* classe){
 
 	int i;
 	char* retorno = (char*) malloc((classe->constant_pool[nameIndex - 1]).info.Utf8.length + 1);
+	uint16_t indice = classe->constant_pool[nameIndex - 1].info.Utf8.length;
 
 	// Percorre o bytes na constant pool e salva no retorno.
-	for (i = 0; i < ( classe->constant_pool[nameIndex - 1]).info.Utf8.length; i++) {
+	for (i = 0; i < indice; i++) {
 		retorno[i] = (char) (classe->constant_pool[nameIndex - 1]).info.Utf8.bytes[i];
 	}
 
@@ -145,9 +216,9 @@ char * retornaNome(classFile* cf, uint16_t indiceNome) {
 
 	//Aloca espaço.
 	char* retorno = malloc((cf->constant_pool[indiceNome - 1]).info.Utf8.length + 1);
-
+	uint16_t indice = cf->constant_pool[indiceNome - 1].info.Utf8.length;
 	//Percorre o campo bytes de um utf8 para um auxiliar.
-	for (i = 0; i < (cf->constant_pool[indiceNome - 1]).info.Utf8.length; i++) {
+	for (i = 0; i < indice; i++) {
 		retorno[i] = (char) (cf->constant_pool[indiceNome - 1]).info.Utf8.bytes[i];
 	}
 

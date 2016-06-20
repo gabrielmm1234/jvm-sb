@@ -39,13 +39,13 @@ method_info* buscaMetodoMain(){
 	uint8_t* desc;
 
 	//Busca a classe que contém o método main. Foi a primeira classe a ser carregada.
-	main = buscaClasseIndice(0);
+	main = buscaClasseIndice(1);
 
 	printf("Buscando método main para inicio da execução\n");
 
 	//Percorre o method_info em busca do method main.
 	for(int i = 0; i < main->methods_count; i++){
-		nome = main->constant_pool[(main->methods[i].name_index -1 )].info.Utf8.bytes;
+		nome = main->constant_pool[(main->methods[i].name_index -1)].info.Utf8.bytes;
 
 		desc = main->constant_pool[(main->methods[i].descriptor_index - 1)].info.Utf8.bytes;
 
@@ -70,6 +70,14 @@ method_info* buscaMetodoMain(){
  * @return void
  */
 void iniciaMetodo(method_info* metodo, classFile* classe){
+	/** 
+ 	*1 - Inicializa as instrucoes implementadas pela jvm.
+ 	*/
+	newInstrucoes();
+
+	/** 
+ 	*2 - Aloca o frame a ser executado.
+ 	*/
 	criaFrame(classe->constant_pool,classe,metodo->cd_atrb);
 }
 
@@ -82,9 +90,14 @@ void iniciaMetodo(method_info* metodo, classFile* classe){
 void executaFrameCorrente(){
 
 	//Loop que percorre o frame e executa instrução a instrução
-	//Enquanto pc for menor que o tamanho do code e o frame foi desalocado(terminado)
-	while((frameCorrente->pc) < frameCorrente->code_length && frameCorrente != NULL) {
+	//Enquanto pc for menor que o tamanho do code.
+	while((frameCorrente->pc) < frameCorrente->code_length) {
+		//Frame corrente == NULL -> não tem mais frames na pilha.
+		if(frameCorrente == NULL)
+			break;
+
 		// printf("opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
+
 		executarInstrucoes(frameCorrente->code[frameCorrente->pc]);
 	}
 	desalocaFrame();
@@ -181,6 +194,12 @@ int32_t buscaCampo(char* className, char* name, char* desc){
 	}
 }
 
+/**
+ * Função que recebe um nome de classe e a partir desse nome retorna uma referencia
+ * da classe com esse nome.
+ * @param nome da classe buscada
+ * @return referência da classe buscada.
+ */
 classFile* retornaClasseNome(char* nomeClasse) {
 	for (int i = 0; i < area_met.num_classes; i++) {
 		if (strcmp(nomeClasse, retornaNomeClasse(area_met.array_classes[i])) == 0)
@@ -208,6 +227,7 @@ int32_t retornaNumeroParametros(classFile* classe, method_info* metodo) {
 	length = classe->constant_pool[(metodo->descriptor_index-1)].info.Utf8.length;
 
 	//Percorre o vetor de caracteres em busca dos caracteres especiais.
+	//Percorre até o ) que significa o fim do descriptor.
 	for(int i = 0; i < length && bytes[i] != ')'; i++) {
 		if(bytes[i] == 'L') {
 			while(bytes[i] != ';') {

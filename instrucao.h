@@ -13,8 +13,14 @@ char* tipoGlobal;
 
 //Função que inicializa o vetor de ponteiro para funções
 //Com cada função sendo acessada pelo opcode correspondente.
-void executarInstrucoes(uint8_t opcode);
 void newInstrucoes();
+
+//Função que recebe o opcode acessa o vetor de ponteiros pra função
+//e a partir do opcode executa a função correspondente.
+void executarInstrucoes(uint8_t opcode);
+
+//Funçãoq que atualiza o program counter.
+void atualizaPc();
 
 /* Cabeçalho de instruções implementadas */
 void nop();

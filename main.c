@@ -51,15 +51,8 @@ int main(int argc, char* argv[]) {
  	*/
 	method_info* Main;
 
-	arrayClasses = NULL;
-
 	/** 
- 	*1 - Inicializa as instrucoes implementadas pela jvm.
- 	*/
-	newInstrucoes();
-
-	/** 
- 	*2 - Verifica argumentos por linha de comando.
+ 	*1 - Verifica argumentos por linha de comando.
  	*/
 	if (argc < 3) {
 		printf("Forneca o .class que contem a main: \n");
@@ -74,6 +67,11 @@ int main(int argc, char* argv[]) {
 		if(*argv[2] == '1')
 			printPrompt = 1;
 	}
+
+	/** 
+ 	*2 - Carrega no array de classes o object.class.
+ 	*/
+ 	carregaObjectClasse("java/lang/Object");
  
 	/** 
  	*3 - Carrega no array de classes o .class passado por linha de comando.
@@ -96,7 +94,7 @@ int main(int argc, char* argv[]) {
  	*5 - Cria frame e coloca na pilha. Passa o metodo com o bytecode
  	*e a classe que contem o metodo com a constantPool.
  	*/
-	iniciaMetodo(Main, buscaClasseIndice(0));
+	iniciaMetodo(Main, buscaClasseIndice(1));
 
 	/** 
  	*6 - Executa o metodo main que esta no topo da stackFrame.

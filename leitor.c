@@ -19,8 +19,8 @@
 
 
 
-#include "leitor.h"
-#include "exibidor.h"
+#include "./includes/leitor.h"
+#include "./includes/exibidor.h"
 
 
 /**

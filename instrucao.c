@@ -12,16 +12,17 @@
  * Software Basico - 1/2016\n
  * Professor: Marcelo Ladeira\n\n
  *
- * Arquivo que contém as instrucoes implementadas pelo nosso program
+ * Arquivo que contém as instrucoes implementadas pelo nosso programa
  * Conforme sugerido, foi usado um vetor de ponteiro para funcoes
  * 
  */
 
-#include "instrucao.h"
-#include "frame.h"
-#include "carregador.h"
-#include "area_metodos.h"
-#include "metodo.h"
+#include "./includes/instrucao.h"
+#include "./includes/frame.h"
+#include "./includes/carregador.h"
+#include "./includes/area_metodos.h"
+#include "./includes/metodo.h"
+ 
 #include <stdio.h>
 #include <math.h> 
 #include <stdint.h>
@@ -55,6 +56,11 @@ void executarInstrucoes(uint8_t opcode){
 	instrucao[opcode]();
 }
 
+/**
+ * Função que atualiza o valor do program counter do frame corrente.
+ * @param void
+ * @return void 
+ */
 void atualizaPc(){
 
 	//atualiza pc
@@ -1676,6 +1682,13 @@ void iushr(){
 void lushr(){
 
 }
+
+/**
+ * Função que retira dois valores da pilha realiza a operação and entre eles
+ * e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void iand(){
 
 	printf("Entrei no iand\n");
@@ -1695,6 +1708,12 @@ void iand(){
 void land(){
 
 }
+/**
+ * Função que retira dois valores da pilha realiza a operação ou entre eles
+ * e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void ior(){
 
 	printf("Entrei no ior\n");
@@ -1714,6 +1733,12 @@ void ior(){
 void lor(){
 
 }
+/**
+ * Função que retira dois valores da pilha realiza o ou exclusivo entre eles
+ * e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void ixor(){
 
 	printf("Entrei no ixor\n");
@@ -2169,6 +2194,13 @@ void getstatic(){
 void putstatic(){
 
 }
+
+/**
+ * Função acessa um field do objeto e empilha na pilha de operandos do
+ * frame corrente.
+ * @param void
+ * @return void 
+ */
 void getfield(){
 	printf("Entrei no getfield\n");
 

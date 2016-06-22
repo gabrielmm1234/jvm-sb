@@ -17,10 +17,10 @@
  * 
  */
 
-#include "frame.h"
-#include "metodo.h"
-#include "instrucao.h"
-#include "area_metodos.h"
+#include "./includes/frame.h"
+#include "./includes/metodo.h"
+#include "./includes/instrucao.h"
+#include "./includes/area_metodos.h"
 
 extern struct frame* frameCorrente;
 
@@ -33,7 +33,7 @@ uint32_t numObjetos = 0;
  * @return method_info* uma referencia ao metodo main
  */
 method_info* buscaMetodoMain(){
-	classFile * main;
+	classFile* main;
 	uint16_t nome_tam,desc_tam;
 	uint8_t* nome;
 	uint8_t* desc;

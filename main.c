@@ -12,24 +12,27 @@
  * Software Basico - 1/2016\n
  * Professor: Marcelo Ladeira\n\n
  *
- * Funcao main do processamento do arquivo .class
- * e execucao das instrucoes -> JVM.
+ * Função main do processamento do arquivo .class
+ * e execução das instruções -> JVM.
  *
- * para compilar:	make\n
+ * para compilar:	make clean && make\n
  * para executar:	./jvm.exe .class 1  //Arquivo .class com a main e 1 para printar o classfile.\n
  *                	./jvm.exe .class 0  //Arquivo .class com a main e 0 para nao printar o classfile.\n
  *			    	./jvm.exe 			//Programa pede pelo .class e opcao de print\n
  */
 
-#include "exibidor.h"
-#include "instrucao.h"
-#include "carregador.h"
-#include "metodo.h"
+#include "./includes/exibidor.h"
+#include "./includes/instrucao.h"
+#include "./includes/carregador.h"
+#include "./includes/metodo.h"
+
+
+ #define arqSize 100
 
 /** 
  *Salva nome do arquivo passado via linha de comando.
  */
-char arquivo[100];
+char* arquivo;
 
 /** 
  *Flag para printar no prompt - 1 printa - 0 nao printa.
@@ -44,6 +47,8 @@ int printPrompt = 0;
  * @param Segundo argumento eh flag para printar no prompt 1-printa. 0-nao printa.
  */
 int main(int argc, char* argv[]) {
+
+	arquivo = calloc(arqSize,sizeof(char));
 
 	/** 
  	*Ponteiro para uma estrutura de method_info. Para comecar executando
@@ -77,7 +82,7 @@ int main(int argc, char* argv[]) {
  	*3 - Carrega no array de classes o .class passado por linha de comando.
  	*/
 	carregaMemClasse(arquivo);
-
+	classFile* mainClass = buscaClasseIndice(1);
 
 	/** 
  	*4 - Busca o metodo main para comecar a execucao.
@@ -94,7 +99,7 @@ int main(int argc, char* argv[]) {
  	*5 - Cria frame e coloca na pilha. Passa o metodo com o bytecode
  	*e a classe que contem o metodo com a constantPool.
  	*/
-	iniciaMetodo(Main, buscaClasseIndice(1));
+	iniciaMetodo(Main, mainClass);
 
 	/** 
  	*6 - Executa o metodo main que esta no topo da stackFrame.

@@ -46,16 +46,6 @@ int naoEmpilhaFlag = 0;
  */ 
 decodificador dec[NUM_INSTRUCAO];
 
-
-/**
- * Funcao para executar uma instrucao, com base no opcode passado\n
- * @param uint8_t correspondente ao opcode da instrucao 
- * @return void
- */
-void executarInstrucoes(uint8_t opcode){
-	instrucao[opcode]();
-}
-
 /**
  * Função que atualiza o valor do program counter do frame corrente.
  * @param void
@@ -2448,7 +2438,7 @@ void invokespecial(){
 		fields[i] = pop_op();
 
 	//inicia método
-	iniciaMetodo(metodoInvocado, classe);
+	empilhaMetodo(metodoInvocado, classe);
 
 	//Preenche fields no frame novo (invoke).
 	for(int32_t i = 0; i <= numeroParametros; i++) {

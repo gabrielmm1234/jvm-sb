@@ -12,8 +12,8 @@
  * Software Basico - 1/2016\n
  * Professor: Marcelo Ladeira\n\n
  *
- * Função main do processamento do arquivo .class
- * e execução das instruções -> JVM.
+ * Funcao main do processamento do arquivo .class
+ * e execucao das instrucoes -> JVM.
  *
  * para compilar:	make clean && make\n
  * para executar:	./jvm.exe .class 1  //Arquivo .class com a main e 1 para printar o classfile.\n
@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
  	*5 - Cria frame e coloca na pilha. Passa o metodo com o bytecode
  	*e a classe que contem o metodo com a constantPool.
  	*/
-	iniciaMetodo(Main, mainClass);
+	empilhaMetodo(Main, mainClass);
 
 	/** 
  	*6 - Executa o metodo main que esta no topo da stackFrame.

@@ -15,10 +15,6 @@ char* tipoGlobal;
 //Com cada função sendo acessada pelo opcode correspondente.
 void newInstrucoes();
 
-//Função que recebe o opcode acessa o vetor de ponteiros pra função
-//e a partir do opcode executa a função correspondente.
-void executarInstrucoes(uint8_t opcode);
-
 //Funçãoq que atualiza o program counter.
 void atualizaPc();
 

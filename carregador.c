@@ -25,13 +25,12 @@
 #include <stdbool.h>
 
 /** 
- *Array de referencia a classFiles. Declarado no carregador.h
+ *Area de métodos que engloba o array de classes e seus respectivos metodos.
  */
-classFile** arrayClasses;
 area_metodos area_met; 
 
 /** 
- *Quantidade de classes já carregadas pelo carregador.
+ *booleano para verificar a primeira classe a ser carregada.
  */
 bool ja_carregou = false;
 
@@ -190,12 +189,14 @@ char* retornaNomeClasse(classFile* classe){
 
 	// \0 no final do nome da classe a ser retornada
 	retorno[i] = '\0';
+
+	//Retorna nome da classe.
 	return retorno;
 }
 
 /**
- *Função que retorna uma referencia a uma classFile de acordo com o indice.\n
- *Util para encontrar a classe da main no inicio do processamento.
+ * Função que retorna uma referencia a uma classFile de acordo com o indice.\n
+ * Util para encontrar a classe da main no inicio do processamento.
  * @param Posicao a ser acessada no array de classes.
  * @return Referencia a um classFile ou NULL caso nao exista a referencia 
  */

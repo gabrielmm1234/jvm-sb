@@ -14,7 +14,7 @@
  *
  * Arquivo que contém Funções de leitura do arquivo .class e montagem das estruturas.
  * Para salvar a saida em um arquivo execute da seguinte forma:
- * ./jvm .class 1 > log.txt* 
+ * ./jvm.exe .class 1 > log.txt* 
  */
 
 
@@ -59,6 +59,7 @@ classFile* leitorClasse(char * nomeClass){
     //liberando ponteiros.
     fclose(file);
 
+    //Retorna referencia ao classFile preenchido.
     return cf;
 }
 

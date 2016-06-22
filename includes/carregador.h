@@ -4,11 +4,8 @@
 #include "leitor.h"
 #include "area_metodos.h"
 
-//Array de classes carrregadas.
-extern classFile** arrayClasses;
+//Area de metodos.
 extern area_metodos area_met; 
-
-//QUantidade de classes carregas.
 
 // funcoes usadas no carregador 
 int32_t carregaMemClasse(char* );

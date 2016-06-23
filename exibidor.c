@@ -287,7 +287,8 @@ void imprime_code(classFile* cf, code_attribute* cd_atrb)
             pos_referencia = k - 1;
 
             // pega bytes de preenchimento - nao salva em nenhum lugar
-            bytes_preench = k % 4;  
+            //bytes_preench = k % 4;  
+            bytes_preench = (4 - (k % 4)) % 4;  
             for (int l = 0; l < bytes_preench; l++)
             {
                 k++; 
@@ -344,7 +345,8 @@ void imprime_code(classFile* cf, code_attribute* cd_atrb)
             pos_referencia = k - 1;
 
             // pega bytes de preenchimento 
-            bytes_preench = k % 4;  
+            //bytes_preench = k % 4;  
+            bytes_preench = (4 - (k % 4)) % 4;  
             for (int l = 0; l < bytes_preench; l++)
             {
                 k++; 

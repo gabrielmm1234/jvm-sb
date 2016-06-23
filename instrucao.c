@@ -2612,10 +2612,11 @@ void ret(){
 }
 void tableswitch(){
     uint32_t bytes_preench; 
-    uint32_t indice;
-    uint32_t default_v, low, high, npairs; 
+    int32_t indice;
+    int32_t default_v, low, high, npairs; 
     uint32_t pc_novo, pc_aux;
-    uint32_t qtd_offset, offset, posicao;
+    int32_t qtd_offset, offset, posicao;
+    uint32_t temp;
 
     // diz se o novo valor de pc ja esta definido ou nao 
     bool definido = false; 
@@ -2628,7 +2629,8 @@ void tableswitch(){
     
     /* passo 1 - le ateh o low. Se o indice eh menor que low - define logo o novo valor para PC */
     // pula bytes de preenchimento
-    bytes_preench = (pc_aux + 1) % 4;
+    //bytes_preench = (pc_aux + 1) % 4;
+    bytes_preench = (4 - ((pc_aux + 1) % 4) ) % 4;  
     pc_aux += bytes_preench;
     pc_aux++;
     
@@ -2636,7 +2638,7 @@ void tableswitch(){
     default_v = 0;
     for (int l = 0; l < 4; l++)
     {
-        default_v = (default_v << 4) + frameCorrente->code[pc_aux];   
+        default_v = (default_v << 8) + frameCorrente->code[pc_aux];   
         pc_aux++;
     }       
 
@@ -2644,9 +2646,10 @@ void tableswitch(){
     low = 0;
     for (int l = 0; l < 4; l++)
     {
-        low = (low << 4) + frameCorrente->code[pc_aux];   
+        low = (low << 8) + frameCorrente->code[pc_aux];   
         pc_aux++; 
     }       
+    
 
     // se o indice eh menor que o low e ainda nao definimos novo pc
     if (indice < low && !definido)
@@ -2661,7 +2664,7 @@ void tableswitch(){
     high = 0;
     for (int l = 0; l < 4; l++)
     {
-        high = (high << 4) + frameCorrente->code[pc_aux];   
+        high = (high << 8) + frameCorrente->code[pc_aux];   
         pc_aux++; 
     }       
 
@@ -2676,7 +2679,7 @@ void tableswitch(){
      * definido */ 
     qtd_offset = 1 + high - low; 
     posicao = indice - low; 
-    for (uint32_t l = 0; l < qtd_offset; l++)
+    for (int32_t l = 0; l < qtd_offset; l++)
     {
         // se estamos na posicao correta
         if (l == posicao)
@@ -2685,7 +2688,7 @@ void tableswitch(){
             offset = 0;
             for (int i = 0; i < 4; i++)
             {
-                offset = (offset << 4) + frameCorrente->code[pc_aux];   
+                offset = (offset << 8) + frameCorrente->code[pc_aux];   
                 pc_aux++; 
             }       
             
@@ -2695,7 +2698,6 @@ void tableswitch(){
             
             // sai do loop 
             break;
-
         }
 
         // senao, passa pelo offset atual incrementando pc
@@ -2713,7 +2715,93 @@ void tableswitch(){
 }
 
 void lookupswitch(){
+    uint32_t pc_aux, pc_novo; 
+    uint32_t bytes_preench;
+    uint32_t offset;
+    int32_t default_v, npairs; 
+    int32_t match; 
+    int32_t key;
 
+    // diz se o novo valor de pc ja esta definido ou nao 
+    bool definido = false; 
+
+    // pc auxiliar que iremos seguindo durante a execucao da instrucao 
+    pc_aux = frameCorrente->pc; 
+   
+    // pega key da operand stack
+    key = pop_op(); 
+    
+    // pula bytes de preenchimento
+    bytes_preench = (4 - ((pc_aux + 1) % 4) ) % 4;  
+    //bytes_preench = (pc_aux + 1) % 4;
+    pc_aux += bytes_preench;
+    pc_aux++;
+   
+    // pega bytes default 
+    default_v = 0;
+    for (int l = 0; l < 4; l++)
+    {
+        default_v = (default_v << 8) + frameCorrente->code[pc_aux];   
+        pc_aux++;
+    }       
+    
+    // pega numeros de pares
+    npairs = 0;
+    for (int l = 0; l < 4; l++)
+    {
+        npairs = (npairs << 8) + frameCorrente->code[pc_aux];   
+        pc_aux++;
+    }       
+    
+    
+    // itera pelo numero de pares
+    for (int32_t l = 0; l < npairs; l++)
+    {
+        // pega match atual 
+        match = 0;
+        for (int l = 0; l < 4; l++)
+        {
+            match = (match << 8) + frameCorrente->code[pc_aux];   
+            pc_aux++;
+        }       
+        
+        // se a key corresponde ao match 
+        if (key == match)
+        {
+            // pega offset
+            offset = 0;
+            for (int l = 0; l < 4; l++)
+            {
+                offset = (offset << 8) + frameCorrente->code[pc_aux];   
+                pc_aux++;
+            }       
+            
+            // poe valor correto em pc_novo
+            pc_novo = frameCorrente->pc + offset; 
+
+            // set booleano que achou o match
+            definido = true;
+        }
+
+        // senao 
+        else
+        {
+            // pula offset
+            for(int i = 0; i < 4; i++)
+            {
+                pc_aux++;
+            }
+        }
+     }
+
+    // se ainda nao achamos o offset 
+    if (!definido)
+    {
+        pc_novo = frameCorrente->pc + default_v;
+    }
+
+    // poe valor correto no offset
+    frameCorrente->pc = pc_novo; 
 }
 
 /**

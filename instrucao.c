@@ -31,7 +31,6 @@
 
 //OBS: Alternativa para memcpy no manipulação de ponto flutuante -> UNION.
 
-
 /**
  * Acesso ao frame corrente declarado no modulo frame.h
  */
@@ -899,9 +898,29 @@ void aload(){
 void iload_0(){
 
 }
+
+/* 
+ * a funcao carrega o int na posicao 1 do array de variaveis locais para a pilha de operandos
+ * @param void
+ * @return void
+ */
 void iload_1(){
 
+    uint32_t valor;
+
+    // pega valor do array de var local na posicao 1
+    valor = frameCorrente->fields[1];
+
+    // poe valor na pilha de operandos
+    push(valor);
+    
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
+
 void iload_2(){
 
 }
@@ -1017,7 +1036,26 @@ void astore(){
 void istore_0(){
 
 }
+
+/**
+ * a funcao coloca um int no array de variaveis locais
+ * @param void
+ * @return void
+ */
 void istore_1(){
+    uint32_t valor; 
+
+    // pega valor no topo da operand stack
+    valor = pop_op();
+
+    // coloca o valor na posicao 1 do array de variaveis locais
+    frameCorrente->fields[1] = valor;
+
+    // incrementa o PC - indo para proxima instrucao
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
 void istore_2(){
@@ -2340,8 +2378,107 @@ void ret(){
 
 }
 void tableswitch(){
+    uint32_t bytes_preench; 
+    uint32_t indice;
+    uint32_t default_v, low, high, npairs; 
+    uint32_t pc_novo, pc_aux;
+    uint32_t qtd_offset, offset, posicao;
 
+    // diz se o novo valor de pc ja esta definido ou nao 
+    bool definido = false; 
+
+    // pc auxiliar que iremos seguindo durante a execucao da instrucao 
+    pc_aux = frameCorrente->pc; 
+
+    // pega indice da operand stack
+    indice = pop_op(); 
+    
+    /* passo 1 - le ateh o low. Se o indice eh menor que low - define logo o novo valor para PC */
+    // pula bytes de preenchimento
+    bytes_preench = (pc_aux + 1) % 4;
+    pc_aux += bytes_preench;
+    pc_aux++;
+    
+    // pega bytes do target default
+    default_v = 0;
+    for (int l = 0; l < 4; l++)
+    {
+        default_v = (default_v << 4) + frameCorrente->code[pc_aux];   
+        pc_aux++;
+    }       
+
+    // pega bytes low
+    low = 0;
+    for (int l = 0; l < 4; l++)
+    {
+        low = (low << 4) + frameCorrente->code[pc_aux];   
+        pc_aux++; 
+    }       
+
+    // se o indice eh menor que o low e ainda nao definimos novo pc
+    if (indice < low && !definido)
+    {
+        definido = true;
+        pc_novo = frameCorrente->pc + default_v; 
+    }
+
+    /* passo 2 - le ateh o high. Se o indice eh maior que o high - define o novo valor para PC
+     * caso low ainda nao tenha sido definido */ 
+    // pega bytes high 
+    high = 0;
+    for (int l = 0; l < 4; l++)
+    {
+        high = (high << 4) + frameCorrente->code[pc_aux];   
+        pc_aux++; 
+    }       
+
+    // se o indice eh maior que o high e ainda nao definimos novo pc
+    if (indice > high && !definido)
+    {
+        definido = true;
+        pc_novo = frameCorrente->pc + default_v; 
+    }
+
+    /* passo 3 - calcula offset na posicao index - low. Coloca novo endereco de PC aqui, caso ainda não tenha sido 
+     * definido */ 
+    qtd_offset = 1 + high - low; 
+    posicao = indice - low; 
+    for (uint32_t l = 0; l < qtd_offset; l++)
+    {
+        // se estamos na posicao correta
+        if (l == posicao)
+        {
+            // extrai offset
+            offset = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                offset = (offset << 4) + frameCorrente->code[pc_aux];   
+                pc_aux++; 
+            }       
+            
+            // calcula posicao 
+            pc_novo = frameCorrente->pc + offset; 
+            definido = true;
+            
+            // sai do loop 
+            break;
+
+        }
+
+        // senao, passa pelo offset atual incrementando pc
+        else
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                pc_aux++; 
+            }       
+        }
+    }
+
+    // poe valor correto em frameCorrente
+    frameCorrente->pc = pc_novo; 
 }
+
 void lookupswitch(){
 
 }

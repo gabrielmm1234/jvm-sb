@@ -1319,8 +1319,17 @@ void ladd(){
 	//Soma os dois valores
 	int64_t resultado = lVal1 + lVal;
 	//Empilha o resultado
-	push(resultado);
 
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = resultado >> 32;
+	baixa = resultado & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
 
 	//atualiza pc
 	inicializa_decodificador(dec); 
@@ -1473,10 +1482,85 @@ void isub(){
 
 }
 void lsub(){
+	int32_t baixa,alta;
 
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal1 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal1 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal1 = lVal1 + baixa;
+
+	//subtrai os dois valores
+	int64_t resultado = lVal1 - lVal;
+	//Empilha o resultado
+
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = resultado >> 32;
+	baixa = resultado & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
+
+	//atualiza pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 void fsub(){
+	float fVal1,fVal2;
 
+	//Desempilha os dois valores
+	int32_t aux1 = pop_op();
+	int32_t aux2 = pop_op();
+
+	//Converte para float e nao perde precisao
+	memcpy(&fVal1, &aux1, sizeof(int32_t));
+	memcpy(&fVal2, &aux2, sizeof(int32_t));
+
+	//subtrai os dois valores em float
+	float resultado = fVal1 - fVal2;
+
+	//copia para um int32_t
+	int32_t retPilha;
+	memcpy(&retPilha, &resultado, sizeof(int32_t));
+
+	//Empilha
+	push(retPilha);
+
+	//atualiza pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 
 /**
@@ -1990,6 +2074,56 @@ void iand(){
 }
 void land(){
 
+	int32_t baixa,alta;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal1 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal1 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal1 = lVal1 + baixa;
+
+
+	int64_t resultado = lVal1 & lVal;
+	//Empilha o resultado
+
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = resultado >> 32;
+	baixa = resultado & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
+
+	//atualiza pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 void ior(){
 
@@ -2009,6 +2143,56 @@ void ior(){
 }
 void lor(){
 
+	int32_t baixa,alta;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal1 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal1 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal1 = lVal1 + baixa;
+
+	int64_t resultado = lVal1 | lVal;
+	//Empilha o resultado
+
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = resultado >> 32;
+	baixa = resultado & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
+
+	//atualiza pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+
 }
 void ixor(){
 
@@ -2027,7 +2211,56 @@ void ixor(){
 
 }
 void lxor(){
+	int32_t baixa,alta;
 
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal1 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal1 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal1 = lVal1 + baixa;
+
+
+	int64_t resultado = lVal1 ^ lVal;
+	//Empilha o resultado
+
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = resultado >> 32;
+	baixa = resultado & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
+
+	//atualiza pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 void iinc(){
 

@@ -1853,14 +1853,6 @@ void dup(){
 	printf("Entrei no dup\n");
 	int32_t aux;
 
-	if(naoEmpilhaFlag){
-
-		atualizaPc();
-
-		naoEmpilhaFlag = 0;
-		return;
-	}
-
 	//Desempilha
 	aux = pop_op();
 

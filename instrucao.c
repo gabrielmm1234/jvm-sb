@@ -336,6 +336,7 @@ void iconst_0(){
  */
 void iconst_1(){
 
+    printf("cheguei aqui");
     // poe 1 na pilha de operandos
     push(1);
     
@@ -833,7 +834,7 @@ void iload(){
 
 
 	printf("Entrei no iload\n");
-	int32_t argumento = (int32_t) frameCorrente->code[(++frameCorrente->pc)];
+	int32_t argumento = (int32_t) frameCorrente->code[frameCorrente->pc + 1];
 	int32_t aux = frameCorrente->fields[argumento];
 	printf("argumento empilhado: %d\n",argumento);
 	push(aux);
@@ -1283,7 +1284,7 @@ void aload_0(){
 	//Empilha a posição 0 do vetor de variáveis locais.
 	push(frameCorrente->fields[0]);
 	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
-
+    dumpStack();
 
 	atualizaPc();
 }
@@ -1870,6 +1871,7 @@ void dup(){
 	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 	push(aux);
 	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
+    dumpStack();
 
 
 	atualizaPc();
@@ -3785,7 +3787,7 @@ void invokespecial(){
 	char* nomeClasse = retornaNome(frameCorrente->classe,(frameCorrente->constant_pool[indiceClasse-1]).info.Class.name_index);
 	printf("nomeClasse: %s\n",nomeClasse);
 
-	if(strcmp("java/lang/Object",nomeClasse) == 0){
+    if(strcmp("java/lang/Object",nomeClasse) == 0){
 
 		carregaMemClasse(nomeClasse);
 
@@ -3838,6 +3840,7 @@ void invokespecial(){
 	for(int32_t i = 0; i <= numeroParametros; i++)
 		fields[i] = pop_op();
 
+    dumpStack();
 	//inicia método
 	empilhaMetodo(metodoInvocado, classe);
 
@@ -3849,6 +3852,7 @@ void invokespecial(){
 	//Executa método.
 	executaFrameCorrente();
 
+    dumpStack();
 	atualizaPc();
 }
 
@@ -3995,6 +3999,7 @@ void ins_new(){
 	//empilha objeto na pilha de operandos (push)
 	push((int32_t) objeto);
 	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
+    dumpStack();
 
 	atualizaPc();
 }

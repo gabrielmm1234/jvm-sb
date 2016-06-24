@@ -889,7 +889,7 @@ void iload(){
 
 }
 
-/*
+/**
  * a funcao carrega um long do array de var locais a pilha de operandos
  * @param void
  * @return void
@@ -920,7 +920,7 @@ void lload(){
     }
 }
 
-/* 
+/** 
  * a funcao carrega um float no array de variaveis locais da pilha
  * @param void
  * @return void
@@ -945,7 +945,7 @@ void fload(){
     }
 }
 
-/*
+/**
  * a funcao carrega um double no array de variaveis locais da pilha 
  * @param void
  * @return void
@@ -975,7 +975,7 @@ void dload(){
     }
 }
 
-/*
+/**
  * a funcao carrega uma referencia do array de variaveis locais da pilha
  * @param void
  * @return void
@@ -1001,7 +1001,7 @@ void aload(){
 
 }
 
-/* 
+/**
  * a funcao carrega o int na posicao 0 do array de variaveis locais para a pilha de operandos
  * @param void
  * @return void
@@ -1024,7 +1024,7 @@ void iload_0(){
 
 }
 
-/* 
+/** 
  * a funcao carrega o int na posicao 1 do array de variaveis locais para a pilha de operandos
  * @param void
  * @return void
@@ -1046,7 +1046,7 @@ void iload_1(){
 		frameCorrente->pc++;
 }
 
-/* 
+/** 
  * a funcao carrega o int na posicao 2 do array de variaveis locais para a pilha de operandos
  * @param void
  * @return void
@@ -1068,7 +1068,7 @@ void iload_2(){
 		frameCorrente->pc++;
 }
 
-/* 
+/**
  * a funcao carrega o int na posicao 3 do array de variaveis locais para a pilha de operandos
  * @param void
  * @return void
@@ -1090,6 +1090,11 @@ void iload_3(){
 
 }
 
+/**
+ * a funcao carrega o long da posicao 0/1 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ **/
 void lload_0(){
 
     int32_t indice;
@@ -1116,6 +1121,11 @@ void lload_0(){
 
 }
 
+/**
+ * a funcao carrega o long da posicao 1/2 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void lload_1(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
@@ -1141,6 +1151,11 @@ void lload_1(){
 
 }
 
+/**
+ * a funcao carrega o long da posicao 2/3 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void lload_2(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
@@ -1166,6 +1181,11 @@ void lload_2(){
 
 }
 
+/**
+ * a funcao carrega o long da posicao 3/4 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void lload_3(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
@@ -1191,6 +1211,11 @@ void lload_3(){
 
 }
 
+/**
+ * a funcao carrega o float da posicao 0 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void fload_0(){
 
     int32_t indice, valor; 
@@ -1212,6 +1237,11 @@ void fload_0(){
 
 }
 
+/**
+ * a funcao carrega o float da posicao 1 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void fload_1(){
     int32_t indice, valor; 
 
@@ -1232,6 +1262,11 @@ void fload_1(){
 
 }
 
+/**
+ * a funcao carrega o float da posicao 2 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void fload_2(){
     int32_t indice, valor; 
 
@@ -1252,6 +1287,11 @@ void fload_2(){
 
 }
 
+/**
+ * a funcao carrega o float da posicao 3 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void fload_3(){
     int32_t indice, valor; 
 
@@ -1272,6 +1312,11 @@ void fload_3(){
 
 }
 
+/**
+ * a funcao carrega o double da posicao 0/1 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void dload_0(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
@@ -1297,6 +1342,11 @@ void dload_0(){
 
 }
 
+/**
+ * a funcao carrega o double da posicao 1/2 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void dload_1(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
@@ -1322,6 +1372,11 @@ void dload_1(){
 
 }
 
+/**
+ * a funcao carrega o double da posicao 2/3 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void dload_2(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
@@ -1347,6 +1402,11 @@ void dload_2(){
 
 }
 
+/**
+ * a funcao carrega o double da posicao 3/4 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void dload_3(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
@@ -1393,6 +1453,12 @@ void aload_0(){
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
 }
+
+/**
+ * a funcao acessa a posicao 1 do array de var local e empilha o conteudo na pilha de operandos
+ * @param void
+ * @return voi
+ */
 void aload_1(){
     int32_t indice, valor; 
 
@@ -1412,6 +1478,12 @@ void aload_1(){
     }
 
 }
+
+/**
+ * a funcao acessa a posicao 2 do array de var local e empilha o conteudo na pilha de operandos
+ * @param void
+ * @return voi
+ */
 void aload_2(){
     int32_t indice, valor; 
 
@@ -1431,6 +1503,11 @@ void aload_2(){
     }
 
 }
+/**
+ * a funcao acessa a posicao 3 do array de var local e empilha o conteudo na pilha de operandos
+ * @param void
+ * @return voi
+ */
 void aload_3(){
     int32_t indice, valor; 
 
@@ -1475,6 +1552,7 @@ void caload(){
 void saload(){
 
 }
+
 void istore(){
 
 }

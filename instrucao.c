@@ -1786,7 +1786,32 @@ void dstore_3(){
 void astore_0(){
 
 }
+
+/* 
+ * pega referencia e coloca no array de variaveis locais, na posicao dada por 1
+ * @param void
+ * @return void
+ */
 void astore_1(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 1;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
 void astore_2(){
@@ -3737,6 +3762,10 @@ void invokevirtual(){
 						float valDesemp;
 						memcpy(&valDesemp,&resultado, sizeof(float));
 						printf("%f\n",valDesemp);
+					}
+
+					if(strcmp(tipoGlobal, "I") == 0){
+						printf("%d\n", resultado);
 					}
 
 				flagAppend = 0;

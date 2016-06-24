@@ -1862,6 +1862,11 @@ void dup_x1(){
 	atualizaPc();
 }
 
+/**
+ * Instrução que duplica valor da pilha e adiciona dois ou tres valores de volta.
+ * @param void
+ * @return void
+ */
 void dup_x2(){
 	//TODO : fazer para a forma 2
 
@@ -1886,14 +1891,98 @@ void dup_x2(){
 	atualizaPc();
 
 }
+
+/**
+ * Instrução que duplica valor da pilha e adiciona dois valores de volta.
+ * @param void
+ * @return void
+ */
 void dup2(){
+	//TODO : fazer para a forma 2
 
+	//forma 1
+
+	printf("Entrei no dup\n");
+	int32_t aux1, aux2, aux3;
+
+	//Desempilha
+	aux2 = pop_op();
+
+	aux1 = pop_op();
+
+	//Duplica
+
+	push(aux2);
+	push(aux1);
+	push(aux2);
+	push(aux1);
+
+	atualizaPc();
 }
+
+/**
+ * Instrução que duplica valor da pilha e adiciona dois ou tres valores de volta.
+ * @param void
+ * @return void
+ */
 void dup2_x1(){
+	//TODO : fazer para a forma 2
+
+	//forma 1
+
+	printf("Entrei no dup\n");
+	int32_t aux1, aux2, aux3;
+
+	//Desempilha
+	aux3 = pop_op();
+
+	aux2 = pop_op();
+
+	aux1 = pop_op();
+
+	//Duplica
+	push(aux2);
+	push(aux1);
+	push(aux3);
+	push(aux2);
+	push(aux1);
+
+	atualizaPc();
 
 }
-void dup2_x2(){
 
+/**
+ * Instrução que duplica valor o primeiro ou segundo valor da pilha e
+ * adiciona dois ou tres ou quatro valores de volta.
+ * @param void
+ * @return void
+ */
+void dup2_x2(){
+	//TODO : fazer para a forma 2
+
+	//forma 1
+
+	printf("Entrei no dup\n");
+	int32_t aux1, aux2, aux3, aux4;
+
+	//Desempilha
+	aux4 = pop_op();
+
+	aux3 = pop_op();
+
+	aux2 = pop_op();
+
+	aux1 = pop_op();
+
+	//Duplica
+	push(aux2);
+	push(aux1);
+	push(aux4);
+	push(aux3);
+	push(aux2);
+	push(aux1);
+
+	atualizaPc();
 }
 
 /**

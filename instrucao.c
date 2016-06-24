@@ -1394,14 +1394,63 @@ void aload_0(){
 		frameCorrente->pc++;
 }
 void aload_1(){
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = 1; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    // incrementa o valor de pc 
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
 void aload_2(){
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = 2; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    // incrementa o valor de pc 
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
 void aload_3(){
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = 3; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    // incrementa o valor de pc 
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
 void iaload(){
 
 }
@@ -3329,6 +3378,7 @@ void ins_return(){
 		frameCorrente->pc++;
 	printf("retornando! método acabou!\n");
 }
+
 void getstatic(){
 	printf("Entrei no getstatic!!\n");
 

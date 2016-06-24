@@ -61,6 +61,42 @@ void atualizaPc(){
 		frameCorrente->pc++;
 }
 
+/*
+ * a funcao recebe uma referencia para a constant pool e a posicao que se deseja acessar
+ * a funcao retorna o indice da CONSTANT_UTF8 associada a CONSTANT da posicao passada na constant pool 
+ * @param cp_info* uma referencia a constant pool 
+ * @param int um indice para a constant pool 
+ * @return int indice da CONSTANT_UTF8 associada 
+ */
+int obtem_utf_eq(cp_info* cp, int pos_pool)
+{
+    int tag;
+
+    // pega tag 
+    tag = cp[pos_pool].tag;
+
+    // se a tag for o de uma UTF8
+    if (tag == CONSTANT_Utf8)
+    {
+        // imprime informacao e sai
+        return pos_pool;
+    }
+
+    // senao, de acordo com a tag, decide qual sera a proxima posicao da cte pool que iremos olhar
+    switch(tag)
+    {
+        case CONSTANT_Class:
+            return obtem_utf_eq(cp, cp[pos_pool].info.Class.name_index - 1);
+        case CONSTANT_String:
+            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
+        case CONSTANT_Integer: 
+            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
+        case CONSTANT_Float: 
+            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
+    }
+}
+
+
 /**
  * Função que aponta para uma implementação de cada instrução de acordo
  * com o opcode fornecido.
@@ -280,7 +316,6 @@ void newInstrucoes(){
  * @return void 
  */
 void nop(){
-
     // pula para proxima instrucao, atualizando pc
 	frameCorrente->pc++;
 }
@@ -291,7 +326,6 @@ void nop(){
  * @return void 
  */
 void aconst_null(){
-
     // poe a refererencia null na pilha 
     push((int32_t)NULL_REF);
     
@@ -318,15 +352,10 @@ void iconst_m1(){
  * @return void 
  */
 void iconst_0(){
-
     // poe 0 na pilha de operandos
-    push(0);
-
-	printf("Entrei no iconst_0\n");
 	push((int32_t) 0);
 
 	atualizaPc();
-	
 }
 
 /**
@@ -335,14 +364,11 @@ void iconst_0(){
  * @return void 
  */
 void iconst_1(){
-
-    printf("cheguei aqui");
     // poe 1 na pilha de operandos
     push(1);
     
     // atualiza pc 
     frameCorrente->pc++;
-
 }
 
 /**
@@ -351,13 +377,11 @@ void iconst_1(){
  * @return void 
  */
 void iconst_2(){
-
     // poe 2 na pilha de operandos
     push(2);
     
     // atualiza pc 
     frameCorrente->pc++;
-
 }
 
 /**
@@ -366,13 +390,11 @@ void iconst_2(){
  * @return void 
  */
 void iconst_3(){
-
     // poe 3 na pilha de operandos
     push(3);
     
     // atualiza pc 
     frameCorrente->pc++;
-
 }
 
 /**
@@ -381,13 +403,11 @@ void iconst_3(){
  * @return void 
  */
 void iconst_4(){
-
     // poe 4 na pilha de operandos
     push(4);
     
     // atualiza pc 
     frameCorrente->pc++;
-
 }
 
 /**
@@ -396,13 +416,11 @@ void iconst_4(){
  * @return void 
  */
 void iconst_5(){
-
     // poe 5 na pilha de operandos
     push(5);
     
     // atualiza pc 
     frameCorrente->pc++;
-
 }
 
 /*
@@ -428,8 +446,7 @@ void lconst_0(){
     push(parte_baixa);
 
     // atualiza pc 
-    frameCorrente->pc++;
-    
+    frameCorrente->pc++; 
 }
 
 /*
@@ -464,7 +481,6 @@ void lconst_1(){
  * @return void 
  */
 void fconst_0(){
-	printf("Entrei no fconst_0\n");
 
 	//Auxiliar para utilizar o memcpy e não perder precisão com cast.
 	int32_t* valPilha;
@@ -493,7 +509,6 @@ void fconst_0(){
  * @return void 
  */
 void fconst_1(){
-	printf("Entrei no fconst_1\n");
 
 	//Auxiliar para utilizar o memcpy e não perder precisão com cast.
 	int32_t* valPilha;
@@ -522,7 +537,6 @@ void fconst_1(){
  * @return void 
  */
 void fconst_2(){
-	printf("Entrei no fconst_2\n");
 
 	//Auxiliar para utilizar o memcpy e não perder precisão com cast.
 	int32_t* valPilha;
@@ -569,7 +583,6 @@ void dconst_0(){
 
     // atualiza pc 
     frameCorrente->pc++;
-
 }
 
 /*
@@ -596,7 +609,6 @@ void dconst_1(){
 
     // atualiza pc 
     frameCorrente->pc++;
-
 }
 
 /**
@@ -605,7 +617,6 @@ void dconst_1(){
  * @return void 
  */
 void bipush(){
-	printf("Entrei no bipush\n");
 	int8_t argumento = (int8_t) frameCorrente->code[(++frameCorrente->pc)];
 	printf("argumento empilhado: %d\n",argumento);
 	push((int32_t)argumento);
@@ -638,49 +649,12 @@ void sipush(){
 }
 
 /*
- * a funcao recebe uma referencia para a constant pool e a posicao que se deseja acessar
- * a funcao retorna o indice da CONSTANT_UTF8 associada a CONSTANT da posicao passada na constant pool 
- * @param cp_info* uma referencia a constant pool 
- * @param int um indice para a constant pool 
- * @return int indice da CONSTANT_UTF8 associada 
- */
-int obtem_utf_eq(cp_info* cp, int pos_pool)
-{
-    int tag;
-
-    // pega tag 
-    tag = cp[pos_pool].tag;
-
-    // se a tag for o de uma UTF8
-    if (tag == CONSTANT_Utf8)
-    {
-        // imprime informacao e sai
-        return pos_pool;
-    }
-
-    // senao, de acordo com a tag, decide qual sera a proxima posicao da cte pool que iremos olhar
-    switch(tag)
-    {
-        case CONSTANT_Class:
-            return obtem_utf_eq(cp, cp[pos_pool].info.Class.name_index - 1);
-        case CONSTANT_String:
-            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
-        case CONSTANT_Integer: 
-            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
-        case CONSTANT_Float: 
-            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
-    }
-}
-
-/*
  * a funcao coloca um item da run-time constan pool na pilha 
  * @param void
  * @return void
  */
 void ldc(){
     uint32_t indice;
-    
-	printf("Entrei no ldc!!\n");
 	
     // pega indice 
     indice = frameCorrente->code[frameCorrente->pc + 1];
@@ -737,7 +711,6 @@ void ldc(){
 void ldc_w(){
     uint32_t indice;
     
-	printf("Entrei no ldc!!\n");
 	inicializa_decodificador(dec); 
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 
@@ -794,16 +767,13 @@ void ldc_w(){
  * @return void 
  */
 void ldc2_w(){
-	printf("Entrei no ldc2_w\n");
 
 	//Pega indice presente na instrução para acesso a constant pool.
 	uint8_t indice = frameCorrente->code[frameCorrente->pc + 2];
-	printf("Indice: %d\n",indice);
 
 	//Pega tag da posição da constant pool dada pelo indice
 	//Pode ser ou long ou double.
 	uint8_t tag = (frameCorrente->constant_pool[indice-1]).tag;
-	printf("tag: %d\n",tag);
 
 	//TODO LONG
 
@@ -832,8 +802,6 @@ void iload(){
 	// instruction (§wide) to access a local variable using a two-byte
 	// bunsigned index.
 
-
-	printf("Entrei no iload\n");
 	int32_t argumento = (int32_t) frameCorrente->code[frameCorrente->pc + 1];
 	int32_t aux = frameCorrente->fields[argumento];
 	printf("argumento empilhado: %d\n",argumento);
@@ -938,7 +906,7 @@ void aload(){
  */
 void iload_0(){
 
-    uint32_t valor;
+    int32_t valor;
 
     // pega valor do array de var local na posicao 2
     valor = frameCorrente->fields[0];
@@ -956,7 +924,7 @@ void iload_0(){
  */
 void iload_1(){
 
-    uint32_t valor;
+    int32_t valor;
 
     // pega valor do array de var local na posicao 1
     valor = frameCorrente->fields[1];
@@ -974,7 +942,7 @@ void iload_1(){
  */
 void iload_2(){
 
-    uint32_t valor;
+    int32_t valor;
 
     // pega valor do array de var local na posicao 2
     valor = frameCorrente->fields[2];
@@ -991,7 +959,7 @@ void iload_2(){
  * @return void
  */
 void iload_3(){
-    uint32_t valor;
+    int32_t valor;
 
     // pega valor do array de var local na posicao 3
     valor = frameCorrente->fields[3];
@@ -1879,14 +1847,6 @@ void pop2(){
 void dup(){
 	printf("Entrei no dup\n");
 	int32_t aux;
-
-	if(naoEmpilhaFlag){
-
-		atualizaPc();
-
-		naoEmpilhaFlag = 0;
-		return;
-	}
 
 	//Desempilha
 	aux = pop_op();
@@ -3573,7 +3533,7 @@ void ins_return(){
 
 	//setar variaveis globais de retorno para 0.
 	retorno = 0;
-	flagRet = 1;
+	flagRet = 0;
 
 	atualizaPc();
 	printf("retornando! método acabou!\n");

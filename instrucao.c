@@ -1092,38 +1092,283 @@ void iload_3(){
 
 void lload_0(){
 
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 0;
+
+    // empilha a parte alta - por convencao vem primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    // incrementa o valor de pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
+
 }
+
 void lload_1(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 1;
+
+    // empilha a parte alta - por convencao vem primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    // incrementa o valor de pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
 void lload_2(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 2;
+
+    // empilha a parte alta - por convencao vem primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    // incrementa o valor de pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
 void lload_3(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 3;
+
+    // empilha a parte alta - por convencao vem primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    // incrementa o valor de pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
 void fload_0(){
 
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = 0; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    // incrementa o valor de pc 
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
+
 }
+
 void fload_1(){
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = 1; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    // incrementa o valor de pc 
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
 void fload_2(){
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = 2; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    // incrementa o valor de pc 
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
 void fload_3(){
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = 3; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    // incrementa o valor de pc 
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
 void dload_0(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 0; 
+
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    // incrementa o valor de pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
 void dload_1(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 1; 
+
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    // incrementa o valor de pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
 void dload_2(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 2; 
+
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    // incrementa o valor de pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
 void dload_3(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 3; 
+
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    // incrementa o valor de pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
 

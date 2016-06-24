@@ -117,9 +117,9 @@ void popFrame(){
 	anterior = topo->next;
 
 	//Desaloca frame já executado.
-	free(topo->refFrame->fields);
     free(topo->refFrame->pilha_op->operandos);
     free(topo->refFrame->pilha_op);
+    free(topo->refFrame->fields);
 	free(topo->refFrame);
 	free(topo);
 
@@ -184,5 +184,16 @@ void dumpStack(){
 	int i;
 	for(i = 0; i < frameCorrente->pilha_op->depth; i++){
 		printf("valor: %d\n",frameCorrente->pilha_op->operandos[i]);
+	}
+}
+
+/**
+ * funcao criada para analisar o conteudo do array de variaveis locais
+ * foi usada mais para debug de alguns problemas. 
+ */
+void dumpFields(){
+	int i;
+	for(i = 0; i < frameCorrente->max_locals; i++){
+		printf("valor: %d\n",frameCorrente->fields[i]);
 	}
 }

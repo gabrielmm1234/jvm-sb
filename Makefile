@@ -4,6 +4,7 @@ CC   = gcc
 CFLAGS   = -Wextra -g -m32 -std=c99
 NFLAGS   = 
 INCLUDE  = 
+OBJDIR	 = objetos
 TARGET   = jvm.exe
 SOURCES_ASM = $(wildcard *.asm)
 SOURCES_C   = $(wildcard *.c)

@@ -28,8 +28,6 @@
  * @return void 
  */
 void criaFrame(cp_info* cp, classFile* classe, code_attribute* code){
-	printf("Criando Frame.\n");
-
 	//Aloca espaço para o novo frame.
 	struct stackFrame* sf = NULL;
 	sf =(struct stackFrame*) calloc(sizeof(struct stackFrame),1);
@@ -94,7 +92,6 @@ void popFrame(){
 	//se topo->next diferente de null -> existe outros frames para executar.
 	//Atualiza o frame corrente para prosseguir a execução.
 	if (topo->next != NULL) {
-		printf("Execução prossegue para proximo frame!\n");
 		frameCorrente = topo->next->refFrame;
 
 		//Empilha valor de retorno do frame anterior na pilha do proximo frame.
@@ -109,7 +106,6 @@ void popFrame(){
 		flagRet = 0;
 		
 	} else {
-		printf("Execução Acabou - Não há mais frames!\n");
 		frameCorrente = NULL;
 	}
 
@@ -133,7 +129,6 @@ void popFrame(){
  * @return void 
  */
 void desalocaFrame(){
-	printf("desalocando Frame!\n");
 	popFrame();
 }
 

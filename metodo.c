@@ -41,8 +41,6 @@ method_info* buscaMetodoMain(){
 	//Busca a classe que contém o método main. Foi a segunda classe a ser carregada.
 	main = buscaClasseIndice(1);
 
-	printf("Buscando método main para inicio da execução\n");
-
 	//Percorre o method_info em busca do method main.
 	for(int i = 0; i < main->methods_count; i++){
 		nome = main->constant_pool[(main->methods[i].name_index -1)].info.Utf8.bytes;
@@ -52,7 +50,6 @@ method_info* buscaMetodoMain(){
 		//Se encontrou método main retorna uma referencia.
 		if(strcmp("main",(char *)nome) == 0){ //Nome da função
 			if(strcmp("([Ljava/lang/String;)V",(char *)desc) == 0){ //Parâmetros e Retorno da main.
-				printf("Método main encontrado\n");
 				return &(main->methods[i]);
 			}
 		}

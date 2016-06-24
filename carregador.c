@@ -61,8 +61,6 @@ int32_t carregaObjectClasse(char* ObjectClass){
 
 	//Se não está carregado carrega e salva no array de classes.
 
-	printf("Carregando classe: %s\n", ObjectClass);
-
 	//uma classe nova vai entrar na lista de classes carregadas.
 	area_met.num_classes++;
 	aux = area_met.num_classes;
@@ -89,7 +87,6 @@ int32_t carregaObjectClasse(char* ObjectClass){
 	//printf("destino: %s\n",destino);
 
     area_met.array_classes[area_met.num_classes - 1] = leitorClasse(destino);  
-    printf("Carregou no array!\n");
     
 	if(area_met.array_classes[area_met.num_classes -1] == NULL){
 		printf("Erro ao carregar classe!\n");
@@ -127,8 +124,6 @@ int32_t carregaMemClasse(char* nomeClass){
 
 	//Se não está carregado carrega e salva no array de classes.
 
-	printf("Carregando classe: %s\n", nomeClass);
-
 	//uma classe nova vai entrar na lista de classes carregadas.
 	area_met.num_classes++;
 	aux = area_met.num_classes;
@@ -155,7 +150,6 @@ int32_t carregaMemClasse(char* nomeClass){
 	//printf("destino: %s\n",destino);
 
     area_met.array_classes[area_met.num_classes - 1] = leitorClasse(destino);  
-    printf("Carregou no array!\n");
     
 	if(area_met.array_classes[area_met.num_classes -1] == NULL){
 		printf("Erro ao carregar classe!\n");

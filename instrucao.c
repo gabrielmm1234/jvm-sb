@@ -1854,8 +1854,6 @@ void ladd(){
 	baixa = resultado & 0xffffffff;
 
 	//finalmente empilha.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
@@ -1898,8 +1896,6 @@ void fadd(){
  * @return void 
  */
 void dadd(){
-	printf("Entrei no dadd\n");
-
 	//Parte alta e baixa do double.
 	int32_t alta;
 	int32_t baixa;
@@ -1944,11 +1940,8 @@ void dadd(){
 	memcpy(&valorDouble2, &dVal, sizeof(int64_t));
 
 	//Soma os dois valores double
-	printf("Valor1 double: %f\n",valorDouble1);
-	printf("Valor2 double: %f\n",valorDouble2);
 	double doubleSomado = valorDouble1 + valorDouble2;
-	printf("Valor somado: %f\n",doubleSomado);
-
+	
 	//Necessario converter mais uma vez o double somado para int64 para 
 	//empilhar corretamente.
 	int64_t valorPilha;
@@ -1959,18 +1952,10 @@ void dadd(){
 	baixa = valorPilha & 0xffffffff;
 
 	//finalmente empilha.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -1982,18 +1967,10 @@ void isub(){
 	int32_t v1,v2;
 	v1 = pop_op();
 	v2 = pop_op();
-	printf("v1: %d\n",v1);
-	printf("v2: %d\n",v2);
-	printf("Empilhado: %d\n",v1-v2);
+
 	push(v1-v2);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 
 }
 
@@ -2041,8 +2018,6 @@ void lsub(){
 	baixa = resultado & 0xffffffff;
 
 	//finalmente empilha.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
@@ -2085,8 +2060,6 @@ void fsub(){
  * @return void 
  */
 void dsub(){
-	printf("Entrei no dsub\n");
-
 	//Parte alta e baixa do double.
 	int32_t alta;
 	int32_t baixa;
@@ -2131,11 +2104,8 @@ void dsub(){
 	memcpy(&valorDouble2, &dVal, sizeof(int64_t));
 
 	//Soma os dois valores double
-	printf("Valor1 double: %f\n",valorDouble1);
-	printf("Valor2 double: %f\n",valorDouble2);
 	double doubleSubtraido = valorDouble1 - valorDouble2;
-	printf("Valor subtraido: %f\n",doubleSubtraido);
-
+	
 	//Necessario converter mais uma vez o double somado para int64 para 
 	//empilhar corretamente.
 	int64_t valorPilha;
@@ -2146,8 +2116,6 @@ void dsub(){
 	baixa = valorPilha & 0xffffffff;
 
 	//finalmente empilha.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
@@ -2160,12 +2128,11 @@ void dsub(){
  * @return void 
  */
 void imul(){
-	printf("Entrei no imul\n");
-	 int32_t v1 = pop_op();
-	 int32_t v2 = pop_op();
-	 push((int32_t)(v1 * v2));
-	 printf("Valor empilhado: %d\n",v1*v2);
+	int32_t v1 = pop_op();
+	int32_t v2 = pop_op();
 
+	push((int32_t)(v1 * v2));
+	 
 	atualizaPc();
 }
 
@@ -2214,19 +2181,10 @@ void lmul(){
 	baixa = resultado & 0xffffffff;
 
 	//finalmente empilha.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
-	//atualiza pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
-
+	atualizaPc();
 }
 
 /**
@@ -2255,14 +2213,7 @@ void fmul(){
 	//Empilha
 	push(retPilha);
 
-	//atualiza pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
-
+	atualizaPc();
 }
 
 /**
@@ -2271,8 +2222,6 @@ void fmul(){
  * @return void 
  */
 void dmul(){
-	printf("Entrei no dmul\n");
-
 	//Parte alta e baixa do double.
 	int32_t alta;
 	int32_t baixa;
@@ -2317,11 +2266,8 @@ void dmul(){
 	memcpy(&valorDouble2, &dVal, sizeof(int64_t));
 
 	//Soma os dois valores double
-	printf("Valor1 double: %f\n",valorDouble1);
-	printf("Valor2 double: %f\n",valorDouble2);
 	double doubleMultiplicado = valorDouble1 * valorDouble2;
-	printf("Valor multiplicado: %f\n",doubleMultiplicado);
-
+	
 	//Necessario converter mais uma vez o double somado para int64 para 
 	//empilhar corretamente.
 	int64_t valorPilha;
@@ -2332,8 +2278,6 @@ void dmul(){
 	baixa = valorPilha & 0xffffffff;
 
 	//finalmente empilha.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
@@ -2346,11 +2290,11 @@ void dmul(){
  * @return void 
  */
 void idiv(){
-	 int32_t v1 = pop_op();
-	 int32_t v2 = pop_op();
-	 push((int32_t)(v1 / v2));
-	 printf("Valor empilhado: %d\n",v1/v2);
+	int32_t v1 = pop_op();
+	int32_t v2 = pop_op();
 
+	push((int32_t)(v1 / v2));
+	 
 	atualizaPc();
 }
 
@@ -2358,7 +2302,27 @@ void ins_ldiv(){
 
 }
 void fdiv(){
+	float fVal1,fVal2;
 
+	//Desempilha os dois valores
+	int32_t aux1 = pop_op();
+	int32_t aux2 = pop_op();
+
+	//Converte para float e nao perde precisao
+	memcpy(&fVal1, &aux1, sizeof(int32_t));
+	memcpy(&fVal2, &aux2, sizeof(int32_t));
+
+	//multiplica os dois valores em float
+	float resultado = fVal1 / fVal2;
+
+	//copia para um int32_t
+	int32_t retPilha;
+	memcpy(&retPilha, &resultado, sizeof(int32_t));
+
+	//Empilha
+	push(retPilha);
+
+	atualizaPc();
 }
 
 /**
@@ -2367,8 +2331,6 @@ void fdiv(){
  * @return void 
  */
 void ddiv(){
-	printf("Entrei no ddiv\n");
-
 	//Partes altas e baixas dos dois doubles.
 	int32_t alta,baixa,alta1,baixa1;
 
@@ -2409,8 +2371,7 @@ void ddiv(){
 	memcpy(&v2, &dVal, sizeof(double));
 
 	double resultado = v2 / v1;
-	printf("Resultado: %f\n",resultado);
-
+	
 	//Necessario converter mais uma vez o double somado para int64 para 
 	//empilhar corretamente.
 	int64_t pilhaVal;
@@ -2421,8 +2382,6 @@ void ddiv(){
 	baixa = pilhaVal & 0xffffffff;
 
 	//finalmente empilha.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
@@ -2430,15 +2389,15 @@ void ddiv(){
 }
 
 /**
- * Desempilha 2 valores da pilha, obtem o resto da divisao e empilha o resultado.
+ * Desempilha 2 valores inteiros da pilha, obtem o resto da divisao e empilha o resultado.
  * @param void
  * @return void 
  */
 void irem(){
-	 int32_t v1 = pop_op();
-	 int32_t v2 = pop_op();
-	 push((int32_t)(v1 % v2));
-	 printf("Valor empilhado: %d\n",v1%v2);
+	int32_t v1 = pop_op();
+	int32_t v2 = pop_op();
+
+	push((int32_t)(v1 % v2));
 
 	atualizaPc();
 }
@@ -2446,10 +2405,97 @@ void irem(){
 void lrem(){
 
 }
-void frem(){
 
+/**
+ * Desempilha 2 valores float da pilha, obtem o resto da divisao e empilha o resultado.
+ * @param void
+ * @return void 
+ */
+void frem(){
+	float fVal1,fVal2;
+
+	//Desempilha os dois valores
+	int32_t aux1 = pop_op();
+	int32_t aux2 = pop_op();
+
+	//Converte para float e nao perde precisao
+	memcpy(&fVal1, &aux1, sizeof(int32_t));
+	memcpy(&fVal2, &aux2, sizeof(int32_t));
+
+	//multiplica os dois valores em float
+	float resultado = fVal1 % fVal2;
+
+	//copia para um int32_t
+	int32_t retPilha;
+	memcpy(&retPilha, &resultado, sizeof(int32_t));
+
+	//Empilha
+	push(retPilha);
+
+	atualizaPc();
 }
+
+/**
+ * Desempilha 2 valores double da pilha, obtem o resto da divisao e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void _drem(){
+	//Partes altas e baixas dos dois doubles.
+	int32_t alta,baixa,alta1,baixa1;
+
+	baixa1 = pop_op();
+	alta1 = pop_op();
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(double)
+
+	//Atribui parte alta primeiro
+	int64_t dVal = alta1;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa1;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble1.
+	double v1;
+	memcpy(&v1, &dVal, sizeof(double));
+
+	//Converter os numeros 32 bits para 64 bits(double)
+
+	//Atribui parte alta primeiro
+	dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble1.
+	double v2;
+	memcpy(&v2, &dVal, sizeof(double));
+
+	double resultado = v2 % v1;
+	
+	//Necessario converter mais uma vez o double somado para int64 para 
+	//empilhar corretamente.
+	int64_t pilhaVal;
+	memcpy(&pilhaVal, &resultado, sizeof(int64_t));
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = pilhaVal >> 32;
+	baixa = pilhaVal & 0xffffffff;
+
+	//finalmente empilha.
+	push(alta);
+	push(baixa);
+
+	atualizaPc();
 
 }
 
@@ -2459,13 +2505,11 @@ void _drem(){
  * @return void 
  */
 void ineg(){
-	printf("Entrei no ineg\n");
-		
 	//Desempilha valor da pilha
 	int32_t retPilha = pop_op();
 	//Negativa.
 	int32_t aux = -retPilha;
-	printf("Valor empilhado: %d\n",aux);
+	
 	//Empilha valor negativado.
 	push(aux);
 

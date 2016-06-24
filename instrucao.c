@@ -2288,6 +2288,11 @@ void imul(){
 	atualizaPc();
 }
 
+/**
+ * Desempilha 2 valores da pilha, multiplica-os e empilha o resultado.
+ * @param void
+ * @return void
+ */
 void lmul(){
 
 	int32_t baixa,alta;
@@ -2342,6 +2347,12 @@ void lmul(){
 		frameCorrente->pc++;
 
 }
+
+/**
+ * Desempilha 2 valores da pilha, multiplica-os e empilha o resultado.
+ * @param void
+ * @return void
+ */
 void fmul(){
 	float fVal1,fVal2;
 

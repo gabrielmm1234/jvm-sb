@@ -1,0 +1,1 @@
+Operacoes.class 0

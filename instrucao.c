@@ -1739,8 +1739,29 @@ void dup(){
 	atualizaPc();
 }
 
+/**
+ * Instrução que duplica valor da pilha e adiciona de volta de forma que se repita de forma nao ordenada.
+ * @param void
+ * @return void
+ */
 void dup_x1(){
 
+	printf("Entrei no dup\n");
+	int32_t aux1, aux2;
+
+	//Desempilha
+	aux2 = pop_op();
+
+	aux1 = pop_op();
+
+	//Duplica
+	push(aux1);
+	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
+	push(aux2);
+	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
+	push(aux1);
+
+	atualizaPc();
 }
 void dup_x2(){
 
@@ -2148,6 +2169,11 @@ void imul(){
 	atualizaPc();
 }
 
+/**
+ * Desempilha 2 valores da pilha, multiplica-os e empilha o resultado.
+ * @param void
+ * @return void
+ */
 void lmul(){
 
 	int32_t baixa,alta;
@@ -2202,6 +2228,12 @@ void lmul(){
 		frameCorrente->pc++;
 
 }
+
+/**
+ * Desempilha 2 valores da pilha, multiplica-os e empilha o resultado.
+ * @param void
+ * @return void
+ */
 void fmul(){
 	float fVal1,fVal2;
 

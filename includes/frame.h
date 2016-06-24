@@ -27,7 +27,7 @@ typedef struct pilha_op
  * cada metodo ao ser executado cria um frame proprio
  */
 typedef struct frame{
-	uint32_t* fields; //Array de variaveis locais
+	int32_t* fields; //Array de variaveis locais
 	cp_info* constant_pool;
 	classFile* classe;
 	uint16_t max_stack;

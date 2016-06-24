@@ -495,7 +495,6 @@ void fconst_0(){
 	//para empilhar na forma correta. Ao desempilhar realiza
 	//Memcpy de volta para um float.
 	memcpy(valPilha, &valF, sizeof(int32_t));
-	printf("Valor Empilhado: %d\n",*valPilha);
 
 	//Empilha float na forma de int32 para se adequar ao tipo da pilha.
 	push(*valPilha);
@@ -523,7 +522,6 @@ void fconst_1(){
 	//para empilhar na forma correta. Ao desempilhar realiza
 	//Memcpy de volta para um float.
 	memcpy(valPilha, &valF, sizeof(int32_t));
-	printf("Valor Empilhado: %d\n",*valPilha);
 
 	//Empilha float na forma de int32 para se adequar ao tipo da pilha.
 	push(*valPilha);
@@ -551,7 +549,6 @@ void fconst_2(){
 	//para empilhar na forma correta. Ao desempilhar realiza
 	//Memcpy de volta para um float.
 	memcpy(valPilha, &valF, sizeof(int32_t));
-	printf("Valor Empilhado: %d\n",*valPilha);
 
 	//Empilha float na forma de int32 para se adequar ao tipo da pilha.
 	push(*valPilha);
@@ -618,7 +615,7 @@ void dconst_1(){
  */
 void bipush(){
 	int8_t argumento = (int8_t) frameCorrente->code[(++frameCorrente->pc)];
-	printf("argumento empilhado: %d\n",argumento);
+
 	push((int32_t)argumento);
 	
 	atualizaPc();
@@ -680,7 +677,6 @@ void ldc(){
         uint32_t indice_utf;
         indice_utf = obtem_utf_eq(frameCorrente->constant_pool, indice-1); 
         push(indice_utf);
-        printf("Valor %d empilhado\n", frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
     }
 
     // se o indice para a constant pool for uma referencia a uma classe 
@@ -738,7 +734,6 @@ void ldc_w(){
         uint32_t indice_utf;
         indice_utf = obtem_utf_eq(frameCorrente->constant_pool, indice-1); 
         push(indice_utf);
-        printf("Valor %d empilhado\n", frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
     }
 
     // se o indice para a constant pool for uma referencia a uma classe 
@@ -781,8 +776,6 @@ void ldc2_w(){
 	if(tag == 6){
 		uint32_t alta = frameCorrente->constant_pool[indice-1].info.Double.high_bytes;
 		uint32_t baixa = frameCorrente->constant_pool[indice-1].info.Double.low_bytes;
-		printf("Parte alta empilhada: %d\n",alta);
-		printf("Parte baixa empilhada: %d\n",baixa);
 		push(alta);
 		push(baixa);
 	}
@@ -804,7 +797,6 @@ void iload(){
 
 	int32_t argumento = (int32_t) frameCorrente->code[frameCorrente->pc + 1];
 	int32_t aux = frameCorrente->fields[argumento];
-	printf("argumento empilhado: %d\n",argumento);
 	push(aux);
 
 	atualizaPc();
@@ -1745,8 +1737,6 @@ void dup(){
  * @return void
  */
 void dup_x1(){
-
-	printf("Entrei no dup\n");
 	int32_t aux1, aux2;
 
 	//Desempilha
@@ -1756,9 +1746,9 @@ void dup_x1(){
 
 	//Duplica
 	push(aux1);
-	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
+	
 	push(aux2);
-	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
+	
 	push(aux1);
 
 	atualizaPc();
@@ -2285,7 +2275,7 @@ void dmul(){
 }
 
 /**
- * Desempilha 2 valores da pilha, divide-os e empilha o resultado.
+ * Desempilha 2 valores inteiros da pilha, divide-os e empilha o resultado.
  * @param void
  * @return void 
  */
@@ -2298,9 +2288,61 @@ void idiv(){
 	atualizaPc();
 }
 
+/**
+ * Desempilha 2 valores long da pilha, divide-os e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void ins_ldiv(){
+	int32_t baixa,alta;
 
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal1 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal1 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal1 = lVal1 + baixa;
+
+	//multiplica os dois valores
+	int64_t resultado = lVal1 / lVal;
+	//Empilha o resultado
+
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = resultado >> 32;
+	baixa = resultado & 0xffffffff;
+
+	//finalmente empilha.
+	push(alta);
+	push(baixa);
+
+	atualizaPc();
 }
+
+/**
+ * Desempilha 2 valores float da pilha, divide-os e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void fdiv(){
 	float fVal1,fVal2;
 
@@ -2402,8 +2444,53 @@ void irem(){
 	atualizaPc();
 }
 
+/**
+ * Desempilha 2 valores long da pilha, obtem o resto da divisao e empilha o resultado.
+ * @param void
+ * @return void 
+ */
 void lrem(){
+	int32_t baixa,alta;
 
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal1 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal1 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal1 = lVal1 + baixa;
+
+	//multiplica os dois valores
+	int64_t resultado = lVal1 % lVal;
+
+	//Empilha o resultado
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = resultado >> 32;
+	baixa = resultado & 0xffffffff;
+
+	//finalmente empilha.
+	push(alta);
+	push(baixa);
+
+	atualizaPc();
 }
 
 /**
@@ -2422,7 +2509,7 @@ void frem(){
 	memcpy(&fVal1, &aux1, sizeof(int32_t));
 	memcpy(&fVal2, &aux2, sizeof(int32_t));
 
-	//multiplica os dois valores em float
+	//Utiliza função da math.h para obter o modulo de floats os dois valores em float
 	float resultado = fmodf(fVal1,fVal2);
 
 	//copia para um int32_t
@@ -2546,8 +2633,6 @@ void lneg(){
 	baixa = lVal & 0xffffffff;
 
 	//finalmente empilha.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
@@ -2618,8 +2703,6 @@ void dneg(){
 	baixa = dVal & 0xffffffff;
 
 	//finalmente empilha.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
@@ -2651,9 +2734,6 @@ void lushr(){
  * @return void
  */
 void iand(){
-
-	printf("Entrei no iand\n");
-
 	int32_t pop1 = pop_op();
 
 	int32_t pop2 = pop_op();
@@ -2664,7 +2744,6 @@ void iand(){
 
 	//atualiza pc
 	frameCorrente->pc++;
-
 }
 
 /**
@@ -2673,7 +2752,6 @@ void iand(){
  * @return void
  */
 void land(){
-
 	int32_t baixa,alta;
 
 	baixa = pop_op();
@@ -2712,18 +2790,10 @@ void land(){
 	baixa = resultado & 0xffffffff;
 
 	//finalmente empilha.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
-	//atualiza pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -2732,9 +2802,6 @@ void land(){
  * @return void
  */
 void ior(){
-
-	printf("Entrei no ior\n");
-
 	int32_t pop1 = pop_op();
 
 	int32_t pop2 = pop_op();
@@ -2754,7 +2821,6 @@ void ior(){
  * @return void
  */
 void lor(){
-
 	int32_t baixa,alta;
 
 	baixa = pop_op();
@@ -2792,8 +2858,6 @@ void lor(){
 	baixa = resultado & 0xffffffff;
 
 	//finalmente empilha.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
@@ -2801,10 +2865,7 @@ void lor(){
 	inicializa_decodificador(dec);
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
-
+	atualizaPc();
 }
 
 /**
@@ -2813,9 +2874,6 @@ void lor(){
  * @return void
  */
 void ixor(){
-
-	printf("Entrei no ixor\n");
-
 	int32_t pop1 = pop_op();
 
 	int32_t pop2 = pop_op();
@@ -2873,8 +2931,6 @@ void lxor(){
 	baixa = resultado & 0xffffffff;
 
 	//finalmente empilha.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
@@ -2882,9 +2938,7 @@ void lxor(){
 	inicializa_decodificador(dec);
 	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 void iinc(){
 
@@ -2900,20 +2954,18 @@ void i2l(){
  * @return void 
  */
 void i2f(){
-	printf("Entrei no i2f\n");
-	
 	//Obtem valor da pilha
 	int32_t val = (int32_t) pop_op();
-	printf("Val inteiro: %d\n",val);
+	
 
 	//Realiza cast para float
 	float valF = (float) val;
-	printf("Val Float: %f\n",valF);
+	
 
 	//Utiliza um auxiliar para armazenar o valor float e empilha-lo.
 	int32_t valPilha;
 	memcpy(&valPilha, &valF, sizeof(int32_t));
-	printf("Val empilhado %d\n",valPilha);
+	
 	push(valPilha);
 
 	atualizaPc();
@@ -2925,13 +2977,11 @@ void i2f(){
  * @return void 
  */
 void i2d(){
-	printf("Entrei no i2d\n");
 	//Desempilha valor da pilha
 	int32_t retPilha = pop_op();
 
 	//Cast para double
 	double dVal = (double) retPilha;
-	printf("Valor int já em double desempilhado: %f\n",dVal);
 
 	int64_t pilhaVal;
 	//Copia bytes em doubleNum para pilhaVal que é um int64
@@ -2948,8 +2998,6 @@ void i2d(){
 	baixa = pilhaVal & 0xffffffff;
 
 	//Empilha parte alta e baixa.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
@@ -2977,13 +3025,11 @@ void f2l(){
  * @return void 
  */
 void f2d(){
-	printf("Entrei no f2d\n");
 	//Desempilha valor da pilha
 	int32_t retPilha = pop_op();
 	float fVal;
 	//Copia os bytes do retPilha para uma var float -> Nao perder precisao
 	memcpy(&fVal, &retPilha, sizeof(int32_t));
-	printf("Valor int já em float desempilhado: %f\n",fVal);
 
 	//Cast para double
 	double dVal = (double) fVal;
@@ -3003,8 +3049,6 @@ void f2d(){
 	baixa = pilhaVal & 0xffffffff;
 
 	//Empilha parte alta e baixa.
-	printf("Parte alta empilhada: %d\n",alta);
-	printf("Parte baixa empilhada: %d\n",baixa);
 	push(alta);
 	push(baixa);
 
@@ -3024,7 +3068,6 @@ void d2l(){
  * @return void 
  */
 void d2f(){
-	printf("Entrei no d2f\n");
 	int32_t alta,baixa;
 	baixa = pop_op();
 	alta = pop_op();
@@ -3045,12 +3088,11 @@ void d2f(){
 
 	//Realiza cast
 	float fVal = (float) v1;
-	printf("Valor float: %f\n",fVal);
 
 	//Copia valor castado para um int32_T para ser empilhado.
 	int32_t pilhaVal;
 	memcpy(&pilhaVal,&fVal,sizeof(float));
-	printf("Valor Empilhado: %d\n",pilhaVal);
+	
 	push(pilhaVal);
 
 	atualizaPc();
@@ -3094,18 +3136,13 @@ void fcmpl(){
 	memcpy(&val1,&retPilha,sizeof(float));
 
 	//Compara os dois floats e seta o resultado.
-	printf("val1: %f\n",val1);
-	printf("val2: %f\n",val2);
 	if(val1 == val2){
-		printf("val1 == val2 empilhando 0\n");
 		push((int32_t)0);
 	}
 	if(val1 > val2){
-		printf("val1 > val2 empilhando 1\n");
 		push((int32_t)1);
 	}
 	if(val1 < val2){
-		printf("val1 < val2 empilhando -1\n");
 		push((int32_t)-1);
 	}
 
@@ -3137,19 +3174,15 @@ void iflt(){
 	uint8_t offset;
 	//Pega offset para salto.
 	offset = frameCorrente->code[frameCorrente->pc + 2];
-	printf("Offset: %d\n",offset);
 
 	//Pega valor a ser comparado na pilha.
 	int32_t retPilha = pop_op();
-	printf("Val: %d\n",retPilha);
 
 	//Se val menor que zero atualiza pc com offset
 	if(retPilha < 0){
 		frameCorrente->pc += offset;
-		printf("Val < 0 novopc: %d\n",frameCorrente->pc);
 	}else{
 		frameCorrente->pc += 3;
-		printf("Val > 0 novopc: %d\n",frameCorrente->pc);
 	}
 }
 
@@ -3409,8 +3442,6 @@ void ireturn(){
 	flagRet = 1;
 
 	atualizaPc();
-	printf("retornando! método acabou!\n");
-
 }
 
 /**
@@ -3430,8 +3461,6 @@ void lreturn(){
 	retBaixa = baixa;
 
 	atualizaPc();
-	printf("retornando! método acabou!\n");
-
 }
 
 /**
@@ -3444,8 +3473,6 @@ void freturn(){
 	flagRet = 1;
 
 	atualizaPc();
-	printf("retornando! método acabou!\n");
-
 }
 
 /**
@@ -3465,8 +3492,6 @@ void dreturn(){
 	retBaixa = baixa;
 
 	atualizaPc();
-	printf("retornando! método acabou!\n");
-
 }
 void areturn(){
 
@@ -3478,19 +3503,14 @@ void areturn(){
  * @return void 
  */
 void ins_return(){
-	printf("entrei no ins_return!!\n");
-
 	//setar variaveis globais de retorno para 0.
 	retorno = 0;
 	flagRet = 0;
 
 	atualizaPc();
-	printf("retornando! método acabou!\n");
 }
 
 void getstatic(){
-	printf("Entrei no getstatic!!\n");
-
 	//Executa a instrução.
     // pega indice da constant pool 
     
@@ -3518,28 +3538,23 @@ void putstatic(){
  * @return void 
  */
 void getfield(){
-	printf("Entrei no getfield\n");
-
 	//Pega indice no argumento da instrução.
 	uint32_t indice = frameCorrente->code[frameCorrente->pc + 2];
-	printf("indice: %d\n",indice);
 
 	//Acessa o indice da classe que possui o field.
 	int32_t indiceClasse = frameCorrente->constant_pool[indice-1].info.Fieldref.class_index;
-	printf("indiceClasse: %d\n",indiceClasse);
 
 	//Obtem o nome da classe a partir do indice obtido anteriormente
 	char* nomeClasse = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[indiceClasse-1].info.Class.name_index);
-	printf("nomeClasse: %s\n",nomeClasse);
+
 	//Obtem agora o indice do nome e do tipo
 	uint16_t nomeTipoIndice = frameCorrente->constant_pool[indice-1].info.Fieldref.name_and_type_index;
-	printf("nomeTipoIndice: %d\n",nomeTipoIndice);
+
 	//Obtem finalmente o nome e o tipo do field
 	char* nome = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[nomeTipoIndice-1].info.NameAndType.name_index);
 	char* tipo = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[nomeTipoIndice-1].info.NameAndType.descriptor_index);
 	tipoGlobal = tipo;
- 	printf("nome: %s\n",nome);
- 	printf("tipo: %s\n",tipo);
+
 
  	if((strcmp(tipo, "Ljava/util/Scanner;") == 0)){
  		atualizaPc();
@@ -3550,17 +3565,17 @@ void getfield(){
 
  	//Obtem indice do field utilizando as informações anteriores.
  	int32_t indiceField = buscaCampo(nomeClasse,nome,tipo);
- 	printf("indiceField: %d\n",indiceField);
+ 
 
  	//obtem indice do nome do field (variavel)
  	uint32_t indiceNome = frameCorrente->classe->fields[indiceField].name_index;
- 	printf("indiceNome: %d\n",indiceNome);
+
 
  	int32_t i;
 	for(i = 0;obj->indiceCampos[i] != indiceNome; i++);
  	//Pega o field do objeto e empilha.
  	uint32_t val = obj->campos[i];
- 	printf("val empilhado: %d\n",val);
+ 
  	push(val);
 
 	atualizaPc();
@@ -3572,39 +3587,31 @@ void getfield(){
  * @return void 
  */
 void putfield(){
-	printf("Entrei no putfield\n");
-
 	//Pega indice no argumento da instrução.
 	uint32_t indice = frameCorrente->code[frameCorrente->pc + 2];
-	printf("indice: %d\n",indice);
 
 	//Acessa o indice da classe que possui o field.
 	int32_t indiceClasse = frameCorrente->constant_pool[indice-1].info.Fieldref.class_index;
-	printf("indiceClasse: %d\n",indiceClasse);
 
 	//Obtem o nome da classe a partir do indice obtido anteriormente
 	char* nomeClasse = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[indiceClasse-1].info.Class.name_index);
-	printf("nomeClasse: %s\n",nomeClasse);
+
 	//Obtem agora o indice do nome e do tipo
 	uint16_t nomeTipoIndice = frameCorrente->constant_pool[indice-1].info.Fieldref.name_and_type_index;
-	printf("nomeTipoIndice: %d\n",nomeTipoIndice);
+
 	//Obtem finalmente o nome e o tipo do field
 	char* nome = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[nomeTipoIndice-1].info.NameAndType.name_index);
 	char* tipo = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[nomeTipoIndice-1].info.NameAndType.descriptor_index);
- 	printf("nome: %s\n",nome);
- 	printf("tipo: %s\n",tipo);
 
  	//Obtem indice do field utilizando as informações anteriores.
  	int32_t indiceField = buscaCampo(nomeClasse,nome,tipo);
- 	printf("indiceField: %d\n",indiceField);
 
  	//obtem indice do nome do field (variavel)
  	uint32_t indiceNome = frameCorrente->classe->fields[indiceField].name_index;
- 	printf("indiceNome: %d\n",indiceNome);
 
  	//obtem valor e objeto da pilha e seta o valor no field do objeto.
  	int32_t val = pop_op();
- 	printf("valor desempilhado: %d\n",val);
+
  	objeto* obj = (objeto*)pop_op();
 
  	int i;
@@ -3621,7 +3628,6 @@ void putfield(){
  * @return void 
  */
 void invokevirtual(){
-	printf("Entrei no invokevirtual!!\n");
 
     char* nomeClasse;
     char* nomeMetodo;
@@ -3682,7 +3688,6 @@ void invokevirtual(){
 		int32_t aux;
 		scanf("%d",&aux);
 		push(aux);
-		printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 	}
 
 	atualizaPc();
@@ -3694,21 +3699,17 @@ void invokevirtual(){
  * @return void 
  */
 void invokespecial(){
-	printf("Entrei no invokespecial\n");
 	method_info* metodoInvocado;
 	//Executar instrução.
 
 	//Pega indice no argumento da instrução.
 	uint32_t indice = frameCorrente->code[frameCorrente->pc + 2];
-	printf("indice: %d\n",indice);
 
 	//Pega o indice do nome da classe na CP pelo indice anterior.
 	uint32_t indiceClasse = (frameCorrente->constant_pool[indice-1]).info.Methodref.class_index;
-	printf("indiceClasse: %d\n",indiceClasse);
 
 	//Pega nome da classe.
 	char* nomeClasse = retornaNome(frameCorrente->classe,(frameCorrente->constant_pool[indiceClasse-1]).info.Class.name_index);
-	printf("nomeClasse: %s\n",nomeClasse);
 
     if(strcmp("java/lang/Object",nomeClasse) == 0){
 
@@ -3720,15 +3721,11 @@ void invokespecial(){
 
 	if(strcmp("java/lang/StringBuffer",nomeClasse) == 0){
 
-		printf("Método nativo java - java/lang/object\n");
-
 		atualizaPc();
 		return;
 	}
 
 	if(strcmp("java/util/Scanner",nomeClasse) == 0){
-
-		printf("Método nativo java - java/util/Scanner\n");
 
 		atualizaPc();
 		return;
@@ -3736,25 +3733,18 @@ void invokespecial(){
 
 	//Pega posição da classe no array de classes
 	int32_t indexClasse = carregaMemClasse(nomeClasse);
-	printf("posClasse: %d\n",indexClasse);
 
 	//Pega referencia ao classFile pelo indice anterior.
 	classFile* classe = buscaClasseIndice(indexClasse);
 
 	//Pega o nome e tipo dó método pelo indice da instrução.
 	uint16_t nomeTipoIndice = frameCorrente->constant_pool[indice-1].info.Methodref.name_and_type_index;
-	printf("nomeTipoIndice: %d\n",nomeTipoIndice);
 
 	//Busca método a ser invocado.
 	metodoInvocado = buscaMetodo(frameCorrente->classe,classe,nomeTipoIndice);
 
-	if(metodoInvocado != NULL){
-		printf("método invocado: %s\n",classe->constant_pool[metodoInvocado->name_index - 1].info.Utf8.bytes);
-	}
-
 	//Pega parametros da pilha pelo numero de fields
 	int32_t numeroParametros = retornaNumeroParametros(classe,metodoInvocado);
-	printf("numeroParametros: %d\n",numeroParametros);
 
 	//Aloca espaço para os parametros do método
 	uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
@@ -3763,7 +3753,6 @@ void invokespecial(){
 	for(int32_t i = 0; i <= numeroParametros; i++)
 		fields[i] = pop_op();
 
-    dumpStack();
 	//inicia método
 	empilhaMetodo(metodoInvocado, classe);
 
@@ -3775,7 +3764,6 @@ void invokespecial(){
 	//Executa método.
 	executaFrameCorrente();
 
-    dumpStack();
 	atualizaPc();
 }
 
@@ -3785,7 +3773,6 @@ void invokespecial(){
  * @return void 
  */
 void invokestatic(){
-	printf("Entrei no invokestatic\n");
 
     char* nomeMetodo;
     char* descricaoMetodo;
@@ -3793,15 +3780,12 @@ void invokestatic(){
 
 	//Pega indice no argumento da instrução.
 	uint32_t indice = frameCorrente->code[frameCorrente->pc + 2];
-	printf("indice: %d\n",indice);
 
 	//Pega o indice do nome da classe na CP pelo indice anterior.
 	uint32_t indiceClasse = (frameCorrente->constant_pool[indice-1]).info.Methodref.class_index;
-	printf("indiceClasse: %d\n",indiceClasse);
 
 	//Pega nome da classe.
 	char* nomeClasse = retornaNome(frameCorrente->classe,(frameCorrente->constant_pool[indiceClasse-1]).info.Class.name_index);
-	printf("nomeClasse: %s\n",nomeClasse);
 
 	nomeTipoAux = frameCorrente->constant_pool[indice - 1].info.Methodref.name_and_type_index;
 
@@ -3816,9 +3800,7 @@ void invokestatic(){
 
 	if((strcmp(nomeClasse, "java/lang/System") == 0) && (strcmp(nomeMetodo,"exit") == 0)){
 		if(strstr(descricaoMetodo, "(I)V") != NULL) {
-			printf("Saindo do programa!\n");
 			int32_t retPilha = pop_op();
-			printf("cod retorno: %d\n",retPilha);
 			exit(retPilha);
 		}
 	}
@@ -3850,7 +3832,6 @@ void invokestatic(){
 
 			//Tira raiz
 			valorDouble1 = sqrt (valorDouble1);
-			printf("Raiz do valor: %f\n",valorDouble1);
 
 			//Volta para 64 bits para empilhar
 			int64_t aux;
@@ -3877,7 +3858,6 @@ void invokeinterface(){
  * @return void 
  */
 void ins_new(){
-	printf("Entrei no new!\n");
 	uint32_t indice;
 	int32_t aux;
 	char* nomeClasse;
@@ -3892,7 +3872,6 @@ void ins_new(){
 	nomeClasse = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[indice-1].info.Class.name_index);
 
 	if(strcmp("java/util/Scanner",nomeClasse) == 0){
-		printf("Método nativo java - java/util/Scanner\n");
 		naoEmpilhaFlag = 1;
 
 		atualizaPc();
@@ -3900,7 +3879,6 @@ void ins_new(){
 	}
 
 	if(strcmp("java/lang/StringBuffer",nomeClasse) == 0){
-		printf("Método nativo java - java/util/Scanner\n");
 		naoEmpilhaFlag = 1;
 
 		atualizaPc();
@@ -3921,9 +3899,7 @@ void ins_new(){
 
 	//empilha objeto na pilha de operandos (push)
 	push((int32_t) objeto);
-	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
-    dumpStack();
-
+	
 	atualizaPc();
 }
 

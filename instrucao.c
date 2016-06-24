@@ -2423,7 +2423,7 @@ void frem(){
 	memcpy(&fVal2, &aux2, sizeof(int32_t));
 
 	//multiplica os dois valores em float
-	float resultado = fVal1 % fVal2;
+	float resultado = fmodf(fVal1,fVal2);
 
 	//copia para um int32_t
 	int32_t retPilha;
@@ -2480,7 +2480,7 @@ void _drem(){
 	double v2;
 	memcpy(&v2, &dVal, sizeof(double));
 
-	double resultado = v2 % v1;
+	double resultado = fmod(v2,v1);
 	
 	//Necessario converter mais uma vez o double somado para int64 para 
 	//empilhar corretamente.

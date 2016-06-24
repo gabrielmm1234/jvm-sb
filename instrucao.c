@@ -1657,12 +1657,7 @@ void fstore_0(){
     frameCorrente->fields[indice] = valor; 
 
     // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1685,13 +1680,7 @@ void fstore_1(){
     frameCorrente->fields[indice] = valor; 
 
     // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
-
+    atualizaPc();
 }
 
 /* 
@@ -1713,12 +1702,7 @@ void fstore_2(){
     frameCorrente->fields[indice] = valor; 
 
     // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1741,12 +1725,7 @@ void fstore_3(){
     frameCorrente->fields[indice] = valor; 
 
     // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1774,13 +1753,7 @@ void dstore_0(){
     frameCorrente->fields[indice + 1] = parte_baixa;
 
     // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
-
+    atualizaPc();
 }
 
 /* 
@@ -1807,12 +1780,7 @@ void dstore_1(){
     frameCorrente->fields[indice + 1] = parte_baixa;
 
     // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1840,12 +1808,7 @@ void dstore_2(){
     frameCorrente->fields[indice + 1] = parte_baixa;
 
     // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1873,15 +1836,30 @@ void dstore_3(){
     frameCorrente->fields[indice + 1] = parte_baixa;
 
     // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
+
+
+/* 
+ * pega referencia e coloca no array de variaveis locais, na posicao 0
+ * @param void
+ * @return void
+ */
 void astore_0(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 0;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    atualizaPc();
 
 }
 
@@ -1904,20 +1882,56 @@ void astore_1(){
     frameCorrente->fields[indice] = valor; 
 
     // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
+
+/* 
+ * pega referencia e coloca no array de variaveis locais, na posicao dada por 2
+ * @param void
+ * @return void
+ */
 void astore_2(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 2;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+    atualizaPc();
 
 }
+
+/* 
+ * pega referencia e coloca no array de variaveis locais, na posicao dada por 3
+ * @param void
+ * @return void
+ */
 void astore_3(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 3;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+    atualizaPc();
 
 }
+
 void iastore(){
 
 }

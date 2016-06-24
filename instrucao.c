@@ -1628,42 +1628,302 @@ void lstore_3(){
 
     atualizaPc();
 }
+
+
+/* 
+ * pega float e coloca no array de variaveis locais na posicao 0
+ * @param void
+ * @return void
+ */
 void fstore_0(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 0;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+    atualizaPc();
 
 }
+
+/* 
+ * pega float e coloca no array de variaveis locais na posicao 1
+ * @param void
+ * @return void
+ */
 void fstore_1(){
+    int32_t indice; 
+    int32_t valor; 
 
+    // pega indice 
+    indice = 1;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+    atualizaPc();
 }
+
+/* 
+ * pega float e coloca no array de variaveis locais na posicao 2
+ * @param void
+ * @return void
+ */
 void fstore_2(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 2;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+    atualizaPc();
 
 }
+
+/* 
+ * pega float e coloca no array de variaveis locais na posicao 3
+ * @param void
+ * @return void
+ */
 void fstore_3(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 3;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+    atualizaPc();
 
 }
+
+/* 
+ * pega double e coloca no array de variaveis locais, na posicao iniciada em 0 
+ * @param void
+ * @return void
+ */
 void dstore_0(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
 
+    // pega indice 
+    indice = 0;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+    atualizaPc();
 }
+
+/* 
+ * pega double e coloca no array de variaveis locais, na posicao iniciada em 1 
+ * @param void
+ * @return void
+ */
 void dstore_1(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 1;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+    atualizaPc();
 
 }
+
+/* 
+ * pega double e coloca no array de variaveis locais, na posicao iniciada em 2 
+ * @param void
+ * @return void
+ */
 void dstore_2(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 2;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+    atualizaPc();
 
 }
+
+/* 
+ * pega double e coloca no array de variaveis locais, na posicao iniciada em 3 
+ * @param void
+ * @return void
+ */
 void dstore_3(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 2;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+    atualizaPc();
 
 }
+
+
+/* 
+ * pega referencia e coloca no array de variaveis locais, na posicao 0
+ * @param void
+ * @return void
+ */
 void astore_0(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 0;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    atualizaPc();
 
 }
+
+/* 
+ * pega referencia e coloca no array de variaveis locais, na posicao dada por 1
+ * @param void
+ * @return void
+ */
 void astore_1(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 1;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+    atualizaPc();
 
 }
+
+/* 
+ * pega referencia e coloca no array de variaveis locais, na posicao dada por 2
+ * @param void
+ * @return void
+ */
 void astore_2(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 2;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+    atualizaPc();
 
 }
+
+/* 
+ * pega referencia e coloca no array de variaveis locais, na posicao dada por 3
+ * @param void
+ * @return void
+ */
 void astore_3(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 3;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+    atualizaPc();
 
 }
+
 void iastore(){
 
 }
@@ -3677,6 +3937,10 @@ void invokevirtual(){
 						float valDesemp;
 						memcpy(&valDesemp,&resultado, sizeof(float));
 						printf("%f\n",valDesemp);
+					}
+
+					if(strcmp(tipoGlobal, "I") == 0){
+						printf("%d\n", resultado);
 					}
 
 				flagAppend = 0;

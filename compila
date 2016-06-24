@@ -23,11 +23,17 @@
 # print3
 #javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar programas_java/Print3.java
 
-# para testes
-#./jvm.exe < testes/hello.txt
-#./jvm.exe < testes/delta.txt
-#./jvm.exe < testes/fields.txt
-#./jvm.exe < testes/tableswitch.txt
-#./jvm.exe < testes/lookupswitch.txt
-#./jvm.exe < testes/wide1.txt
-#./jvm.exe < testes/wide2.txt
+# Switch
+#javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar Switch.java
+
+# lookupswitch 
+#javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar Switch.java
+
+# lookupswitch 2
+#javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar LookupSwitch2.java
+
+# Array
+#javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar Array.java
+
+# Object2
+javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar Object2.java

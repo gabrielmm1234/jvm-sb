@@ -1838,7 +1838,7 @@ void dup(){
 }
 
 /**
- * Instrução que duplica valor da pilha e adiciona de volta de forma que se repita de forma nao ordenada.
+ * Instrução que duplica valor da pilha e adiciona dois valores de volta.
  * @param void
  * @return void
  */
@@ -1861,7 +1861,29 @@ void dup_x1(){
 
 	atualizaPc();
 }
+
 void dup_x2(){
+	//TODO : fazer para a forma 2
+
+	//forma 1
+
+	printf("Entrei no dup\n");
+	int32_t aux1, aux2, aux3;
+
+	//Desempilha
+	aux3 = pop_op();
+
+	aux2 = pop_op();
+
+	aux1 = pop_op();
+
+	//Duplica
+	push(aux1);
+	push(aux3);
+	push(aux2);
+	push(aux1);
+
+	atualizaPc();
 
 }
 void dup2(){

@@ -2153,6 +2153,12 @@ void isub(){
 		frameCorrente->pc++;
 
 }
+
+/**
+ * Funcao desempilha dois valores long, subtrai e empilha resultado.
+ * @param void
+ * @return void
+ */
 void lsub(){
 	int32_t baixa,alta;
 
@@ -2205,6 +2211,12 @@ void lsub(){
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
 }
+
+/**
+ * Funcao desempilha dois valores float, subtrai e empilha resultado.
+ * @param void
+ * @return void
+ */
 void fsub(){
 	float fVal1,fVal2;
 
@@ -2728,6 +2740,12 @@ void iushr(){
 void lushr(){
 
 }
+
+/**
+ * Funcao desempilha dois valores inteiros, opera com o and e empilha resultado.
+ * @param void
+ * @return void
+ */
 void iand(){
 
 	printf("Entrei no iand\n");
@@ -2744,6 +2762,12 @@ void iand(){
 	frameCorrente->pc++;
 
 }
+
+/**
+ * Funcao desempilha dois valores long, opera com o and e empilha resultado.
+ * @param void
+ * @return void
+ */
 void land(){
 
 	int32_t baixa,alta;
@@ -2797,6 +2821,12 @@ void land(){
 	for(int8_t i = 0; i < num_bytes + 1; i++)
 		frameCorrente->pc++;
 }
+
+/**
+ * Funcao desempilha dois valores inteiros, opera com o or e empilha resultado.
+ * @param void
+ * @return void
+ */
 void ior(){
 
 	printf("Entrei no ior\n");
@@ -2813,6 +2843,12 @@ void ior(){
 	frameCorrente->pc++;
 
 }
+
+/**
+ * Funcao desempilha dois valores long, opera com o or e empilha resultado.
+ * @param void
+ * @return void
+ */
 void lor(){
 
 	int32_t baixa,alta;
@@ -2866,6 +2902,12 @@ void lor(){
 		frameCorrente->pc++;
 
 }
+
+/**
+ * Funcao desempilha dois valores inteiros, opera com o xor e empilha resultado.
+ * @param void
+ * @return void
+ */
 void ixor(){
 
 	printf("Entrei no ixor\n");
@@ -2882,6 +2924,12 @@ void ixor(){
 	frameCorrente->pc++;
 
 }
+
+/**
+ * Funcao desempilha dois valores long, opera com o xor e empilha resultado.
+ * @param void
+ * @return void
+ */
 void lxor(){
 	int32_t baixa,alta;
 

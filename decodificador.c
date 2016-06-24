@@ -16,7 +16,7 @@
  *e apresentar os mnemônicos de cada instrução no exibidor.
  */
 
-#include "decodificador.h"
+#include "./includes/decodificador.h"
 
 /**
  * Funcao que inicializa um vetor de instrucoes que fornecem o mnemonico e quantidade de argumentos de cada instrucao.

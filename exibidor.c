@@ -17,7 +17,7 @@
  * ./jvm .class 1 > log.txt
  */
 
-#include "exibidor.h"
+#include "./includes/exibidor.h"
 
 /**
  * Imprime no prompt toda a estrutura de um classFile carregado no array de classes.

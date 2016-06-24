@@ -1,15 +1,34 @@
-/*
-* Software Basico - 1/2016
-* Arquivo que contém Funções de leitura do arquivo .class e montagem das estruturas.
-* Para salvar a saida em um arquivo execute da seguinte forma:
-* ./jvm .class 1 > log.txt
-*/
+/**
+ *@file
+ *@section DESCRIPTION
+ *Universidade de Brasilia
+ *
+ *Gabriel Mesquita de Araujo 13/0009121\n
+ *Gabriel Ferreira Silva 14/0140131\n
+ *Renato 13/0009121\n
+ *Leandro 13/0009121\n
+ *Carlos 13/0009121\n\n
+ *
+ * Software Basico - 1/2016\n
+ * Professor: Marcelo Ladeira\n\n
+ *
+ * Arquivo que contém Funções de leitura do arquivo .class e montagem das estruturas.
+ * Para salvar a saida em um arquivo execute da seguinte forma:
+ * ./jvm.exe .class 1 > log.txt* 
+ */
 
-#include "leitor.h"
-#include "exibidor.h"
 
-//Função que recebe o nome do arquivo  e retorna uma estrutura preenchida
-//Com as informações necessárias. Seguindo o JClassLib.
+
+#include "./includes/leitor.h"
+#include "./includes/exibidor.h"
+
+
+/**
+ * Função que recebe o nome do arquivo .class a ser lido. Seguindo o jclasslib.
+ * 
+ * @param nome do arquivo ".class" a ser lido.
+ * @return estrutura que representa um classFile.
+ */
 classFile* leitorClasse(char * nomeClass){
 
     FILE* file;
@@ -40,9 +59,16 @@ classFile* leitorClasse(char * nomeClass){
     //liberando ponteiros.
     fclose(file);
 
+    //Retorna referencia ao classFile preenchido.
     return cf;
 }
 
+/**
+ * Função que le as informações gerais de um arquivo .class
+ * 
+ * @param referência ao classfile.
+ * @param referência ao arquivo sendo lido.
+ */
 void generalInfo(classFile* cf, FILE* file){
 	cf->magic = le4Bytes(file);
 	if(cf->magic != 0xCAFEBABE){
@@ -54,6 +80,12 @@ void generalInfo(classFile* cf, FILE* file){
 	cf->constant_pool_count = le2Bytes(file);
 }
 
+/**
+ * Função que le a constant pool de um arquivo .class
+ * 
+ * @param referência ao classfile.
+ * @param referência ao arquivo sendo lido.
+ */
 void constantPool(classFile* cf, FILE* file){
 	cf->constant_pool = (cp_info*) malloc((cf->constant_pool_count-1)*sizeof(cp_info));
 	cp_info* cp;
@@ -109,6 +141,13 @@ void constantPool(classFile* cf, FILE* file){
 	}
 }
 
+/**
+ * Função que le as interfaces de um arquivo .class
+ * 
+ * @param referência ao classfile.
+ * @param referência ao arquivo sendo lido.
+ * @param Quantidade de interfaces a serem lidas.
+ */
 void interfaceInfo(classFile* cf, FILE* file, uint16_t interfaces_count){
 	if(interfaces_count == 0)
 		return;
@@ -125,6 +164,13 @@ void interfaceInfo(classFile* cf, FILE* file, uint16_t interfaces_count){
 	}
 }
 
+/**
+ * Função que le os fields de um arquivo .class
+ * 
+ * @param referência ao classfile.
+ * @param referência ao arquivo sendo lido.
+ * @param Quantidade de fields a serem lidas.
+ */
 void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
 	if(fields_count == 0)
 		return;
@@ -160,7 +206,13 @@ void fieldInfo(classFile* cf, FILE* file, uint16_t fields_count){
 	}
 }
 
-//Função para ler estrutura e informações dos métodos.
+/**
+ * Função que le os methods de um arquivo .class
+ * 
+ * @param referência ao classfile.
+ * @param referência ao arquivo sendo lido.
+ * @param Quantidade de methods a serem lidas.
+ */
 void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
     uint16_t name_ind; 
     uint32_t att_len; 
@@ -511,6 +563,13 @@ void salva_instrucoes(code_attribute** cd_atrb, FILE* file)
     }
 }
 
+/**
+ * Função que le os attributes de um arquivo .class
+ * 
+ * @param referência ao classfile.
+ * @param referência ao arquivo sendo lido.
+ * @param Quantidade de attributes a serem lidas.
+ */
 void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){
 	if(attributes_count == 0)
 		return;
@@ -531,6 +590,12 @@ void attributeInfo(classFile* cf, FILE* file, uint16_t attributes_count){
 	}
 }
 
+/**
+ * Função que le a segunda parte de informações gerais de um arquivo .class
+ * 
+ * @param referência ao classfile.
+ * @param referência ao arquivo sendo lido.
+ */
 void secondGeneralInfo(classFile* cf, FILE* file){
 	cf->access_flags = le2Bytes(file);
 	cf->this_class = le2Bytes(file);
@@ -548,11 +613,21 @@ void secondGeneralInfo(classFile* cf, FILE* file){
 	attributeInfo(cf,file,cf->attributes_count);
 }
 
-// funcoes auxiliares para leitura.
+/**
+ * Função que le 1 byte de um arquivo.
+ * 
+ * @param referência ao arquivo a ser lido
+ */
 static inline uint8_t le1Byte(FILE* fp){
 	uint8_t retorno = getc(fp);
 	return retorno;
 }
+
+/**
+ * Função que le 2 bytes de um arquivo.
+ * 
+ * @param referência ao arquivo a ser lido
+ */
 
 static inline uint16_t le2Bytes(FILE* fp){
 	uint16_t retorno = getc(fp); 
@@ -560,6 +635,11 @@ static inline uint16_t le2Bytes(FILE* fp){
 	return retorno;
 }
 
+/**
+ * Função que le 4 bytes de um arquivo.
+ * 
+ * @param referência ao arquivo a ser lido
+ */
 static inline uint32_t le4Bytes(FILE* fp){
 	uint32_t retorno = getc(fp);
 	retorno = (retorno << 8) | (getc(fp));

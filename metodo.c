@@ -17,10 +17,10 @@
  * 
  */
 
-#include "frame.h"
-#include "metodo.h"
-#include "instrucao.h"
-#include "area_metodos.h"
+#include "./includes/frame.h"
+#include "./includes/metodo.h"
+#include "./includes/instrucao.h"
+#include "./includes/area_metodos.h"
 
 extern struct frame* frameCorrente;
 
@@ -33,19 +33,19 @@ uint32_t numObjetos = 0;
  * @return method_info* uma referencia ao metodo main
  */
 method_info* buscaMetodoMain(){
-	classFile * main;
+	classFile* main;
 	uint16_t nome_tam,desc_tam;
 	uint8_t* nome;
 	uint8_t* desc;
 
-	//Busca a classe que contém o método main. Foi a primeira classe a ser carregada.
-	main = buscaClasseIndice(0);
+	//Busca a classe que contém o método main. Foi a segunda classe a ser carregada.
+	main = buscaClasseIndice(1);
 
 	printf("Buscando método main para inicio da execução\n");
 
 	//Percorre o method_info em busca do method main.
 	for(int i = 0; i < main->methods_count; i++){
-		nome = main->constant_pool[(main->methods[i].name_index -1 )].info.Utf8.bytes;
+		nome = main->constant_pool[(main->methods[i].name_index -1)].info.Utf8.bytes;
 
 		desc = main->constant_pool[(main->methods[i].descriptor_index - 1)].info.Utf8.bytes;
 
@@ -69,7 +69,15 @@ method_info* buscaMetodoMain(){
  * @param classFile* uma referencia a estrutura da classe 
  * @return void
  */
-void iniciaMetodo(method_info* metodo, classFile* classe){
+void empilhaMetodo(method_info* metodo, classFile* classe){
+	/** 
+ 	*1 - Inicializa as instrucoes implementadas pela jvm.
+ 	*/
+	newInstrucoes();
+
+	/** 
+ 	*2 - Aloca o frame a ser executado.
+ 	*/
 	criaFrame(classe->constant_pool,classe,metodo->cd_atrb);
 }
 
@@ -82,11 +90,17 @@ void iniciaMetodo(method_info* metodo, classFile* classe){
 void executaFrameCorrente(){
 
 	//Loop que percorre o frame e executa instrução a instrução
-	//Enquanto pc for menor que o tamanho do code e o frame foi desalocado(terminado)
-	while((frameCorrente->pc) < frameCorrente->code_length && frameCorrente != NULL) {
+	//Enquanto houver instruções no attributo code.
+	for(;(frameCorrente->pc) < frameCorrente->code_length;){
+		//Frame corrente == NULL -> não tem mais frames na pilha.
+		if(frameCorrente == NULL)
+			break;
+
 		// printf("opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
-		executarInstrucoes(frameCorrente->code[frameCorrente->pc]);
+
+		instrucao[frameCorrente->code[frameCorrente->pc]]();
 	}
+
 	desalocaFrame();
 }
 
@@ -163,17 +177,17 @@ method_info* buscaMetodo(classFile* indiceClasse, classFile* searchClasse, uint1
 int32_t buscaCampo(char* className, char* name, char* desc){
 	//Obtem classe pelo nome para percorrer seus fields
 	classFile* classe = retornaClasseNome(className);
-	//Busca nome e descrição do método pelo indice fornecido
+	//Busca nome e descrição do campo pelo indice fornecido
 	uint8_t* searchName;
 	uint8_t* searchDesc;
 	for(int i = 0; i < classe->fields_count; i++) {
 
-		//Busca nome do metodo na searchClasse
+		//Busca nome do campo na searchClasse
 		searchName = classe->constant_pool[(classe->fields[i].name_index-1)].info.Utf8.bytes;
-		//Busca descrição do metodo na searchClasse	
+		//Busca descrição do campo na searchClasse	
 		searchDesc = classe->constant_pool[(classe->fields[i].descriptor_index-1)].info.Utf8.bytes;
 		
-		//Compara o nome e descrição. Se for igual é o método desejado e retorna.
+		//Compara o nome e descrição. Se for igual é o campo desejado e retorna.
 		if ((strcmp(name, searchName) == 0) && (strcmp(desc, searchDesc) == 0)) {
 			return i;
 		}
@@ -181,6 +195,12 @@ int32_t buscaCampo(char* className, char* name, char* desc){
 	}
 }
 
+/**
+ * Função que recebe um nome de classe e a partir desse nome retorna uma referencia
+ * da classe com esse nome.
+ * @param nome da classe buscada
+ * @return referência da classe buscada.
+ */
 classFile* retornaClasseNome(char* nomeClasse) {
 	for (int i = 0; i < area_met.num_classes; i++) {
 		if (strcmp(nomeClasse, retornaNomeClasse(area_met.array_classes[i])) == 0)
@@ -208,18 +228,23 @@ int32_t retornaNumeroParametros(classFile* classe, method_info* metodo) {
 	length = classe->constant_pool[(metodo->descriptor_index-1)].info.Utf8.length;
 
 	//Percorre o vetor de caracteres em busca dos caracteres especiais.
-	for(int i = 0; i < length && bytes[i] != ')'; i++) {
+	//Percorre até o ) que significa o fim do descriptor.
+	int i = 0; 
+	while(i < length) {
+		if(bytes[i] != ')')
+			break;
 		if(bytes[i] == 'L') {
 			while(bytes[i] != ';') {
 				i++;
 			}
 			numeroParametros++;
-		} else if((bytes[i] == 'B')||(bytes[i] == 'C')||(bytes[i] == 'F')|| (bytes[i] == 'I')||(bytes[i] == 'S')||(bytes[i] == 'Z') ) {
+		} else if((bytes[i] == 'Z')||(bytes[i] == 'S')||(bytes[i] == 'F')|| (bytes[i] == 'I')||(bytes[i] == 'C')||(bytes[i] == 'B')) {
 			numeroParametros++;
 		//long e Double precisam de dois espaços.
 		} else if((bytes[i] == 'D')||(bytes[i] == 'J')) {
 			numeroParametros+=2;
 		}
+		i++;
 	}
 	return numeroParametros;
 }

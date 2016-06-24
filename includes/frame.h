@@ -27,15 +27,15 @@ typedef struct pilha_op
  * cada metodo ao ser executado cria um frame proprio
  */
 typedef struct frame{
-	uint32_t* fields;
+	uint32_t* fields; //Array de variaveis locais
 	cp_info* constant_pool;
-	classFile* classe; //revisar conceito!
+	classFile* classe;
 	uint16_t max_stack;
 	uint16_t max_locals;
 	uint32_t code_length;
-	uint8_t* code;
-	uint32_t pc;
-    pilha_op* pilha_op; 
+	uint8_t* code; //Bytecode
+	uint32_t pc; //Program counter
+    pilha_op* pilha_op; //Pilha de operandos
 }frame;
 
 
@@ -43,7 +43,7 @@ typedef struct frame{
  * Struct para a pilha de frames de metodos 
  */ 
 struct stackFrame{
-	struct frame* refFrame;
+	frame* refFrame;
 	struct stackFrame* next;
 };
 
@@ -61,4 +61,11 @@ int8_t flagRet;
 void push(int32_t valor); 
 int32_t pop_op();
 void dumpStack();
+void dumpFields();
+void pushFrame(cp_info*, classFile*, code_attribute*,struct stackFrame*);
+void popFrame();
+
+//Refencia ao topo da pilha de frames. Essencial para Empilhar e desempilhar os frames.
+static struct stackFrame* topo = NULL;
+
 #endif

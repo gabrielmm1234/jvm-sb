@@ -12,16 +12,17 @@
  * Software Basico - 1/2016\n
  * Professor: Marcelo Ladeira\n\n
  *
- * Arquivo que contém as instrucoes implementadas pelo nosso program
+ * Arquivo que contém as instrucoes implementadas pelo nosso programa
  * Conforme sugerido, foi usado um vetor de ponteiro para funcoes
  * 
  */
 
-#include "instrucao.h"
-#include "frame.h"
-#include "carregador.h"
-#include "area_metodos.h"
-#include "metodo.h"
+#include "./includes/instrucao.h"
+#include "./includes/frame.h"
+#include "./includes/carregador.h"
+#include "./includes/area_metodos.h"
+#include "./includes/metodo.h"
+ 
 #include <stdio.h>
 #include <math.h> 
 #include <stdint.h>
@@ -44,14 +45,20 @@ int naoEmpilhaFlag = 0;
  */ 
 decodificador dec[NUM_INSTRUCAO];
 
-
 /**
- * Funcao para executar uma instrucao, com base no opcode passado\n
- * @param uint8_t correspondente ao opcode da instrucao 
- * @return void
+ * Função que atualiza o valor do program counter do frame corrente.
+ * @param void
+ * @return void 
  */
-void executarInstrucoes(uint8_t opcode){
-	instrucao[opcode]();
+void atualizaPc(){
+
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 
 /**
@@ -60,9 +67,7 @@ void executarInstrucoes(uint8_t opcode){
  * @param void
  * @return void
  */
-void newInstrucoes()
-{
-	printf("Inicializando o vetor de ponteiros para funções!\n");
+void newInstrucoes(){
 	
 	instrucao[0] = nop;
 	instrucao[1] = aconst_null;
@@ -320,14 +325,8 @@ void iconst_0(){
 	printf("Entrei no iconst_0\n");
 	push((int32_t) 0);
 
-
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
+	
 }
 
 /**
@@ -484,13 +483,7 @@ void fconst_0(){
 	//Empilha float na forma de int32 para se adequar ao tipo da pilha.
 	push(*valPilha);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -519,13 +512,7 @@ void fconst_1(){
 	//Empilha float na forma de int32 para se adequar ao tipo da pilha.
 	push(*valPilha);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -554,13 +541,7 @@ void fconst_2(){
 	//Empilha float na forma de int32 para se adequar ao tipo da pilha.
 	push(*valPilha);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /*
@@ -628,13 +609,7 @@ void bipush(){
 	printf("argumento empilhado: %d\n",argumento);
 	push((int32_t)argumento);
 	
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -658,13 +633,7 @@ void sipush(){
     // poe valor no stack de operandos
     push(valor);
     
-    // atualiza pc 
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+    atualizaPc();
 }
 
 /*
@@ -711,9 +680,7 @@ void ldc(){
     uint32_t indice;
     
 	printf("Entrei no ldc!!\n");
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
+	
     // pega indice 
     indice = frameCorrente->code[frameCorrente->pc + 1];
 
@@ -755,9 +722,7 @@ void ldc(){
         exit(1);
     }
 
-	// atualiza proxima instrucao 
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+    atualizaPc();
 }
 
 
@@ -851,13 +816,7 @@ void ldc2_w(){
 		push(baixa);
 	}
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 
 }
 
@@ -879,13 +838,7 @@ void iload(){
 	printf("argumento empilhado: %d\n",argumento);
 	push(aux);
 
-	//atualiza pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 
 }
 
@@ -911,13 +864,7 @@ void lload(){
     parte_baixa = frameCorrente->fields[indice + 1];
     push(parte_baixa);
 
-    // incrementa o valor de pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 }
 
 /** 
@@ -936,13 +883,7 @@ void fload(){
     valor = frameCorrente->fields[indice];
     push(valor);
     
-    // incrementa o valor de pc 
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 }
 
 /**
@@ -966,13 +907,7 @@ void dload(){
     parte_baixa = frameCorrente->fields[indice + 1];
     push(parte_baixa);
 
-    // incrementa o valor de pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 }
 
 /**
@@ -991,13 +926,7 @@ void aload(){
     valor = frameCorrente->fields[indice];
     push(valor);
     
-    // incrementa o valor de pc 
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1010,18 +939,13 @@ void iload_0(){
 
     uint32_t valor;
 
-    // pega valor do array de var local na posicao 0
+    // pega valor do array de var local na posicao 2
     valor = frameCorrente->fields[0];
 
     // poe valor na pilha de operandos
     push(valor);
     
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
-
+	atualizaPc();
 }
 
 /** 
@@ -1039,11 +963,7 @@ void iload_1(){
     // poe valor na pilha de operandos
     push(valor);
     
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+    atualizaPc();
 }
 
 /** 
@@ -1061,11 +981,7 @@ void iload_2(){
     // poe valor na pilha de operandos
     push(valor);
     
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+    atualizaPc();
 }
 
 /**
@@ -1082,11 +998,7 @@ void iload_3(){
     // poe valor na pilha de operandos
     push(valor);
     
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+    atualizaPc();
 
 }
 
@@ -1111,13 +1023,7 @@ void lload_0(){
     parte_baixa = frameCorrente->fields[indice + 1];
     push(parte_baixa);
 
-    // incrementa o valor de pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+	atualizaPc();
 
 }
 
@@ -1141,13 +1047,7 @@ void lload_1(){
     parte_baixa = frameCorrente->fields[indice + 1];
     push(parte_baixa);
 
-    // incrementa o valor de pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1171,13 +1071,7 @@ void lload_2(){
     parte_baixa = frameCorrente->fields[indice + 1];
     push(parte_baixa);
 
-    // incrementa o valor de pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+   atualizaPc();
 
 }
 
@@ -1201,13 +1095,7 @@ void lload_3(){
     parte_baixa = frameCorrente->fields[indice + 1];
     push(parte_baixa);
 
-    // incrementa o valor de pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1227,13 +1115,7 @@ void fload_0(){
     valor = frameCorrente->fields[indice];
     push(valor);
     
-    // incrementa o valor de pc 
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+   atualizaPc();
 
 }
 
@@ -1252,13 +1134,7 @@ void fload_1(){
     valor = frameCorrente->fields[indice];
     push(valor);
     
-    // incrementa o valor de pc 
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1277,13 +1153,7 @@ void fload_2(){
     valor = frameCorrente->fields[indice];
     push(valor);
     
-    // incrementa o valor de pc 
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1302,13 +1172,7 @@ void fload_3(){
     valor = frameCorrente->fields[indice];
     push(valor);
     
-    // incrementa o valor de pc 
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1332,13 +1196,7 @@ void dload_0(){
     parte_baixa = frameCorrente->fields[indice + 1];
     push(parte_baixa);
 
-    // incrementa o valor de pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1362,13 +1220,7 @@ void dload_1(){
     parte_baixa = frameCorrente->fields[indice + 1];
     push(parte_baixa);
 
-    // incrementa o valor de pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1392,13 +1244,7 @@ void dload_2(){
     parte_baixa = frameCorrente->fields[indice + 1];
     push(parte_baixa);
 
-    // incrementa o valor de pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1422,13 +1268,7 @@ void dload_3(){
     parte_baixa = frameCorrente->fields[indice + 1];
     push(parte_baixa);
 
-    // incrementa o valor de pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+   atualizaPc();
 
 }
 
@@ -1445,13 +1285,7 @@ void aload_0(){
 	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -1469,13 +1303,7 @@ void aload_1(){
     valor = frameCorrente->fields[indice];
     push(valor);
     
-    // incrementa o valor de pc 
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1494,14 +1322,7 @@ void aload_2(){
     valor = frameCorrente->fields[indice];
     push(valor);
     
-    // incrementa o valor de pc 
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
-
+   atualizaPc();
 }
 /**
  * a funcao acessa a posicao 3 do array de var local e empilha o conteudo na pilha de operandos
@@ -1518,13 +1339,7 @@ void aload_3(){
     valor = frameCorrente->fields[indice];
     push(valor);
     
-    // incrementa o valor de pc 
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 
 }
 
@@ -1553,23 +1368,184 @@ void saload(){
 
 }
 
+/*
+ * pega inteiro e coloca no array de variaveis locais, na posicao dada por indice
+ * @param void
+ * @return void
+ */
 void istore(){
 
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao dada por indice e indice + 1
+ * @param void
+ * @return void
+ */
 void lstore(){
 
+    //TODO nao precisa de casting nesse caso, ne?
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
+
 }
+
+/* 
+ * pega float e coloca no array de variaveis locais, na posicao dada por indice
+ * @param void
+ * @return void
+ */
 void fstore(){
 
-}
-void dstore(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/* 
+ * pega double e coloca no array de variaveis locais, na posicao dada por indice e indice + 1
+ * @param void
+ * @return void
+ */
+void dstore(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
+}
+
+/* 
+ * pega referencia e coloca no array de variaveis locais, na posicao dada por indice
+ * @param void
+ * @return void
+ */
 void astore(){
 
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 }
+
+/*
+ * pega inteiro e coloca na posicao 0 do array de variaveis locais
+ * @param void
+ * @return void
+ */
 void istore_0(){
 
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 0;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 }
 
 /**
@@ -1593,22 +1569,193 @@ void istore_1(){
 		frameCorrente->pc++;
 
 }
+
+/*
+ * pega inteiro e coloca na posicao 2 do array de variaveis locais
+ * @param void
+ * @return void
+ */
 void istore_2(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 2;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/*
+ * pega inteiro e coloca na posicao 3 do array de variaveis locais
+ * @param void
+ * @return void
+ */
 void istore_3(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 3;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao 0 e 1
+ * @param void
+ * @return void
+ */
 void lstore_0(){
 
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 0;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
+
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao 1 e 2
+ * @param void
+ * @return void
+ */
 void lstore_1(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 1;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao 2 e 3
+ * @param void
+ * @return void
+ */
 void lstore_2(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 2;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao 3 e 4
+ * @param void
+ * @return void
+ */
 void lstore_3(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 3;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
 void fstore_0(){
@@ -1681,13 +1828,7 @@ void pop(){
 	printf("Entrei no pop\n");
 	pop_op();
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -1701,13 +1842,7 @@ void pop2(){
 	pop_op();
 	pop_op();
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -1720,13 +1855,8 @@ void dup(){
 	int32_t aux;
 
 	if(naoEmpilhaFlag){
-		//atualiza pc
-		inicializa_decodificador(dec); 
-		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-		
-		//proxima instruçao.
-		for(int8_t i = 0; i < num_bytes + 1; i++)
-			frameCorrente->pc++;
+
+		atualizaPc();
 
 		naoEmpilhaFlag = 0;
 		return;
@@ -1742,13 +1872,7 @@ void dup(){
 	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 void dup_x1(){
@@ -1783,13 +1907,7 @@ void swap(){
 	push(val1);
 	push(val2);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 
 }
 
@@ -1808,13 +1926,7 @@ void iadd(){
 	printf("Empilhado: %d\n",v1+v2);
 	push(v1+v2);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -1853,8 +1965,8 @@ void ladd(){
 
 	//Soma os dois valores
 	int64_t resultado = lVal1 + lVal;
-	//Empilha o resultado
 
+	//Empilha o resultado
 
 	//Converte para parte alta e baixa novamente :) kk para empilhar
 	alta = resultado >> 32;
@@ -1866,14 +1978,7 @@ void ladd(){
 	push(alta);
 	push(baixa);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
-
+	atualizaPc();
 }
 
 /**
@@ -1902,13 +2007,7 @@ void fadd(){
 	//Empilha
 	push(retPilha);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 
 }
 
@@ -2066,13 +2165,8 @@ void lsub(){
 	push(alta);
 	push(baixa);
 
-	//atualiza pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -2101,13 +2195,7 @@ void fsub(){
 	//Empilha
 	push(retPilha);
 
-	//atualiza pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -2182,13 +2270,7 @@ void dsub(){
 	push(alta);
 	push(baixa);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -2203,13 +2285,7 @@ void imul(){
 	 push((int32_t)(v1 * v2));
 	 printf("Valor empilhado: %d\n",v1*v2);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 void lmul(){
@@ -2369,13 +2445,7 @@ void dmul(){
 	push(alta);
 	push(baixa);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -2389,14 +2459,9 @@ void idiv(){
 	 push((int32_t)(v1 / v2));
 	 printf("Valor empilhado: %d\n",v1/v2);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
+
 void ins_ldiv(){
 
 }
@@ -2469,14 +2534,7 @@ void ddiv(){
 	push(alta);
 	push(baixa);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
-
+	atualizaPc();
 }
 
 /**
@@ -2490,15 +2548,9 @@ void irem(){
 	 push((int32_t)(v1 % v2));
 	 printf("Valor empilhado: %d\n",v1%v2);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
-
+	atualizaPc();
 }
+
 void lrem(){
 
 }
@@ -2525,13 +2577,7 @@ void ineg(){
 	//Empilha valor negativado.
 	push(aux);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -2569,14 +2615,7 @@ void lneg(){
 	push(alta);
 	push(baixa);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
-
+	atualizaPc();
 }
 
 /**
@@ -2601,13 +2640,7 @@ void fneg(){
 	//Empilha valor de ponto flutuante em int32_t
 	push(retPilha);
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -2654,15 +2687,9 @@ void dneg(){
 	push(alta);
 	push(baixa);
 
-	//atualiza pc
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
-
+	atualizaPc();
 }
+
 void ishl(){
 
 }
@@ -2953,13 +2980,7 @@ void i2f(){
 	printf("Val empilhado %d\n",valPilha);
 	push(valPilha);
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -2996,13 +3017,7 @@ void i2d(){
 	push(alta);
 	push(baixa);
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 void l2i(){
 
@@ -3057,14 +3072,9 @@ void f2d(){
 	push(alta);
 	push(baixa);
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
+
 void d2i(){
 
 }
@@ -3107,13 +3117,7 @@ void d2f(){
 	printf("Valor Empilhado: %d\n",pilhaVal);
 	push(pilhaVal);
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 void i2b(){
 
@@ -3169,13 +3173,7 @@ void fcmpl(){
 		push((int32_t)-1);
 	}
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 void fcmpg(){
 
@@ -3474,13 +3472,7 @@ void ireturn(){
 	int32_t retorno = pop_op();
 	flagRet = 1;
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 	printf("retornando! método acabou!\n");
 
 }
@@ -3501,13 +3493,7 @@ void lreturn(){
 	retAlta = alta;
 	retBaixa = baixa;
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 	printf("retornando! método acabou!\n");
 
 }
@@ -3520,13 +3506,8 @@ void lreturn(){
 void freturn(){
 	int32_t retorno = pop_op();
 	flagRet = 1;
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+
+	atualizaPc();
 	printf("retornando! método acabou!\n");
 
 }
@@ -3547,13 +3528,7 @@ void dreturn(){
 	retAlta = alta;
 	retBaixa = baixa;
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 	printf("retornando! método acabou!\n");
 
 }
@@ -3573,13 +3548,7 @@ void ins_return(){
 	retorno = 0;
 	flagRet = 1;
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 	printf("retornando! método acabou!\n");
 }
 
@@ -3599,18 +3568,19 @@ void getstatic(){
     // poe valor da classe no stack 
     // incrementa profundidade do stack 
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 void putstatic(){
 
 }
+
+/**
+ * Função acessa um field do objeto e empilha na pilha de operandos do
+ * frame corrente.
+ * @param void
+ * @return void 
+ */
 void getfield(){
 	printf("Entrei no getfield\n");
 
@@ -3636,14 +3606,7 @@ void getfield(){
  	printf("tipo: %s\n",tipo);
 
  	if((strcmp(tipo, "Ljava/util/Scanner;") == 0)){
- 		//Atualiza PC.
-		inicializa_decodificador(dec); 
-		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-		
-		//proxima instruçao.
-		for(int8_t i = 0; i < num_bytes + 1; i++)
-			frameCorrente->pc++;
-
+ 		atualizaPc();
 		return;
  	}
 
@@ -3664,13 +3627,7 @@ void getfield(){
  	printf("val empilhado: %d\n",val);
  	push(val);
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -3718,15 +3675,7 @@ void putfield(){
  	for(i = 0; obj->indiceCampos[i] != indiceNome; i++);
 	obj->campos[i] = val;
 
-
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -3800,15 +3749,7 @@ void invokevirtual(){
 		printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 	}
 
-	//Atualiza PC.
-
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -3837,17 +3778,7 @@ void invokespecial(){
 
 		carregaMemClasse(nomeClasse);
 
-		//Atualiza PC.
-		inicializa_decodificador(dec); 
-		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-		printf("num_bytes: %d\n",num_bytes);
-
-		//proxima instruçao.
-		for(int8_t i = 0; i < num_bytes + 1; i++)
-			frameCorrente->pc++;
-		printf("novo pc: %d\n",frameCorrente->pc);
-		printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
-
+		atualizaPc();
 		return;
 	}
 
@@ -3855,17 +3786,7 @@ void invokespecial(){
 
 		printf("Método nativo java - java/lang/object\n");
 
-		//Atualiza PC.
-		inicializa_decodificador(dec); 
-		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-		printf("num_bytes: %d\n",num_bytes);
-
-		//proxima instruçao.
-		for(int8_t i = 0; i < num_bytes + 1; i++)
-			frameCorrente->pc++;
-		printf("novo pc: %d\n",frameCorrente->pc);
-		printf("novo opcode: %d\n",frameCorrente->code[frameCorrente->pc]);
-
+		atualizaPc();
 		return;
 	}
 
@@ -3873,14 +3794,7 @@ void invokespecial(){
 
 		printf("Método nativo java - java/util/Scanner\n");
 
-		//Atualiza PC.
-		inicializa_decodificador(dec); 
-		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
-		//proxima instruçao.
-		for(int8_t i = 0; i < num_bytes + 1; i++)
-			frameCorrente->pc++;
-
+		atualizaPc();
 		return;
 	}
 
@@ -3914,7 +3828,7 @@ void invokespecial(){
 		fields[i] = pop_op();
 
 	//inicia método
-	iniciaMetodo(metodoInvocado, classe);
+	empilhaMetodo(metodoInvocado, classe);
 
 	//Preenche fields no frame novo (invoke).
 	for(int32_t i = 0; i <= numeroParametros; i++) {
@@ -3924,13 +3838,7 @@ void invokespecial(){
 	//Executa método.
 	executaFrameCorrente();
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 /**
@@ -4019,13 +3927,7 @@ void invokestatic(){
 		}
 	}
 
-	//Atualiza PC.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 void invokeinterface(){
 
@@ -4054,28 +3956,16 @@ void ins_new(){
 	if(strcmp("java/util/Scanner",nomeClasse) == 0){
 		printf("Método nativo java - java/util/Scanner\n");
 		naoEmpilhaFlag = 1;
-		//Atualiza PC.
-		inicializa_decodificador(dec); 
-		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 
-		//proxima instruçao.
-		for(int8_t i = 0; i < num_bytes + 1; i++)
-			frameCorrente->pc++;
-		
+		atualizaPc();
 		return;
 	}
 
 	if(strcmp("java/lang/StringBuffer",nomeClasse) == 0){
 		printf("Método nativo java - java/util/Scanner\n");
 		naoEmpilhaFlag = 1;
-		//Atualiza PC.
-		inicializa_decodificador(dec); 
-		int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
 
-		//proxima instruçao.
-		for(int8_t i = 0; i < num_bytes + 1; i++)
-			frameCorrente->pc++;
-		
+		atualizaPc();
 		return;
 	}
 	//Busca indice da classe no array de classeFiles
@@ -4095,13 +3985,7 @@ void ins_new(){
 	push((int32_t) objeto);
 	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 
-	//atualia pc.
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
-	//proxima instruçao.
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
+	atualizaPc();
 }
 
 void newarray(){

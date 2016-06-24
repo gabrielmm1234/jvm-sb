@@ -17,9 +17,7 @@
  * 
  */
 
-#include "frame.h"
-
-static struct stackFrame* topo = NULL;
+#include "./includes/frame.h"
 
 /**
  * Cria uma estrutura de pilha e coloca no frame. Sao necessarios uma referencia a classe q contem o metodo\n
@@ -39,8 +37,22 @@ void criaFrame(cp_info* cp, classFile* classe, code_attribute* code){
 	if(sf == NULL){
 		printf("Problema na alocação do frame\n");
 	}
+
 	sf->refFrame = (struct frame*) calloc(sizeof(struct frame),1);
 
+	//Empilha o frame na pilha de frames.
+	pushFrame(cp,classe,code,sf);
+}
+
+/**
+ * Função que empilha na nossa pilha de frames um novo frame alocado. 
+ * @param cp_info* uma referencia a constant pool 
+ * @param classFile* uma referencia a classe 
+ * @param code* uma referencia ao atributo code do metodo que estamos 
+ * @param struct stackFrame* referencia para a pilha de frames.
+ * @return void 
+ */
+void pushFrame(cp_info* cp, classFile* classe, code_attribute* code,struct stackFrame* sf){
 	//Atualiza a pilha.
 	sf->next = topo;
 	topo = sf;
@@ -70,20 +82,15 @@ void criaFrame(cp_info* cp, classFile* classe, code_attribute* code){
 	//Atualiza o frameCorrente para o frame alocado agora.
 	//IMPORTANTE para que o loop de execução acesse o frameCorrente atualizado.
 	frameCorrente = topo->refFrame;
-
 }
 
 /**
- * Funcao que desaloca o topo da pilha de frames de metodos
- * @param void
- * @return void 
+ * Função que desempilha na nossa pilha de frames o frame que terminou a execução.
+ * desempilha e atualiza o estado da pilha. Se não tem mais frames na pilha garante
+ * que a execução termine. 
  */
-void desalocaFrame(){
+void popFrame(){
 	struct stackFrame *anterior;
-
-	push(retorno);
-
-	printf("desalocando Frame!\n");
 	//se topo->next diferente de null -> existe outros frames para executar.
 	//Atualiza o frame corrente para prosseguir a execução.
 	if (topo->next != NULL) {
@@ -110,13 +117,24 @@ void desalocaFrame(){
 	anterior = topo->next;
 
 	//Desaloca frame já executado.
-	free(topo->refFrame->fields);
     free(topo->refFrame->pilha_op->operandos);
     free(topo->refFrame->pilha_op);
+    free(topo->refFrame->fields);
 	free(topo->refFrame);
 	free(topo);
+
 	//Atualiza topo com o proximo frame a ser executado.
 	topo = anterior;
+}
+
+/**
+ * Funcao que desaloca o topo da pilha de frames de metodos.
+ * @param void
+ * @return void 
+ */
+void desalocaFrame(){
+	printf("desalocando Frame!\n");
+	popFrame();
 }
 
 /**
@@ -158,9 +176,24 @@ int32_t pop_op()
 
 }
 
+/**
+ * funcao criada para analisar o conteudo da pilha de operandos
+ * foi usada mais para debug e problemas com stackOverflow 
+ */
 void dumpStack(){
 	int i;
 	for(i = 0; i < frameCorrente->pilha_op->depth; i++){
 		printf("valor: %d\n",frameCorrente->pilha_op->operandos[i]);
+	}
+}
+
+/**
+ * funcao criada para analisar o conteudo do array de variaveis locais
+ * foi usada mais para debug de alguns problemas. 
+ */
+void dumpFields(){
+	int i;
+	for(i = 0; i < frameCorrente->max_locals; i++){
+		printf("valor: %d\n",frameCorrente->fields[i]);
 	}
 }

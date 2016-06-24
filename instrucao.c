@@ -1247,13 +1247,8 @@ void dload_3(){
  * @return void 
  */
 void aload_0(){
-	printf("Entrei aload_0\n");
-
 	//Empilha a posição 0 do vetor de variáveis locais.
 	push(frameCorrente->fields[0]);
-	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
-    dumpStack();
-
 	atualizaPc();
 }
 
@@ -1273,7 +1268,6 @@ void aload_1(){
     push(valor);
     
     atualizaPc();
-
 }
 
 /**
@@ -1356,13 +1350,7 @@ void istore(){
     // poe o valor na posicao no array de var locais
     frameCorrente->fields[indice] = valor; 
 
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 }
 
 /* 
@@ -1390,14 +1378,7 @@ void lstore(){
     frameCorrente->fields[indice] = parte_alta;
     frameCorrente->fields[indice + 1] = parte_baixa;
 
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
-
+    atualizaPc();
 }
 
 /* 
@@ -1419,14 +1400,7 @@ void fstore(){
     // poe o valor na posicao no array de var locais
     frameCorrente->fields[indice] = valor; 
 
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
-
+    atualizaPc();
 }
 
 /* 
@@ -1452,13 +1426,7 @@ void dstore(){
     frameCorrente->fields[indice] = parte_alta;
     frameCorrente->fields[indice + 1] = parte_baixa;
 
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 }
 
 /* 
@@ -1480,13 +1448,7 @@ void astore(){
     // poe o valor na posicao no array de var locais
     frameCorrente->fields[indice] = valor; 
 
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 }
 
 /*
@@ -1508,13 +1470,7 @@ void istore_0(){
     // poe o valor na posicao no array de var locais
     frameCorrente->fields[indice] = valor; 
 
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
+    atualizaPc();
 }
 
 /**
@@ -1531,12 +1487,7 @@ void istore_1(){
     // coloca o valor na posicao 1 do array de variaveis locais
     frameCorrente->fields[1] = valor;
 
-    // incrementa o PC - indo para proxima instrucao
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-	for(int8_t i = 0; i < num_bytes + 1; i++)
-		frameCorrente->pc++;
-
+    atualizaPc();
 }
 
 /*
@@ -1557,14 +1508,7 @@ void istore_2(){
     // poe o valor na posicao no array de var locais
     frameCorrente->fields[indice] = valor; 
 
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
-
+    atualizaPc();
 }
 
 /*
@@ -1585,14 +1529,7 @@ void istore_3(){
     // poe o valor na posicao no array de var locais
     frameCorrente->fields[indice] = valor; 
 
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
-
+    atualizaPc();
 }
 
 /* 
@@ -1619,14 +1556,7 @@ void lstore_0(){
     frameCorrente->fields[indice] = parte_alta;
     frameCorrente->fields[indice + 1] = parte_baixa;
 
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
-
+    atualizaPc();
 }
 
 /* 
@@ -1652,14 +1582,7 @@ void lstore_1(){
     frameCorrente->fields[indice] = parte_alta;
     frameCorrente->fields[indice + 1] = parte_baixa;
 
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
-
+    atualizaPc();
 }
 
 /* 
@@ -1685,14 +1608,7 @@ void lstore_2(){
     frameCorrente->fields[indice] = parte_alta;
     frameCorrente->fields[indice + 1] = parte_baixa;
 
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
-
+    atualizaPc();
 }
 
 /* 
@@ -1718,14 +1634,7 @@ void lstore_3(){
     frameCorrente->fields[indice] = parte_alta;
     frameCorrente->fields[indice + 1] = parte_baixa;
 
-    // incrementa pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-    for (int i = 0; i < num_bytes + 1; i++)
-    {
-        frameCorrente->pc++;
-    }
-
+    atualizaPc();
 }
 void fstore_0(){
 
@@ -1794,7 +1703,6 @@ void sastore(){
  * @return void 
  */
 void pop(){
-	printf("Entrei no pop\n");
 	pop_op();
 
 	atualizaPc();
@@ -1806,7 +1714,6 @@ void pop(){
  * @return void 
  */
 void pop2(){
-
 	//Desempilha os dois valores
 	pop_op();
 	pop_op();
@@ -1820,7 +1727,6 @@ void pop2(){
  * @return void 
  */
 void dup(){
-	printf("Entrei no dup\n");
 	int32_t aux;
 
 	//Desempilha
@@ -1828,12 +1734,8 @@ void dup(){
 
 	//Duplica
 	push(aux);
-	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 	push(aux);
-	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
-    dumpStack();
-
-
+	
 	atualizaPc();
 }
 
@@ -1870,7 +1772,6 @@ void swap(){
 	push(val2);
 
 	atualizaPc();
-
 }
 
 /**
@@ -1879,13 +1780,10 @@ void swap(){
  * @return void 
  */
 void iadd(){
-	printf("Entrei no iadd\n");
 	int32_t v1,v2;
 	v1 = pop_op();
 	v2 = pop_op();
-	printf("v1: %d\n",v1);
-	printf("v2: %d\n",v2);
-	printf("Empilhado: %d\n",v1+v2);
+	
 	push(v1+v2);
 
 	atualizaPc();

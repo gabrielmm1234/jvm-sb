@@ -861,6 +861,11 @@ void ldc2_w(){
 
 }
 
+/**
+ * funcao carrega um inteira do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void iload(){
 
 	// TODO: The iload opcode can be used in conjunction with the wide
@@ -883,19 +888,139 @@ void iload(){
 		frameCorrente->pc++;
 
 }
+
+/*
+ * a funcao carrega um long do array de var locais a pilha de operandos
+ * @param void
+ * @return void
+ */
 void lload(){
 
+    // TODO pq ta diferente do iload na parte de conseguir os bytes
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+
+    // empilha a parte alta - por convencao vem primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    // incrementa o valor de pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 }
+
+/* 
+ * a funcao carrega um float no array de variaveis locais da pilha
+ * @param void
+ * @return void
+ */
 void fload(){
 
-}
-void dload(){
+    int32_t indice, valor; 
 
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    // incrementa o valor de pc 
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 }
+
+/*
+ * a funcao carrega um double no array de variaveis locais da pilha 
+ * @param void
+ * @return void
+ */
+void dload(){
+    // TODO pq ta diferente do iload na parte de conseguir os bytes
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    // incrementa o valor de pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
+}
+
+/*
+ * a funcao carrega uma referencia do array de variaveis locais da pilha
+ * @param void
+ * @return void
+ */
 void aload(){
 
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    // incrementa o valor de pc 
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
+
 }
+
+/* 
+ * a funcao carrega o int na posicao 0 do array de variaveis locais para a pilha de operandos
+ * @param void
+ * @return void
+ */
 void iload_0(){
+
+    uint32_t valor;
+
+    // pega valor do array de var local na posicao 0
+    valor = frameCorrente->fields[0];
+
+    // poe valor na pilha de operandos
+    push(valor);
+    
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
 
@@ -921,12 +1046,50 @@ void iload_1(){
 		frameCorrente->pc++;
 }
 
+/* 
+ * a funcao carrega o int na posicao 2 do array de variaveis locais para a pilha de operandos
+ * @param void
+ * @return void
+ */
 void iload_2(){
 
+    uint32_t valor;
+
+    // pega valor do array de var local na posicao 2
+    valor = frameCorrente->fields[2];
+
+    // poe valor na pilha de operandos
+    push(valor);
+    
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
+
+/* 
+ * a funcao carrega o int na posicao 3 do array de variaveis locais para a pilha de operandos
+ * @param void
+ * @return void
+ */
 void iload_3(){
+    uint32_t valor;
+
+    // pega valor do array de var local na posicao 3
+    valor = frameCorrente->fields[3];
+
+    // poe valor na pilha de operandos
+    push(valor);
+    
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
+
 void lload_0(){
 
 }

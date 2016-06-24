@@ -1589,7 +1589,7 @@ void istore(){
 void lstore(){
 
     //TODO nao precisa de casting nesse caso, ne?
-    uint32_t indice; 
+    int32_t indice; 
     int32_t parte_alta, parte_baixa; 
 
     // pega indice 
@@ -1623,7 +1623,7 @@ void lstore(){
  */
 void fstore(){
 
-    uint32_t indice; 
+    int32_t indice; 
     int32_t valor; 
 
     // pega indice 
@@ -1651,7 +1651,7 @@ void fstore(){
  * @return void
  */
 void dstore(){
-    uint32_t indice; 
+    int32_t indice; 
     int32_t parte_alta, parte_baixa; 
 
     // pega indice 
@@ -1684,7 +1684,7 @@ void dstore(){
  */
 void astore(){
 
-    uint32_t indice; 
+    int32_t indice; 
     int32_t valor; 
 
     // pega indice 
@@ -1705,8 +1705,32 @@ void astore(){
     }
 }
 
+/*
+ * pega inteiro e coloca na posicao 0 do array de variaveis locais
+ * @param void
+ * @return void
+ */
 void istore_0(){
 
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 0;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 }
 
 /**
@@ -1730,22 +1754,193 @@ void istore_1(){
 		frameCorrente->pc++;
 
 }
+
+/*
+ * pega inteiro e coloca na posicao 2 do array de variaveis locais
+ * @param void
+ * @return void
+ */
 void istore_2(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 2;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/*
+ * pega inteiro e coloca na posicao 3 do array de variaveis locais
+ * @param void
+ * @return void
+ */
 void istore_3(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 3;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao 0 e 1
+ * @param void
+ * @return void
+ */
 void lstore_0(){
 
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 0;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
+
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao 1 e 2
+ * @param void
+ * @return void
+ */
 void lstore_1(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 1;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao 2 e 3
+ * @param void
+ * @return void
+ */
 void lstore_2(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 2;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao 3 e 4
+ * @param void
+ * @return void
+ */
 void lstore_3(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 3;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
 void fstore_0(){

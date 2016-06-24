@@ -32,7 +32,6 @@
 
 //OBS: Alternativa para memcpy no manipulação de ponto flutuante -> UNION.
 
-
 /**
  * Acesso ao frame corrente declarado no modulo frame.h
  */
@@ -637,7 +636,13 @@ void sipush(){
     atualizaPc();
 }
 
-
+/*
+ * a funcao recebe uma referencia para a constant pool e a posicao que se deseja acessar
+ * a funcao retorna o indice da CONSTANT_UTF8 associada a CONSTANT da posicao passada na constant pool 
+ * @param cp_info* uma referencia a constant pool 
+ * @param int um indice para a constant pool 
+ * @return int indice da CONSTANT_UTF8 associada 
+ */
 int obtem_utf_eq(cp_info* cp, int pos_pool)
 {
     int tag;
@@ -645,7 +650,7 @@ int obtem_utf_eq(cp_info* cp, int pos_pool)
     // pega tag 
     tag = cp[pos_pool].tag;
 
-    // se a tag for o de um class info 
+    // se a tag for o de uma UTF8
     if (tag == CONSTANT_Utf8)
     {
         // imprime informacao e sai
@@ -655,11 +660,8 @@ int obtem_utf_eq(cp_info* cp, int pos_pool)
     // senao, de acordo com a tag, decide qual sera a proxima posicao da cte pool que iremos olhar
     switch(tag)
     {
-        // para fieldref e outros ele bifurcava e seguia dois 
-        // como fazer nesses casos?
         case CONSTANT_Class:
             return obtem_utf_eq(cp, cp[pos_pool].info.Class.name_index - 1);
-
         case CONSTANT_String:
             return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
         case CONSTANT_Integer: 
@@ -669,14 +671,16 @@ int obtem_utf_eq(cp_info* cp, int pos_pool)
     }
 }
 
+/*
+ * a funcao coloca um item da run-time constan pool na pilha 
+ * @param void
+ * @return void
+ */
 void ldc(){
     uint32_t indice;
-    uint32_t indice_utf;
     
 	printf("Entrei no ldc!!\n");
-	inicializa_decodificador(dec); 
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
+	
     // pega indice 
     indice = frameCorrente->code[frameCorrente->pc + 1];
 
@@ -684,21 +688,102 @@ void ldc(){
     if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Float || \
             frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Integer)
     {
-        push(indice);
+        // empilha valor correto
+        if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Float)
+        {
+            push(frameCorrente->constant_pool[indice - 1].info.Float.bytes);
+        }
+        else
+        {
+            push(frameCorrente->constant_pool[indice - 1].info.Integer.bytes);
+        }
     }
     
-    // se o indice para a constant pool for para uma string, int ou float
-    if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String) 
+    // se o indice para a constant pool for para uma string
+    else if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String) 
     {
+        uint32_t indice_utf;
         indice_utf = obtem_utf_eq(frameCorrente->constant_pool, indice-1); 
         push(indice_utf);
         printf("Valor %d empilhado\n", frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
     }
 
-	atualizaPc();
+    // se o indice para a constant pool for uma referencia a uma classe 
+    else if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String) 
+    {
+        // poe referencia para a classe na constant pool 
+        // TODO Resolve nome da classe 
+    }
+
+    // se nao for nenhum dos acima, reporta erro e sai
+    else
+    {
+        printf("erro na instrucao ldc\n");
+        exit(1);
+    }
+
+    atualizaPc();
 }
 
+
+/**
+ * a funcao coloca um item da run-time constan pool na pilha 
+ * eh semelhante a ldc, mas o indice lido eh um numero de 16 bits ao 
+ * inves de 8 
+ * @param void
+ * @return void
+ */
 void ldc_w(){
+    uint32_t indice;
+    
+	printf("Entrei no ldc!!\n");
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+    // pega indice 
+    indice = (frameCorrente->code[frameCorrente->pc + 1] << 8 + frameCorrente->code[frameCorrente->pc + 2]);
+
+    // se o indice para a constant pool for para um int ou float
+    if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Float || \
+            frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Integer)
+    {
+        // empilha valor correto
+        if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_Float)
+        {
+            push(frameCorrente->constant_pool[indice - 1].info.Float.bytes);
+        }
+        else
+        {
+            push(frameCorrente->constant_pool[indice - 1].info.Integer.bytes);
+        }
+    }
+    
+    // se o indice para a constant pool for para uma string
+    else if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String) 
+    {
+        uint32_t indice_utf;
+        indice_utf = obtem_utf_eq(frameCorrente->constant_pool, indice-1); 
+        push(indice_utf);
+        printf("Valor %d empilhado\n", frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
+    }
+
+    // se o indice para a constant pool for uma referencia a uma classe 
+    else if (frameCorrente->constant_pool[indice - 1].tag == CONSTANT_String) 
+    {
+        // poe referencia para a classe na constant pool 
+        // TODO Resolve nome da classe 
+    }
+
+    // se nao for nenhum dos acima, reporta erro e sai
+    else
+    {
+        printf("erro na instrucao ldc\n");
+        exit(1);
+    }
+
+	// atualiza proxima instrucao 
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
 
@@ -734,6 +819,12 @@ void ldc2_w(){
 	atualizaPc();
 
 }
+
+/**
+ * funcao carrega um inteira do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void iload(){
 
 	// TODO: The iload opcode can be used in conjunction with the wide
@@ -750,64 +841,434 @@ void iload(){
 	atualizaPc();
 
 }
+
+/**
+ * a funcao carrega um long do array de var locais a pilha de operandos
+ * @param void
+ * @return void
+ */
 void lload(){
 
+    // TODO pq ta diferente do iload na parte de conseguir os bytes
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+
+    // empilha a parte alta - por convencao vem primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    atualizaPc();
 }
+
+/** 
+ * a funcao carrega um float no array de variaveis locais da pilha
+ * @param void
+ * @return void
+ */
 void fload(){
 
-}
-void dload(){
+    int32_t indice, valor; 
 
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    atualizaPc();
 }
+
+/**
+ * a funcao carrega um double no array de variaveis locais da pilha 
+ * @param void
+ * @return void
+ */
+void dload(){
+    // TODO pq ta diferente do iload na parte de conseguir os bytes
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    atualizaPc();
+}
+
+/**
+ * a funcao carrega uma referencia do array de variaveis locais da pilha
+ * @param void
+ * @return void
+ */
 void aload(){
 
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    atualizaPc();
+
 }
+
+/**
+ * a funcao carrega o int na posicao 0 do array de variaveis locais para a pilha de operandos
+ * @param void
+ * @return void
+ */
 void iload_0(){
 
+    uint32_t valor;
+
+    // pega valor do array de var local na posicao 2
+    valor = frameCorrente->fields[0];
+
+    // poe valor na pilha de operandos
+    push(valor);
+    
+	atualizaPc();
 }
+
+/** 
+ * a funcao carrega o int na posicao 1 do array de variaveis locais para a pilha de operandos
+ * @param void
+ * @return void
+ */
 void iload_1(){
 
+    uint32_t valor;
+
+    // pega valor do array de var local na posicao 1
+    valor = frameCorrente->fields[1];
+
+    // poe valor na pilha de operandos
+    push(valor);
+    
+    atualizaPc();
 }
+
+/** 
+ * a funcao carrega o int na posicao 2 do array de variaveis locais para a pilha de operandos
+ * @param void
+ * @return void
+ */
 void iload_2(){
 
+    uint32_t valor;
+
+    // pega valor do array de var local na posicao 2
+    valor = frameCorrente->fields[2];
+
+    // poe valor na pilha de operandos
+    push(valor);
+    
+    atualizaPc();
 }
+
+/**
+ * a funcao carrega o int na posicao 3 do array de variaveis locais para a pilha de operandos
+ * @param void
+ * @return void
+ */
 void iload_3(){
+    uint32_t valor;
+
+    // pega valor do array de var local na posicao 3
+    valor = frameCorrente->fields[3];
+
+    // poe valor na pilha de operandos
+    push(valor);
+    
+    atualizaPc();
 
 }
+
+/**
+ * a funcao carrega o long da posicao 0/1 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ **/
 void lload_0(){
 
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 0;
+
+    // empilha a parte alta - por convencao vem primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+	atualizaPc();
+
 }
+
+/**
+ * a funcao carrega o long da posicao 1/2 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void lload_1(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 1;
+
+    // empilha a parte alta - por convencao vem primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    atualizaPc();
 
 }
+
+/**
+ * a funcao carrega o long da posicao 2/3 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void lload_2(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 2;
+
+    // empilha a parte alta - por convencao vem primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+   atualizaPc();
 
 }
+
+/**
+ * a funcao carrega o long da posicao 3/4 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void lload_3(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 3;
+
+    // empilha a parte alta - por convencao vem primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    atualizaPc();
 
 }
+
+/**
+ * a funcao carrega o float da posicao 0 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void fload_0(){
 
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = 0; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+   atualizaPc();
+
 }
+
+/**
+ * a funcao carrega o float da posicao 1 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void fload_1(){
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = 1; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    atualizaPc();
 
 }
+
+/**
+ * a funcao carrega o float da posicao 2 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void fload_2(){
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = 2; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    atualizaPc();
 
 }
+
+/**
+ * a funcao carrega o float da posicao 3 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void fload_3(){
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = 3; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    atualizaPc();
 
 }
+
+/**
+ * a funcao carrega o double da posicao 0/1 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void dload_0(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 0; 
+
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    atualizaPc();
 
 }
+
+/**
+ * a funcao carrega o double da posicao 1/2 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void dload_1(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 1; 
+
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    atualizaPc();
 
 }
+
+/**
+ * a funcao carrega o double da posicao 2/3 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void dload_2(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 2; 
+
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+    atualizaPc();
 
 }
+
+/**
+ * a funcao carrega o double da posicao 3/4 do array de variaveis locais na pilha de operandos
+ * @param void
+ * @return void
+ */
 void dload_3(){
+    int32_t indice;
+    int32_t parte_alta, parte_baixa;
+
+    // pega indice
+    indice = 3; 
+
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice];
+    push(parte_alta);
+
+    // empilha a parte baixa
+    parte_baixa = frameCorrente->fields[indice + 1];
+    push(parte_baixa);
+
+   atualizaPc();
 
 }
 
@@ -823,18 +1284,65 @@ void aload_0(){
 	push(frameCorrente->fields[0]);
 	printf("Valor %d empilhado\n",frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1]);
 
+
 	atualizaPc();
 }
 
+/**
+ * a funcao acessa a posicao 1 do array de var local e empilha o conteudo na pilha de operandos
+ * @param void
+ * @return voi
+ */
 void aload_1(){
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = 1; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    atualizaPc();
 
 }
+
+/**
+ * a funcao acessa a posicao 2 do array de var local e empilha o conteudo na pilha de operandos
+ * @param void
+ * @return voi
+ */
 void aload_2(){
+    int32_t indice, valor; 
 
+    // pega indice 
+    indice = 2; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+   atualizaPc();
 }
+/**
+ * a funcao acessa a posicao 3 do array de var local e empilha o conteudo na pilha de operandos
+ * @param void
+ * @return voi
+ */
 void aload_3(){
+    int32_t indice, valor; 
+
+    // pega indice 
+    indice = 3; 
+    
+    // empilha 
+    valor = frameCorrente->fields[indice];
+    push(valor);
+    
+    atualizaPc();
 
 }
+
 void iaload(){
 
 }
@@ -859,43 +1367,395 @@ void caload(){
 void saload(){
 
 }
+
+/*
+ * pega inteiro e coloca no array de variaveis locais, na posicao dada por indice
+ * @param void
+ * @return void
+ */
 void istore(){
 
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao dada por indice e indice + 1
+ * @param void
+ * @return void
+ */
 void lstore(){
 
+    //TODO nao precisa de casting nesse caso, ne?
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
+
 }
+
+/* 
+ * pega float e coloca no array de variaveis locais, na posicao dada por indice
+ * @param void
+ * @return void
+ */
 void fstore(){
 
-}
-void dstore(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/* 
+ * pega double e coloca no array de variaveis locais, na posicao dada por indice e indice + 1
+ * @param void
+ * @return void
+ */
+void dstore(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
+}
+
+/* 
+ * pega referencia e coloca no array de variaveis locais, na posicao dada por indice
+ * @param void
+ * @return void
+ */
 void astore(){
 
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = frameCorrente->code[frameCorrente->pc + 1];
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 }
+
+/*
+ * pega inteiro e coloca na posicao 0 do array de variaveis locais
+ * @param void
+ * @return void
+ */
 void istore_0(){
 
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 0;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 }
+
+/**
+ * a funcao coloca um int no array de variaveis locais
+ * @param void
+ * @return void
+ */
 void istore_1(){
+    uint32_t valor; 
+
+    // pega valor no topo da operand stack
+    valor = pop_op();
+
+    // coloca o valor na posicao 1 do array de variaveis locais
+    frameCorrente->fields[1] = valor;
+
+    // incrementa o PC - indo para proxima instrucao
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 
 }
+
+/*
+ * pega inteiro e coloca na posicao 2 do array de variaveis locais
+ * @param void
+ * @return void
+ */
 void istore_2(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 2;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/*
+ * pega inteiro e coloca na posicao 3 do array de variaveis locais
+ * @param void
+ * @return void
+ */
 void istore_3(){
+    int32_t indice; 
+    int32_t valor; 
+
+    // pega indice 
+    indice = 3;
+    
+    // desempilha 
+    valor = pop_op(); 
+
+    // poe o valor na posicao no array de var locais
+    frameCorrente->fields[indice] = valor; 
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao 0 e 1
+ * @param void
+ * @return void
+ */
 void lstore_0(){
 
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 0;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
+
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao 1 e 2
+ * @param void
+ * @return void
+ */
 void lstore_1(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 1;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao 2 e 3
+ * @param void
+ * @return void
+ */
 void lstore_2(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 2;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
+
+/* 
+ * pega long e coloca no array de variaveis locais, na posicao 3 e 4
+ * @param void
+ * @return void
+ */
 void lstore_3(){
+    int32_t indice; 
+    int32_t parte_alta, parte_baixa; 
+
+    // pega indice 
+    indice = 3;
+    
+    // desempilha a parte baixa - por convencao desempilhada primeiro 
+    parte_baixa = pop_op();
+
+    // desempilha a parte alta 
+    parte_alta = pop_op();
+
+    // poe parte alta e baixa no array de var locais
+    // pela convencao a parte alta vem primeiro
+    frameCorrente->fields[indice] = parte_alta;
+    frameCorrente->fields[indice + 1] = parte_baixa;
+
+    // incrementa pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+    for (int i = 0; i < num_bytes + 1; i++)
+    {
+        frameCorrente->pc++;
+    }
 
 }
 void fstore_0(){
@@ -1105,8 +1965,18 @@ void ladd(){
 
 	//Soma os dois valores
 	int64_t resultado = lVal1 + lVal;
+
 	//Empilha o resultado
-	push(resultado);
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = resultado >> 32;
+	baixa = resultado & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
 
 	atualizaPc();
 }
@@ -1213,7 +2083,13 @@ void dadd(){
 	push(alta);
 	push(baixa);
 
-	atualizaPc();
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 
 /**
@@ -1230,14 +2106,96 @@ void isub(){
 	printf("Empilhado: %d\n",v1-v2);
 	push(v1-v2);
 
+	//atualiza pc
+	inicializa_decodificador(dec); 
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+	
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+
+}
+
+/**
+ * Funcao desempilha dois valores long, subtrai e empilha resultado.
+ * @param void
+ * @return void
+ */
+void lsub(){
+	int32_t baixa,alta;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal1 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal1 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal1 = lVal1 + baixa;
+
+	//subtrai os dois valores
+	int64_t resultado = lVal1 - lVal;
+	//Empilha o resultado
+
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = resultado >> 32;
+	baixa = resultado & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
+
+
 	atualizaPc();
 }
 
-void lsub(){
-
-}
+/**
+ * Funcao desempilha dois valores float, subtrai e empilha resultado.
+ * @param void
+ * @return void
+ */
 void fsub(){
+	float fVal1,fVal2;
 
+	//Desempilha os dois valores
+	int32_t aux1 = pop_op();
+	int32_t aux2 = pop_op();
+
+	//Converte para float e nao perde precisao
+	memcpy(&fVal1, &aux1, sizeof(int32_t));
+	memcpy(&fVal2, &aux2, sizeof(int32_t));
+
+	//subtrai os dois valores em float
+	float resultado = fVal1 - fVal2;
+
+	//copia para um int32_t
+	int32_t retPilha;
+	memcpy(&retPilha, &resultado, sizeof(int32_t));
+
+	//Empilha
+	push(retPilha);
+
+	atualizaPc();
 }
 
 /**
@@ -1674,10 +2632,9 @@ void lushr(){
 }
 
 /**
- * Função que retira dois valores da pilha realiza a operação and entre eles
- * e empilha o resultado.
+ * Funcao desempilha dois valores inteiros, opera com o and e empilha resultado.
  * @param void
- * @return void 
+ * @return void
  */
 void iand(){
 
@@ -1695,14 +2652,70 @@ void iand(){
 	frameCorrente->pc++;
 
 }
+
+/**
+ * Funcao desempilha dois valores long, opera com o and e empilha resultado.
+ * @param void
+ * @return void
+ */
 void land(){
 
+	int32_t baixa,alta;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal1 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal1 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal1 = lVal1 + baixa;
+
+
+	int64_t resultado = lVal1 & lVal;
+	//Empilha o resultado
+
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = resultado >> 32;
+	baixa = resultado & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
+
+	//atualiza pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
+
 /**
- * Função que retira dois valores da pilha realiza a operação ou entre eles
- * e empilha o resultado.
+ * Funcao desempilha dois valores inteiros, opera com o or e empilha resultado.
  * @param void
- * @return void 
+ * @return void
  */
 void ior(){
 
@@ -1720,14 +2733,70 @@ void ior(){
 	frameCorrente->pc++;
 
 }
+
+/**
+ * Funcao desempilha dois valores long, opera com o or e empilha resultado.
+ * @param void
+ * @return void
+ */
 void lor(){
 
+	int32_t baixa,alta;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal1 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal1 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal1 = lVal1 + baixa;
+
+	int64_t resultado = lVal1 | lVal;
+	//Empilha o resultado
+
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = resultado >> 32;
+	baixa = resultado & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
+
+	//atualiza pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
+
 }
+
 /**
- * Função que retira dois valores da pilha realiza o ou exclusivo entre eles
- * e empilha o resultado.
+ * Funcao desempilha dois valores inteiros, opera com o xor e empilha resultado.
  * @param void
- * @return void 
+ * @return void
  */
 void ixor(){
 
@@ -1745,8 +2814,63 @@ void ixor(){
 	frameCorrente->pc++;
 
 }
-void lxor(){
 
+/**
+ * Funcao desempilha dois valores long, opera com o xor e empilha resultado.
+ * @param void
+ * @return void
+ */
+void lxor(){
+	int32_t baixa,alta;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal1 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal1 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal1 = lVal1 + baixa;
+
+
+	int64_t resultado = lVal1 ^ lVal;
+	//Empilha o resultado
+
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = resultado >> 32;
+	baixa = resultado & 0xffffffff;
+
+	//finalmente empilha.
+	printf("Parte alta empilhada: %d\n",alta);
+	printf("Parte baixa empilhada: %d\n",baixa);
+	push(alta);
+	push(baixa);
+
+	//atualiza pc
+	inicializa_decodificador(dec);
+	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+	//proxima instruçao.
+	for(int8_t i = 0; i < num_bytes + 1; i++)
+		frameCorrente->pc++;
 }
 void iinc(){
 
@@ -2068,10 +3192,197 @@ void ret(){
 
 }
 void tableswitch(){
+    uint32_t bytes_preench; 
+    int32_t indice;
+    int32_t default_v, low, high, npairs; 
+    uint32_t pc_novo, pc_aux;
+    int32_t qtd_offset, offset, posicao;
+    uint32_t temp;
 
+    // diz se o novo valor de pc ja esta definido ou nao 
+    bool definido = false; 
+
+    // pc auxiliar que iremos seguindo durante a execucao da instrucao 
+    pc_aux = frameCorrente->pc; 
+
+    // pega indice da operand stack
+    indice = pop_op(); 
+    
+    /* passo 1 - le ateh o low. Se o indice eh menor que low - define logo o novo valor para PC */
+    // pula bytes de preenchimento
+    //bytes_preench = (pc_aux + 1) % 4;
+    bytes_preench = (4 - ((pc_aux + 1) % 4) ) % 4;  
+    pc_aux += bytes_preench;
+    pc_aux++;
+    
+    // pega bytes do target default
+    default_v = 0;
+    for (int l = 0; l < 4; l++)
+    {
+        default_v = (default_v << 8) + frameCorrente->code[pc_aux];   
+        pc_aux++;
+    }       
+
+    // pega bytes low
+    low = 0;
+    for (int l = 0; l < 4; l++)
+    {
+        low = (low << 8) + frameCorrente->code[pc_aux];   
+        pc_aux++; 
+    }       
+    
+
+    // se o indice eh menor que o low e ainda nao definimos novo pc
+    if (indice < low && !definido)
+    {
+        definido = true;
+        pc_novo = frameCorrente->pc + default_v; 
+    }
+
+    /* passo 2 - le ateh o high. Se o indice eh maior que o high - define o novo valor para PC
+     * caso low ainda nao tenha sido definido */ 
+    // pega bytes high 
+    high = 0;
+    for (int l = 0; l < 4; l++)
+    {
+        high = (high << 8) + frameCorrente->code[pc_aux];   
+        pc_aux++; 
+    }       
+
+    // se o indice eh maior que o high e ainda nao definimos novo pc
+    if (indice > high && !definido)
+    {
+        definido = true;
+        pc_novo = frameCorrente->pc + default_v; 
+    }
+
+    /* passo 3 - calcula offset na posicao index - low. Coloca novo endereco de PC aqui, caso ainda não tenha sido 
+     * definido */ 
+    qtd_offset = 1 + high - low; 
+    posicao = indice - low; 
+    for (int32_t l = 0; l < qtd_offset; l++)
+    {
+        // se estamos na posicao correta
+        if (l == posicao)
+        {
+            // extrai offset
+            offset = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                offset = (offset << 8) + frameCorrente->code[pc_aux];   
+                pc_aux++; 
+            }       
+            
+            // calcula posicao 
+            pc_novo = frameCorrente->pc + offset; 
+            definido = true;
+            
+            // sai do loop 
+            break;
+        }
+
+        // senao, passa pelo offset atual incrementando pc
+        else
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                pc_aux++; 
+            }       
+        }
+    }
+
+    // poe valor correto em frameCorrente
+    frameCorrente->pc = pc_novo; 
 }
-void lookupswitch(){
 
+void lookupswitch(){
+    uint32_t pc_aux, pc_novo; 
+    uint32_t bytes_preench;
+    uint32_t offset;
+    int32_t default_v, npairs; 
+    int32_t match; 
+    int32_t key;
+
+    // diz se o novo valor de pc ja esta definido ou nao 
+    bool definido = false; 
+
+    // pc auxiliar que iremos seguindo durante a execucao da instrucao 
+    pc_aux = frameCorrente->pc; 
+   
+    // pega key da operand stack
+    key = pop_op(); 
+    
+    // pula bytes de preenchimento
+    bytes_preench = (4 - ((pc_aux + 1) % 4) ) % 4;  
+    //bytes_preench = (pc_aux + 1) % 4;
+    pc_aux += bytes_preench;
+    pc_aux++;
+   
+    // pega bytes default 
+    default_v = 0;
+    for (int l = 0; l < 4; l++)
+    {
+        default_v = (default_v << 8) + frameCorrente->code[pc_aux];   
+        pc_aux++;
+    }       
+    
+    // pega numeros de pares
+    npairs = 0;
+    for (int l = 0; l < 4; l++)
+    {
+        npairs = (npairs << 8) + frameCorrente->code[pc_aux];   
+        pc_aux++;
+    }       
+    
+    
+    // itera pelo numero de pares
+    for (int32_t l = 0; l < npairs; l++)
+    {
+        // pega match atual 
+        match = 0;
+        for (int l = 0; l < 4; l++)
+        {
+            match = (match << 8) + frameCorrente->code[pc_aux];   
+            pc_aux++;
+        }       
+        
+        // se a key corresponde ao match 
+        if (key == match)
+        {
+            // pega offset
+            offset = 0;
+            for (int l = 0; l < 4; l++)
+            {
+                offset = (offset << 8) + frameCorrente->code[pc_aux];   
+                pc_aux++;
+            }       
+            
+            // poe valor correto em pc_novo
+            pc_novo = frameCorrente->pc + offset; 
+
+            // set booleano que achou o match
+            definido = true;
+        }
+
+        // senao 
+        else
+        {
+            // pula offset
+            for(int i = 0; i < 4; i++)
+            {
+                pc_aux++;
+            }
+        }
+     }
+
+    // se ainda nao achamos o offset 
+    if (!definido)
+    {
+        pc_novo = frameCorrente->pc + default_v;
+    }
+
+    // poe valor correto no offset
+    frameCorrente->pc = pc_novo; 
 }
 
 /**
@@ -2162,6 +3473,7 @@ void ins_return(){
 	atualizaPc();
 	printf("retornando! método acabou!\n");
 }
+
 void getstatic(){
 	printf("Entrei no getstatic!!\n");
 
@@ -2564,7 +3876,6 @@ void ins_new(){
 	nomeClasse = retornaNome(frameCorrente->classe, frameCorrente->constant_pool[indice-1].info.Class.name_index);
 
 	if(strcmp("java/util/Scanner",nomeClasse) == 0){
-
 		printf("Método nativo java - java/util/Scanner\n");
 		naoEmpilhaFlag = 1;
 
@@ -2573,7 +3884,6 @@ void ins_new(){
 	}
 
 	if(strcmp("java/lang/StringBuffer",nomeClasse) == 0){
-
 		printf("Método nativo java - java/util/Scanner\n");
 		naoEmpilhaFlag = 1;
 

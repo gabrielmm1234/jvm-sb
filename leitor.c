@@ -348,7 +348,7 @@ void le_code(code_attribute** cd_atrb, uint16_t name_ind, uint32_t att_len, FILE
 
     // le atributos opcionais de debug
     // nao precisa preocupar muito com isso 
-    while (ftell(file) - posicao_inicial < (*cd_atrb)->attribute_length) 
+    while (ftell(file) - posicao_inicial < (int32_t)((*cd_atrb)->attribute_length)) 
     {
         le1Byte(file);
     }
@@ -387,7 +387,8 @@ void salva_instrucoes(code_attribute** cd_atrb, FILE* file)
             pos_referencia = k - 1;
 
             // pega bytes de preenchimento 
-            bytes_preench = k % 4;  
+            //bytes_preench = k % 4;  
+            bytes_preench = (4 - (k % 4)) % 4;  
             for (int l = 0; l < bytes_preench; l++)
             {
                 k++; 
@@ -399,7 +400,7 @@ void salva_instrucoes(code_attribute** cd_atrb, FILE* file)
             for (int l = 0; l < 4; l++)
             {
                 fread(&((*cd_atrb)->code[k]), 1, 1, file);
-                default_v = (default_v << 4) + (*cd_atrb)->code[k];   
+                default_v = (default_v << 8) + (*cd_atrb)->code[k];   
                 k++; 
             }       
 
@@ -408,7 +409,7 @@ void salva_instrucoes(code_attribute** cd_atrb, FILE* file)
             for (int l = 0; l < 4; l++)
             {
                 fread(&((*cd_atrb)->code[k]), 1, 1, file);
-                low = (low << 4) + (*cd_atrb)->code[k];   
+                low = (low << 8) + (*cd_atrb)->code[k];   
                 k++; 
             }       
 
@@ -417,7 +418,7 @@ void salva_instrucoes(code_attribute** cd_atrb, FILE* file)
             for (int l = 0; l < 4; l++)
             {
                 fread(&((*cd_atrb)->code[k]), 1, 1, file);
-                high = (high << 4) + (*cd_atrb)->code[k];   
+                high = (high << 8) + (*cd_atrb)->code[k];   
                 k++; 
             }       
             
@@ -442,7 +443,8 @@ void salva_instrucoes(code_attribute** cd_atrb, FILE* file)
             pos_referencia = k - 1;
 
             // pega bytes de preenchimento - nao salva em nenhum lugar
-            bytes_preench = k % 4;  
+            //bytes_preench = k % 4;  
+            bytes_preench = (4 - (k % 4)) % 4;  
             for (int l = 0; l < bytes_preench; l++)
             {
                 k++; 
@@ -454,16 +456,16 @@ void salva_instrucoes(code_attribute** cd_atrb, FILE* file)
             for (int l = 0; l < 4; l++)
             {
                 fread(&((*cd_atrb)->code[k]), 1, 1, file);
-                default_v = (default_v << 4) + (*cd_atrb)->code[k];   
+                default_v = (default_v << 8) + (*cd_atrb)->code[k];   
                 k++; 
             }       
 
-            // pega bytes low
+            // pega npairs
             npairs = 0;
             for (int l = 0; l < 4; l++)
             {
                 fread(&((*cd_atrb)->code[k]), 1, 1, file);
-                npairs = (npairs << 4) + (*cd_atrb)->code[k];   
+                npairs = (npairs << 8) + (*cd_atrb)->code[k];   
                 k++; 
             }       
 

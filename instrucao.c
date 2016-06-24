@@ -3529,11 +3529,61 @@ void dcmpl(){
 void dcmpg(){
 
 }
+
+/**
+ * Funcao que realiza um jump se valor desempilhado for igual que 0.
+ * eq -> equals to zero.
+ * @param void
+ * @return void 
+ */
 void ifeq(){
+	uint8_t offset1,offset2;
+	int16_t offset;
 
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
+
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha = pop_op();
+
+	//Se val igual a zero atualiza pc com offset
+	if(retPilha == 0){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
-void ifne(){
 
+/**
+ * Funcao que realiza um jump se valor desempilhado for diferente de 0.
+ * ne -> not equal to zero.
+ * @param void
+ * @return void 
+ */
+void ifne(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
+
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha = pop_op();
+
+	//Se val diferente de zero atualiza pc com offset
+	if(retPilha != 0){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
 
 /**
@@ -3543,9 +3593,15 @@ void ifne(){
  * @return void 
  */
 void iflt(){
-	uint8_t offset;
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
 	//Pega offset para salto.
-	offset = frameCorrente->code[frameCorrente->pc + 2];
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
 	//Pega valor a ser comparado na pilha.
 	int32_t retPilha = pop_op();
@@ -3558,14 +3614,88 @@ void iflt(){
 	}
 }
 
+/**
+ * Funcao que realiza um jump se valor desempilhado for maior ou igual que 0.
+ * ge -> greater than or equals to zero.
+ * @param void
+ * @return void 
+ */
 void ifge(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha = pop_op();
+
+	//Se val maior ou igual que zero atualiza pc com offset
+	if(retPilha >= 0){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
+
+/**
+ * Funcao que realiza um jump se valor desempilhado for maior que 0.
+ * gt -> greater than to zero.
+ * @param void
+ * @return void 
+ */
 void ifgt(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha = pop_op();
+
+	//Se val maior que zero atualiza pc com offset
+	if(retPilha > 0){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
-void ifle(){
 
+/**
+ * Funcao que realiza um jump se valor desempilhado for menor ou igual que 0.
+ * gt -> greater than to zero.
+ * @param void
+ * @return void 
+ */
+void ifle(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
+
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha <= 0){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
 void if_icmpeq(){
 

@@ -61,6 +61,42 @@ void atualizaPc(){
 		frameCorrente->pc++;
 }
 
+/*
+ * a funcao recebe uma referencia para a constant pool e a posicao que se deseja acessar
+ * a funcao retorna o indice da CONSTANT_UTF8 associada a CONSTANT da posicao passada na constant pool 
+ * @param cp_info* uma referencia a constant pool 
+ * @param int um indice para a constant pool 
+ * @return int indice da CONSTANT_UTF8 associada 
+ */
+int obtem_utf_eq(cp_info* cp, int pos_pool)
+{
+    int tag;
+
+    // pega tag 
+    tag = cp[pos_pool].tag;
+
+    // se a tag for o de uma UTF8
+    if (tag == CONSTANT_Utf8)
+    {
+        // imprime informacao e sai
+        return pos_pool;
+    }
+
+    // senao, de acordo com a tag, decide qual sera a proxima posicao da cte pool que iremos olhar
+    switch(tag)
+    {
+        case CONSTANT_Class:
+            return obtem_utf_eq(cp, cp[pos_pool].info.Class.name_index - 1);
+        case CONSTANT_String:
+            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
+        case CONSTANT_Integer: 
+            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
+        case CONSTANT_Float: 
+            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
+    }
+}
+
+
 /**
  * Função que aponta para uma implementação de cada instrução de acordo
  * com o opcode fornecido.
@@ -318,11 +354,8 @@ void iconst_m1(){
  * @return void 
  */
 void iconst_0(){
-
-    // poe 0 na pilha de operandos
-    push(0);
-
 	printf("Entrei no iconst_0\n");
+    // poe 0 na pilha de operandos
 	push((int32_t) 0);
 
 	atualizaPc();
@@ -336,7 +369,7 @@ void iconst_0(){
  */
 void iconst_1(){
 
-    printf("cheguei aqui");
+    printf("Entrei no iconst_1\n");
     // poe 1 na pilha de operandos
     push(1);
     
@@ -635,41 +668,6 @@ void sipush(){
     push(valor);
     
     atualizaPc();
-}
-
-/*
- * a funcao recebe uma referencia para a constant pool e a posicao que se deseja acessar
- * a funcao retorna o indice da CONSTANT_UTF8 associada a CONSTANT da posicao passada na constant pool 
- * @param cp_info* uma referencia a constant pool 
- * @param int um indice para a constant pool 
- * @return int indice da CONSTANT_UTF8 associada 
- */
-int obtem_utf_eq(cp_info* cp, int pos_pool)
-{
-    int tag;
-
-    // pega tag 
-    tag = cp[pos_pool].tag;
-
-    // se a tag for o de uma UTF8
-    if (tag == CONSTANT_Utf8)
-    {
-        // imprime informacao e sai
-        return pos_pool;
-    }
-
-    // senao, de acordo com a tag, decide qual sera a proxima posicao da cte pool que iremos olhar
-    switch(tag)
-    {
-        case CONSTANT_Class:
-            return obtem_utf_eq(cp, cp[pos_pool].info.Class.name_index - 1);
-        case CONSTANT_String:
-            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
-        case CONSTANT_Integer: 
-            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
-        case CONSTANT_Float: 
-            return obtem_utf_eq(cp, cp[pos_pool].info.String.string_index - 1); 
-    }
 }
 
 /*
@@ -3548,7 +3546,7 @@ void ins_return(){
 
 	//setar variaveis globais de retorno para 0.
 	retorno = 0;
-	flagRet = 1;
+	flagRet = 0;
 
 	atualizaPc();
 	printf("retornando! método acabou!\n");

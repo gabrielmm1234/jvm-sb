@@ -39,4 +39,4 @@
 #javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar Object2.java
 
 # Operacoes
-javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar Operacoes.java
+#javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar Operacoes.java

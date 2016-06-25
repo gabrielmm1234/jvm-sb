@@ -6,11 +6,11 @@ echo "finished building"
 ./compila 
 echo "finished compiling"
 
-#./jvm.exe < testes/hello.txt
-#./jvm.exe < testes/delta.txt
-#./jvm.exe < testes/switch.txt
-#./jvm.exe < testes/lk_switch.txt
-#./jvm.exe < testes/object.txt
+./jvm.exe < testes/hello.txt
+./jvm.exe < testes/delta.txt
+./jvm.exe < testes/switch.txt
+./jvm.exe < testes/lk_switch.txt
+./jvm.exe < testes/object.txt
 
 # testes de instrucao aritmetica 
 ./jvm.exe < testes/operacoes.txt

@@ -952,6 +952,9 @@ void iload_2(){
  */
 void iload_3(){
     int32_t valor;
+    char* tipo = "I";
+    tipoGlobal = tipo;
+
 
     // pega valor do array de var local na posicao 3
     valor = frameCorrente->fields[3];
@@ -1169,6 +1172,8 @@ void dload_0(){
 void dload_1(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+    char* tipo = "D";
+    tipoGlobal = tipo;
 
     // pega indice
     indice = 1; 
@@ -3893,7 +3898,7 @@ void invokevirtual(){
     char* nomeMetodo;
     char* descricaoMetodo;
     uint16_t nomeMetodoAux, descricaoMetodoAux,nomeTipoAux,stringAux;
-    int32_t resultado,resultado2;
+    int32_t resultado,resultado2, resultado_string;
     int32_t classeIndice;
     uint8_t* string;
     static int8_t flagAppend = 0;
@@ -3919,13 +3924,27 @@ void invokevirtual(){
 	}
 
 	if((strcmp(nomeClasse, "java/io/PrintStream") == 0) && (strcmp(nomeMetodo,"println") == 0)){
-		if(strstr(descricaoMetodo, "Ljava/lang/String") != NULL) {
+        // esse if nao eh necessario, colocamos 1 == 1 pois sempre vai entrar
+		/*if(strstr(descricaoMetodo, "Ljava/lang/String") != NULL || 1 == 1) {
 			if(flagAppend == 0){
-			resultado = pop_op();
-			//resultado = frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1];
-			string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
-			printf("%s\n",string);
-			}
+                resultado = pop_op();
+                string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
+                if (string != NULL)
+                {
+                    printf("%s\n",string);
+                }
+
+                else// (strcmp(tipoGlobal, "I"))
+                {
+                    printf("%d\n", resultado);
+			    }
+
+                // estava comentadoif(strcmp(tipoGlobal, "F") == 0){
+                    float valDesemp;
+                    memcpy(&valDesemp,&resultado, sizeof(float));
+                    printf("%f\n",valDesemp);
+                }
+            }
 			else if(flagAppend == 2){
 				resultado = pop_op();
 				resultado2 = pop_op();
@@ -3933,19 +3952,134 @@ void invokevirtual(){
 				string = frameCorrente->constant_pool[resultado2].info.Utf8.bytes;
 				printf("%s",string);
 
-					if(strcmp(tipoGlobal, "F") == 0){
-						float valDesemp;
-						memcpy(&valDesemp,&resultado, sizeof(float));
-						printf("%f\n",valDesemp);
-					}
+                if(strcmp(tipoGlobal, "F") == 0){
+                    float valDesemp;
+                    memcpy(&valDesemp,&resultado, sizeof(float));
+                    printf("%f\n",valDesemp);
+                }
 
-					if(strcmp(tipoGlobal, "I") == 0){
-						printf("%d\n", resultado);
-					}
+                if(strcmp(tipoGlobal, "I") == 0){
+                    printf("%d\n", resultado);
+                }
+
+                if(strcmp(tipoGlobal, "D") == 0){
+                    double resultado_double; 
+                    int64_t temp; 
+                    temp = resultado2;
+                    temp <<= 32;
+                    temp += resultado; 
+                    memcpy(&resultado_double, &temp, sizeof(int64_t));
+                    printf("%f\n", resultado_double);
+                }
 
 				flagAppend = 0;
 			}
 		}
+        */
+        if (flagAppend == 0)
+        {
+            resultado = pop_op();
+            string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
+            if (string != NULL)
+            {
+                printf("%s\n",string);
+            }
+
+            else if(strcmp(tipoGlobal, "F") == 0)
+            {
+                float valDesemp;
+                memcpy(&valDesemp, &resultado, sizeof(float));
+                printf("%f\n",valDesemp);
+            }
+
+            else if(strcmp(tipoGlobal, "D") == 0)
+            {
+                resultado2 = pop_op();
+
+                double resultado_double; 
+                int64_t temp; 
+
+                temp = resultado2;
+                temp <<= 32;
+                temp += resultado; 
+
+                memcpy(&resultado_double, &temp, sizeof(int64_t));
+                printf("%lf\n", resultado_double);
+            }
+
+            else if (strcmp(tipoGlobal, "I") == 0)
+            {
+                printf("%d\n", resultado);
+            }
+            else
+            {
+                printf("erro no invoke_virtual, tipoGlobal ainda nao setado");
+                exit(1);
+            }
+        }
+
+        if (flagAppend == 2)
+        {
+            if(strcmp(tipoGlobal, "F") == 0)
+            {
+                resultado = pop_op();
+                resultado_string = pop_op();
+
+                string = frameCorrente->constant_pool[resultado_string].info.Utf8.bytes;
+                if (string != NULL)
+                {
+                    printf("%s",string);
+                }
+
+                float valDesemp;
+                memcpy(&valDesemp,&resultado, sizeof(float));
+                printf("%f\n",valDesemp);
+            }
+
+            else if(strcmp(tipoGlobal, "I") == 0)
+            {
+                resultado = pop_op();
+                resultado_string = pop_op();
+
+                string = frameCorrente->constant_pool[resultado_string].info.Utf8.bytes;
+                if (string != NULL)
+                {
+                    printf("%s",string);
+                }
+                printf("%d\n", resultado);
+            }
+
+            else if(strcmp(tipoGlobal, "D") == 0)
+            {
+                resultado = pop_op();
+                resultado2 = pop_op();
+                resultado_string = pop_op();
+
+                double resultado_double; 
+                int64_t temp; 
+
+                temp = resultado2;
+                temp <<= 32;
+                temp += resultado; 
+
+                if (string != NULL)
+                {
+                    printf("%s",string);
+                }
+
+                memcpy(&resultado_double, &temp, sizeof(int64_t));
+                printf("%lf\n", resultado_double);
+            }
+
+            else
+            {
+                printf("tipoGlobal ainda nao reconhecido");
+                exit(1);
+            }
+
+            flagAppend = 0;
+        }
+
 	}
 
 	if((strcmp(nomeClasse, "java/util/Scanner") == 0) && (strcmp(nomeMetodo,"next") == 0)){

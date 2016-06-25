@@ -142,18 +142,19 @@ void push(int32_t valor)
 {	
 	//printf("depth: %d\n",frameCorrente->pilha_op->depth);
 	//printf("max_stack: %d\n",frameCorrente->max_stack);
+    
+    mostra_profundidade(1);
 
 	if(frameCorrente->pilha_op->depth >= frameCorrente->max_stack){
 		printf("Overflow na pilha de operandos!\n");
 		exit(0);
 	}
 
-    // poe valor no frame
-    frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth] = valor; 
-
     // incrementa profundidade da pilha 
     frameCorrente->pilha_op->depth += 1;
-    //dumpStack();
+
+    // poe valor no frame - o -1 eh pq o array comeca em 0
+    frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth - 1] = valor; 
 }
 
 /**
@@ -163,12 +164,37 @@ void push(int32_t valor)
  */
 int32_t pop_op()
 {
+    mostra_profundidade(-1);
+
     // decrementa profundidade da pilha 
     frameCorrente->pilha_op->depth -= 1;
 
-    // retorna valor. o +1 se deve ao fato de ja termos decrementado o topo da pilha
+    if (frameCorrente->pilha_op->depth < 0)
+    {
+        printf("profundidade da pilha de operandos negativa: %d\n", frameCorrente->pilha_op->depth);
+        printf("pc: %d\n", frameCorrente->pc);
+    }
+
+    // retorna valor se deve ao fato de ja termos decrementado o topo da pilha
     return frameCorrente->pilha_op->operandos[frameCorrente->pilha_op->depth];  
 
+}
+
+decodificador dec[NUM_INSTRUCAO];
+void mostra_profundidade(int i)
+{
+    // flag para debug
+    int j = 0;
+    
+    if (j == 1)
+    { 
+        inicializa_decodificador(dec); 
+        int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
+
+        printf("instrucao que modifica pilha: %s\n", dec[frameCorrente->code[frameCorrente->pc]].instrucao);
+        printf("valor de pc: %d\n", frameCorrente->pc);
+        printf("nova profundidade da pilha: %d\n", frameCorrente->pilha_op->depth + i);   
+    }
 }
 
 /**
@@ -181,6 +207,7 @@ void dumpStack(){
 		printf("valor: %d\n",frameCorrente->pilha_op->operandos[i]);
 	}
 }
+
 
 /**
  * funcao criada para analisar o conteudo do array de variaveis locais

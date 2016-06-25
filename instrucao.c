@@ -27,6 +27,7 @@
 #include <math.h> 
 #include <stdint.h>
 #include <stdlib.h>
+#include <inttypes.h>
 
  #define NULL_REF NULL
 
@@ -763,6 +764,9 @@ void ldc_w(){
  */
 void ldc2_w(){
 
+    //int32_t indice;
+
+    //indice = (frameCorrente->code[frameCorrente->pc + 1] << 8 + frameCorrente->code[frameCorrente->pc + 2]);
 	//Pega indice presente na instrução para acesso a constant pool.
 	uint8_t indice = frameCorrente->code[frameCorrente->pc + 2];
 
@@ -770,7 +774,13 @@ void ldc2_w(){
 	//Pode ser ou long ou double.
 	uint8_t tag = (frameCorrente->constant_pool[indice-1]).tag;
 
-	//TODO LONG
+	// long
+	if(tag == 5){
+		uint32_t alta = frameCorrente->constant_pool[indice-1].info.Long.high_bytes;
+		uint32_t baixa = frameCorrente->constant_pool[indice-1].info.Long.low_bytes;
+		push(alta);
+		push(baixa);
+	}
 
 	//Se tag é 6 (double) acessa high bytes e low bytes e empilha.
 	if(tag == 6){
@@ -790,6 +800,9 @@ void ldc2_w(){
  * @return void
  */
 void iload(){
+
+    char* tipo = "I";
+    tipoGlobal = tipo;
 
 	// TODO: The iload opcode can be used in conjunction with the wide
 	// instruction (§wide) to access a local variable using a two-byte
@@ -999,6 +1012,8 @@ void lload_0(){
 void lload_1(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+    char* tipo = "L";
+    tipoGlobal = tipo;
 
     // pega indice
     indice = 1;
@@ -1222,6 +1237,8 @@ void dload_2(){
 void dload_3(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+    char* tipo = "D";
+    tipoGlobal = tipo;
 
     // pega indice
     indice = 3; 
@@ -4032,6 +4049,7 @@ void getstatic(){
     // incrementa profundidade do stack 
 
 	atualizaPc();
+    frameCorrente->pilha_op->depth += 1;
 }
 
 void putstatic(){
@@ -4247,6 +4265,18 @@ void invokevirtual(){
 
                 memcpy(&resultado_double, &temp, sizeof(int64_t));
                 printf("%lf\n", resultado_double);
+            }
+
+            else if(strcmp(tipoGlobal, "L") == 0)
+            {
+                resultado2 = pop_op();
+                int64_t long_num; 
+
+                long_num= resultado2;
+                long_num <<= 32;
+                long_num += resultado; 
+
+                printf("%" PRIu64 "\n", long_num);
             }
 
             else if (strcmp(tipoGlobal, "I") == 0)

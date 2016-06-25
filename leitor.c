@@ -134,6 +134,12 @@ void constantPool(classFile* cf, FILE* file){
 				cp++;
 				i++;
 				break;
+			case CONSTANT_Long:
+				cp->info.Long.high_bytes = le4Bytes(file);
+				cp->info.Long.low_bytes = le4Bytes(file);
+				cp++;
+				i++;
+				break;
 			default:
 				break;
 		}

@@ -64,6 +64,7 @@ void dumpStack();
 void dumpFields();
 void pushFrame(cp_info*, classFile*, code_attribute*,struct stackFrame*);
 void popFrame();
+void mostra_profundidade(int i);
 
 //Refencia ao topo da pilha de frames. Essencial para Empilhar e desempilhar os frames.
 static struct stackFrame* topo = NULL;

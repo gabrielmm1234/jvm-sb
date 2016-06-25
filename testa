@@ -1,10 +1,11 @@
 # para testar se nao quebrou 
 rm jvm.exe
-make
+#make clean 
+make 
 echo "finished building"
 #clear
-./compila 
-echo "finished compiling"
+#./compila 
+#echo "finished compiling"
 
 ./jvm.exe < testes/hello.txt
 ./jvm.exe < testes/delta.txt

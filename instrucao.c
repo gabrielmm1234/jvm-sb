@@ -4569,9 +4569,33 @@ void ins_goto(){
 	//Jump
 	frameCorrente->pc += offset;
 }
-void jsr(){
 
+/**
+ * Jump SubRoutine. Pula para regiao formada por dois offsets
+ * salva na pilha endereço de retorno da proxima instrução.
+ * @param void
+ * @return void 
+ */
+void jsr(){
+	//Salva na pilha endereço de retorno(Instrução seguinte ao jsr).
+	push(frameCorrente->pc+3);
+
+	//obtém offset que vem da instruçao.
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
+
+	//Jump
+	frameCorrente->pc += offset;
 }
+
+
 void ret(){
 
 }
@@ -5486,9 +5510,53 @@ void ifnonnull(){
 		frameCorrente->pc += 3;
 	}
 }
+
+/**
+ * Funcao que realiza um jump a partir de um offset(wide) da instrução.
+ * @param void
+ * @return void 
+ */
 void goto_w(){
+	int32_t deslocamento,offset1,offset2,offset3,offset4;
 
+	//Pega os offsets
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset3 = frameCorrente->code[frameCorrente->pc + 3];
+	offset4 = frameCorrente->code[frameCorrente->pc + 4];
+
+	//Concatena para gerar o deslocamento.
+	deslocamento = (offset1 & 0xFF)<<24;
+	deslocamento |= (offset2 & 0xFF)<<16;
+	deslocamento |= (offset3 & 0xFF)<<8;
+	deslocamento |= (offset4 & 0xFF);
+
+	frameCorrente->pc += deslocamento;
 }
-void jsr_w(){
 
+/**
+ * Jump SubRoutine. Pula para regiao formada por 4 offsets
+ * salva na pilha endereço de retorno da proxima instrução.
+ * @param void
+ * @return void 
+ */
+void jsr_w(){
+	int32_t deslocamento,offset1,offset2,offset3,offset4;
+
+	//Empilha valor de retorno para a proxima instruçao.
+	push(frameCorrente->code[frameCorrente->pc + 5]);
+
+	//Pega os offsets
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset3 = frameCorrente->code[frameCorrente->pc + 3];
+	offset4 = frameCorrente->code[frameCorrente->pc + 4];
+
+	//Concatena para gerar o deslocamento.
+	deslocamento  = (offset1 & 0xFF)<<24;
+	deslocamento |= (offset2 & 0xFF)<<16;
+	deslocamento |= (offset3 & 0xFF)<<8;
+	deslocamento |= (offset4 & 0xFF);
+
+	frameCorrente->pc += deslocamento;
 }

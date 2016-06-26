@@ -3850,17 +3850,99 @@ void d2f(){
 
 	atualizaPc();
 }
+
+/**
+ * Desempilha um inteiro converte para byte e empilha.
+ * pode perder precisão. 32bits -> 8bits
+ * @param void
+ * @return void 
+ */
 void i2b(){
-
+	//Obtem valor de 32 bits da pilha
+	int32_t valPilha = pop_op();
+	//Converte para byte (pode perder precisao)
+	int8_t bVal = (int8_t) valPilha;
+	//Empilha novamente fazendo cast para 32bits para se adequar a pilha.
+	push((int32_t) bVal);
+	atualizaPc();
 }
+
+/**
+ * Desempilha um inteiro converte para char e empilha.
+ * pode perder precisão. 32bits -> 16bits
+ * @param void
+ * @return void 
+ */
 void i2c(){
-
+	//Obtem valor de 32 bits da pilha
+	int32_t valPilha = pop_op();
+	//Converte para char (pode perder precisao)
+	int16_t cVal = (int16_t) valPilha;
+	//Empilha novamente fazendo cast para 32bits para se adequar a pilha.
+	push((int32_t) cVal);
+	atualizaPc();
 }
+
+/**
+ * Desempilha um inteiro converte para short e empilha.
+ * pode perder precisão. 32bits -> 16bits
+ * @param void
+ * @return void 
+ */
 void i2s(){
-
+	//Obtem valor de 32 bits da pilha
+	int32_t valPilha = pop_op();
+	//Converte para char (pode perder precisao)
+	int16_t cVal = (int16_t) valPilha;
+	//Empilha novamente fazendo cast para 32bits para se adequar a pilha.
+	push((int32_t) cVal);
+	atualizaPc();
 }
-void lcmp(){
 
+/**
+ * Função que desempilha dois longs da pilha e compara.
+ * Se primeiro maior que segundo -> empilha 1
+ * Se forem iguais -> empilha 0
+ * Se primeiro menor que segundo -> empilha -1
+ * @param void
+ * @return void 
+ */
+void lcmp(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Atribui parte alta primeiro
+	int64_t lVal2 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal2 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal2 = lVal2 + baixa;
+
+	//Compara os dois longs e seta o resultado.
+	if(lVal2 == lVal){
+		push((int32_t)0);
+	}
+	else if(lVal2 > lVal){
+		push((int32_t)1);
+	}
+	else if(lVal2 < lVal){
+		push((int32_t)-1);
+	}
+
+	atualizaPc();
 }
 
 /**
@@ -3868,6 +3950,7 @@ void lcmp(){
  * Se primeiro maior que segundo -> empilha 1
  * Se forem iguais -> empilha 0
  * Se primeiro menor que segundo -> empilha -1
+ * OBS: Difere do fcmpg somente no tratamento do caso NaN!
  * @param void
  * @return void 
  */
@@ -3892,23 +3975,176 @@ void fcmpl(){
 	if(val1 == val2){
 		push((int32_t)0);
 	}
-	if(val1 > val2){
+	else if(val1 > val2){
 		push((int32_t)1);
 	}
-	if(val1 < val2){
+	else if(val1 < val2){
+		push((int32_t)-1);
+	}
+	else{
+		printf("NaN!!\n");
 		push((int32_t)-1);
 	}
 
 	atualizaPc();
 }
+
+/**
+ * Função que desempilha dois floats da pilha e compara.
+ * Se primeiro maior que segundo -> empilha 1
+ * Se forem iguais -> empilha 0
+ * Se primeiro menor que segundo -> empilha -1
+ * OBS: Difere do fcmpl somente no tratamento do caso NaN!
+ * @param void
+ * @return void 
+ */
 void fcmpg(){
+	//Valores a serem comparadas.
+	float val1,val2;
+	//Valor para receber o pop da pilha e realizar a copia dos bytes para 
+	//os floats.
+	int32_t retPilha;
 
+	//Desempilha o segundo valor(topo).
+	retPilha = pop_op();
+	//Copia os bytes do int32 para uma var do tipo float para nao perder precisão.
+	memcpy(&val2,&retPilha,sizeof(float));
+
+	//Desempilha o primeiro valor(topo).
+	retPilha = pop_op();
+	//Copia os bytes do int32 para uma var do tipo float para nao perder precisão.
+	memcpy(&val1,&retPilha,sizeof(float));
+
+	//Compara os dois floats e seta o resultado.
+	if(val1 == val2){
+		push((int32_t)0);
+	}
+	else if(val1 > val2){
+		push((int32_t)1);
+	}
+	else if(val1 < val2){
+		push((int32_t)-1);
+	}
+	else{
+		printf("NaN!!\n");
+		push((int32_t)1);
+	}
+
+	atualizaPc();
 }
+
+/**
+ * Função que desempilha dois double da pilha e compara.
+ * Se primeiro maior que segundo -> empilha 1
+ * Se forem iguais -> empilha 0
+ * Se primeiro menor que segundo -> empilha -1
+ * OBS: Difere do dcmpg somente no tratamento do caso NaN!
+ * @param void
+ * @return void 
+ */
 void dcmpl(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
 
+	//Atribui parte alta primeiro
+	int64_t dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	double doubleCmpl;
+	memcpy(&doubleCmpl, &dVal, sizeof(double));
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Atribui parte alta primeiro
+	int64_t dVal2 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal2 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal2 = dVal2 + baixa;
+
+	double doubleCmpl2;
+	memcpy(&doubleCmpl2, &dVal2, sizeof(double));
+
+	//Compara os dois longs e seta o resultado.
+	if(doubleCmpl2 > doubleCmpl){
+		push((int32_t)1);
+	}
+	else if(doubleCmpl2 == doubleCmpl){
+		push((int32_t)0);
+	}
+	else if(doubleCmpl2 < doubleCmpl){
+		push((int32_t)-1);
+	}
+	else{
+		printf("NaN!\n");
+		push((int32_t) -1);
+	}
+
+	atualizaPc();
 }
-void dcmpg(){
 
+/**
+ * Função que desempilha dois double da pilha e compara.
+ * Se primeiro maior que segundo -> empilha 1
+ * Se forem iguais -> empilha 0
+ * Se primeiro menor que segundo -> empilha -1
+ * OBS: Difere do dcmpl somente no tratamento do caso NaN!
+ * @param void
+ * @return void 
+ */
+void dcmpg(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Atribui parte alta primeiro
+	int64_t dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	double doubleCmpl;
+	memcpy(&doubleCmpl, &dVal, sizeof(double));
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Atribui parte alta primeiro
+	int64_t dVal2 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal2 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal2 = dVal2 + baixa;
+
+	double doubleCmpl2;
+	memcpy(&doubleCmpl2, &dVal2, sizeof(double));
+
+	//Compara os dois longs e seta o resultado.
+	if(doubleCmpl2 > doubleCmpl){
+		push((int32_t)1);
+	}
+	else if(doubleCmpl2 == doubleCmpl){
+		push((int32_t)0);
+	}
+	else if(doubleCmpl2 < doubleCmpl){
+		push((int32_t)-1);
+	}
+	else{
+		printf("NaN!\n");
+		push((int32_t) 1);
+	}
+
+	atualizaPc();
 }
 
 /**

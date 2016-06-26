@@ -64,7 +64,7 @@ void pushFrame(cp_info* cp, classFile* classe, code_attribute* code,struct stack
 	//Inicializa bytecodes.
 	topo->refFrame->classe = classe;
 	topo->refFrame->constant_pool = cp; 
-	topo->refFrame->max_stack = code->max_stack + 1;
+	topo->refFrame->max_stack = 2 * code->max_stack;
 	topo->refFrame->max_locals = code->max_locals;
 	topo->refFrame->code_length = code->code_length;		
 	topo->refFrame->code = code->code;
@@ -144,6 +144,7 @@ void push(int32_t valor)
 	//printf("max_stack: %d\n",frameCorrente->max_stack);
     
     mostra_profundidade(1);
+
 
 	if(frameCorrente->pilha_op->depth >= frameCorrente->max_stack){
 		printf("Overflow na pilha de operandos!\n");

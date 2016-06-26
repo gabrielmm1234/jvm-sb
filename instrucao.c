@@ -615,7 +615,7 @@ void dconst_1(){
  * @return void 
  */
 void bipush(){
-	int8_t argumento = (int8_t) frameCorrente->code[(++frameCorrente->pc)];
+	int8_t argumento = (int8_t) frameCorrente->code[frameCorrente->pc + 1];
 
 	push((int32_t)argumento);
 	
@@ -653,6 +653,7 @@ void sipush(){
  */
 void ldc(){
     uint32_t indice;
+    tipoGlobal = NULL;
 	
     // pega indice 
     indice = frameCorrente->code[frameCorrente->pc + 1];
@@ -685,6 +686,8 @@ void ldc(){
     {
         // poe referencia para a classe na constant pool 
         // TODO Resolve nome da classe 
+        printf("a implementar\n");
+        exit(1);
     }
 
     // se nao for nenhum dos acima, reporta erro e sai
@@ -823,9 +826,10 @@ void iload(){
  */
 void lload(){
 
-    // TODO pq ta diferente do iload na parte de conseguir os bytes
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+    char* tipo = "L";
+    tipoGlobal = tipo;
 
     // pega indice
     indice = frameCorrente->code[frameCorrente->pc + 1];
@@ -866,9 +870,10 @@ void fload(){
  * @return void
  */
 void dload(){
-    // TODO pq ta diferente do iload na parte de conseguir os bytes
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+    char* tipo = "D";
+    tipoGlobal = tipo;
 
     // pega indice
     indice = frameCorrente->code[frameCorrente->pc + 1];
@@ -912,6 +917,8 @@ void aload(){
 void iload_0(){
 
     int32_t valor;
+    char* tipo = "I";
+    tipoGlobal = tipo;
 
     // pega valor do array de var local na posicao 2
     valor = frameCorrente->fields[0];
@@ -930,6 +937,8 @@ void iload_0(){
 void iload_1(){
 
     int32_t valor;
+    char* tipo = "I";
+    tipoGlobal = tipo;
 
     // pega valor do array de var local na posicao 1
     valor = frameCorrente->fields[1];
@@ -948,6 +957,8 @@ void iload_1(){
 void iload_2(){
 
     int32_t valor;
+    char* tipo = "I";
+    tipoGlobal = tipo;
 
     // pega valor do array de var local na posicao 2
     valor = frameCorrente->fields[2];
@@ -988,6 +999,8 @@ void lload_0(){
 
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+    char* tipo = "L";
+    tipoGlobal = tipo;
 
     // pega indice
     indice = 0;
@@ -1038,6 +1051,8 @@ void lload_1(){
 void lload_2(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+    char* tipo = "L";
+    tipoGlobal = tipo;
 
     // pega indice
     indice = 2;
@@ -1062,6 +1077,8 @@ void lload_2(){
 void lload_3(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+    char* tipo = "L";
+    tipoGlobal = tipo;
 
     // pega indice
     indice = 3;
@@ -1163,6 +1180,8 @@ void fload_3(){
 void dload_0(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+    char* tipo = "D";
+    tipoGlobal = tipo;
 
     // pega indice
     indice = 0; 
@@ -1213,6 +1232,8 @@ void dload_1(){
 void dload_2(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+    char* tipo = "D";
+    tipoGlobal = tipo;
 
     // pega indice
     indice = 2; 
@@ -1374,7 +1395,6 @@ void istore(){
  */
 void lstore(){
 
-    //TODO nao precisa de casting nesse caso, ne?
     int32_t indice; 
     int32_t parte_alta, parte_baixa; 
 
@@ -2186,8 +2206,8 @@ void swap(){
  */
 void iadd(){
 	int32_t v1,v2;
-	v1 = pop_op();
 	v2 = pop_op();
+	v1 = pop_op();
 	
 	push(v1+v2);
 
@@ -2349,8 +2369,8 @@ void dadd(){
  */
 void isub(){
 	int32_t v1,v2;
-	v1 = pop_op();
 	v2 = pop_op();
+	v1 = pop_op();
 
 	push(v1-v2);
 
@@ -2418,8 +2438,8 @@ void fsub(){
 	float fVal1,fVal2;
 
 	//Desempilha os dois valores
-	int32_t aux1 = pop_op();
 	int32_t aux2 = pop_op();
+	int32_t aux1 = pop_op();
 
 	//Converte para float e nao perde precisao
 	memcpy(&fVal1, &aux1, sizeof(int32_t));
@@ -2488,7 +2508,9 @@ void dsub(){
 	memcpy(&valorDouble2, &dVal, sizeof(int64_t));
 
 	//Soma os dois valores double
-	double doubleSubtraido = valorDouble1 - valorDouble2;
+	//double doubleSubtraido = valorDouble1 - valorDouble2;
+    // mudei aqui pois o valor que sai da pilha primeiro eh o valor 2
+	double doubleSubtraido = valorDouble2 - valorDouble1;
 	
 	//Necessario converter mais uma vez o double somado para int64 para 
 	//empilhar corretamente.
@@ -4047,9 +4069,12 @@ void getstatic(){
         // se nao for um campo static lanca excecao 
     // poe valor da classe no stack 
     // incrementa profundidade do stack 
+    // uma possivel abordagem eh aumentar o tamanho da pilha
+    frameCorrente->pilha_op->depth += 1;
+    // outra abordagem eh dar um push - deve facilitar debug - deu errado para um teste
+    //push(0);
 
 	atualizaPc();
-    frameCorrente->pilha_op->depth += 1;
 }
 
 void putstatic(){
@@ -4160,7 +4185,7 @@ void invokevirtual(){
     uint16_t nomeMetodoAux, descricaoMetodoAux,nomeTipoAux,stringAux;
     int32_t resultado,resultado2, resultado_string;
     int32_t classeIndice;
-    uint8_t* string;
+    uint8_t* string = NULL;
     static int8_t flagAppend = 0;
 
     uint32_t pcAux = frameCorrente->code[frameCorrente->pc + 2];
@@ -4239,9 +4264,13 @@ void invokevirtual(){
         if (flagAppend == 0)
         {
             resultado = pop_op();
-            string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
-            if (string != NULL)
+            //string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
+            if (tipoGlobal == NULL)
             {
+                string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
+            }
+
+            if (string != NULL) {
                 printf("%s\n",string);
             }
 
@@ -4283,6 +4312,7 @@ void invokevirtual(){
             {
                 printf("%d\n", resultado);
             }
+
             else
             {
                 printf("erro no invoke_virtual, tipoGlobal ainda nao setado");

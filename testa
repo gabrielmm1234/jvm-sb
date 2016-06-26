@@ -14,4 +14,4 @@ echo "finished building"
 ./jvm.exe < testes/object.txt
 
 # testes de instrucao aritmetica 
-./jvm.exe < testes/operacoes.txt
+#./jvm.exe < testes/operacoes.txt

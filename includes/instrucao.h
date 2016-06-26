@@ -212,8 +212,6 @@ void arraylength();
 void athrow();
 void checkcast();
 void instanceof();
-void monitorenter();
-void monitorexit();
 void wide();
 void multianewarray();
 void ifnull();

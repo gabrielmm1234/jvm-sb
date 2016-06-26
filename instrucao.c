@@ -299,8 +299,6 @@ void newInstrucoes(){
 	instrucao[191] = athrow;
 	instrucao[192] = checkcast;
 	instrucao[193] = instanceof;
-	instrucao[194] = monitorenter;
-	instrucao[195] = monitorexit;
 	instrucao[196] = wide;
 	instrucao[197] = multianewarray;
 	instrucao[198] = ifnull;
@@ -312,7 +310,8 @@ void newInstrucoes(){
 //Implementação de cada instrução.
 
 /**
- * funcao que nao realiza nada na pilha de operandos nem no array de var local 
+ * funcao que nao realiza nada na pilha de operandos nem no array de var local
+ * Somente pula para a proxima instruçao.
  * @param void 
  * @return void 
  */
@@ -825,6 +824,8 @@ void iload(){
  * @return void
  */
 void lload(){
+	char* tipo = "L";
+    tipoGlobal = tipo;
 
     int32_t indice;
     int32_t parte_alta, parte_baixa;
@@ -852,6 +853,9 @@ void lload(){
  */
 void fload(){
 
+	char* tipo = "F";
+    tipoGlobal = tipo;
+
     int32_t indice, valor; 
 
     // pega indice 
@@ -870,6 +874,10 @@ void fload(){
  * @return void
  */
 void dload(){
+
+	char* tipo = "D";
+    tipoGlobal = tipo;
+
     int32_t indice;
     int32_t parte_alta, parte_baixa;
     char* tipo = "D";
@@ -916,6 +924,9 @@ void aload(){
  */
 void iload_0(){
 
+	char* tipo = "I";
+    tipoGlobal = tipo;
+
     int32_t valor;
     char* tipo = "I";
     tipoGlobal = tipo;
@@ -935,6 +946,9 @@ void iload_0(){
  * @return void
  */
 void iload_1(){
+
+	char* tipo = "I";
+    tipoGlobal = tipo;
 
     int32_t valor;
     char* tipo = "I";
@@ -956,6 +970,9 @@ void iload_1(){
  */
 void iload_2(){
 
+	char* tipo = "I";
+    tipoGlobal = tipo;
+
     int32_t valor;
     char* tipo = "I";
     tipoGlobal = tipo;
@@ -975,8 +992,10 @@ void iload_2(){
  * @return void
  */
 void iload_3(){
+
     int32_t valor;
     char* tipo = "I";
+
     tipoGlobal = tipo;
 
 
@@ -996,6 +1015,9 @@ void iload_3(){
  * @return void
  **/
 void lload_0(){
+
+	char* tipo = "L";
+    tipoGlobal = tipo;
 
     int32_t indice;
     int32_t parte_alta, parte_baixa;
@@ -1025,6 +1047,7 @@ void lload_0(){
 void lload_1(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+
     char* tipo = "L";
     tipoGlobal = tipo;
 
@@ -1049,6 +1072,10 @@ void lload_1(){
  * @return void
  */
 void lload_2(){
+
+	char* tipo = "L";
+    tipoGlobal = tipo;
+
     int32_t indice;
     int32_t parte_alta, parte_baixa;
     char* tipo = "L";
@@ -1075,6 +1102,10 @@ void lload_2(){
  * @return void
  */
 void lload_3(){
+
+	char* tipo = "L";
+    tipoGlobal = tipo;
+
     int32_t indice;
     int32_t parte_alta, parte_baixa;
     char* tipo = "L";
@@ -1102,6 +1133,9 @@ void lload_3(){
  */
 void fload_0(){
 
+	char* tipo = "F";
+    tipoGlobal = tipo;
+
     int32_t indice, valor; 
 
     // pega indice 
@@ -1121,6 +1155,10 @@ void fload_0(){
  * @return void
  */
 void fload_1(){
+
+	char* tipo = "F";
+    tipoGlobal = tipo;
+
     int32_t indice, valor; 
 
     // pega indice 
@@ -1140,6 +1178,10 @@ void fload_1(){
  * @return void
  */
 void fload_2(){
+
+	char* tipo = "F";
+    tipoGlobal = tipo;
+
     int32_t indice, valor; 
 
     // pega indice 
@@ -1159,6 +1201,10 @@ void fload_2(){
  * @return void
  */
 void fload_3(){
+
+	char* tipo = "F";
+    tipoGlobal = tipo;
+
     int32_t indice, valor; 
 
     // pega indice 
@@ -1178,6 +1224,10 @@ void fload_3(){
  * @return void
  */
 void dload_0(){
+
+	char* tipo = "D";
+    tipoGlobal = tipo;
+
     int32_t indice;
     int32_t parte_alta, parte_baixa;
     char* tipo = "D";
@@ -1206,6 +1256,7 @@ void dload_0(){
 void dload_1(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+
     char* tipo = "D";
     tipoGlobal = tipo;
 
@@ -1235,6 +1286,9 @@ void dload_2(){
     char* tipo = "D";
     tipoGlobal = tipo;
 
+    char* tipo = "D";
+    tipoGlobal = tipo;
+
     // pega indice
     indice = 2; 
 
@@ -1258,6 +1312,7 @@ void dload_2(){
 void dload_3(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+
     char* tipo = "D";
     tipoGlobal = tipo;
 
@@ -2021,21 +2076,20 @@ void pop2(){
  * @return void 
  */
 void dup(){
-	int32_t aux;
+	int32_t retPilha;
 
 	//Desempilha
-	aux = pop_op();
+	retPilha = pop_op();
 
 	//Duplica
-	push(aux);
-	push(aux);
+	push(retPilha);
+	push(retPilha);
 	
 	atualizaPc();
 }
 
 /**
  * Instrução que duplica valor da pilha e adiciona de volta de forma que se repita de forma nao ordenada.
->>>>>>> 958259ee88e6febbadd8b9de952f74bfa7df0287
  * @param void
  * @return void
  */
@@ -2043,9 +2097,9 @@ void dup_x1(){
 	int32_t aux1, aux2;
 
 	//Desempilha
-	aux2 = pop_op();
-
 	aux1 = pop_op();
+
+	aux2 = pop_op();
 
 	//Duplica
 	push(aux1);
@@ -2067,15 +2121,14 @@ void dup_x2(){
 
 	//forma 1
 
-	printf("Entrei no dup\n");
 	int32_t aux1, aux2, aux3;
 
 	//Desempilha
-	aux3 = pop_op();
+	aux1 = pop_op();
 
 	aux2 = pop_op();
 
-	aux1 = pop_op();
+	aux3 = pop_op();
 
 	//Duplica
 	push(aux1);
@@ -2096,14 +2149,12 @@ void dup2(){
 	//TODO : fazer para a forma 2
 
 	//forma 1
-
-	printf("Entrei no dup\n");
 	int32_t aux1, aux2, aux3;
 
 	//Desempilha
-	aux2 = pop_op();
-
 	aux1 = pop_op();
+
+	aux2 = pop_op();
 
 	//Duplica
 
@@ -2124,16 +2175,14 @@ void dup2_x1(){
 	//TODO : fazer para a forma 2
 
 	//forma 1
-
-	printf("Entrei no dup\n");
 	int32_t aux1, aux2, aux3;
 
 	//Desempilha
-	aux3 = pop_op();
+	aux1 = pop_op();
 
 	aux2 = pop_op();
 
-	aux1 = pop_op();
+	aux3 = pop_op();
 
 	//Duplica
 	push(aux2);
@@ -2156,18 +2205,16 @@ void dup2_x2(){
 	//TODO : fazer para a forma 2
 
 	//forma 1
-
-	printf("Entrei no dup\n");
 	int32_t aux1, aux2, aux3, aux4;
 
 	//Desempilha
-	aux4 = pop_op();
-
-	aux3 = pop_op();
+	aux1 = pop_op();
 
 	aux2 = pop_op();
 
-	aux1 = pop_op();
+	aux3 = pop_op();
+
+	aux4 = pop_op();
 
 	//Duplica
 	push(aux2);
@@ -3125,23 +3172,151 @@ void dneg(){
 	atualizaPc();
 }
 
+/**
+ * Desempilha quantidade a ser shiftada. Desempilha valor inteiro a ser shiftado
+ * shifta-o a esquerda e empilha o resultado.
+ * OBS: shifta no máximo 32 bits. Com sinal.
+ * @param void
+ * @return void 
+ */
 void ishl(){
+	//Pega quantidade a ser shiftada e limita em 32 bits (0x1f)
+	int32_t shift = pop_op();
+	shift = shift & 0x1f;
 
+	//Obtem valor da pilha e shifta a esquerda. Empilha o resultado.
+	int32_t sVal = pop_op();
+	sVal = sVal << shift;
+	push(sVal);
+
+	atualizaPc();
 }
+
+/**
+ * Desempilha quantidade a ser shiftada. Desempilha valor long a ser shiftado
+ * shifta-o a esquerda e empilha o resultado.
+ * OBS: shifta no máximo 64 bits. Com sinal.
+ * @param void
+ * @return void 
+ */
 void lshl(){
 
-}
-void ishr(){
+	//Desempilha a quantidade a ser shiftada e limita em 64 bits
+	int32_t shift = pop_op();
+	shift = shift & 0x3f;
 
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	lVal = lVal << shift;
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = lVal >> 32;
+	baixa = lVal & 0xffffffff;
+
+	//finalmente empilha.
+	push(alta);
+	push(baixa);
+
+	atualizaPc();
+}
+
+/**
+ * Desempilha quantidade a ser shiftada. Desempilha valor inteiro a ser shiftado
+ * shifta-o a direita e empilha o resultado.
+ * OBS: shifta no máximo 32 bits. Com sinal -> é equivalente a dividir o valor por 2.
+ * @param void
+ * @return void 
+ */
+void ishr(){
+	//Pega quantidade a ser shiftada e limita em 32 bits (0x1f)
+	int32_t shift = pop_op();
+	shift = shift & 0x1f;
+
+	//Obtem valor da pilha e shifta a direita(divide n vezes por 2). 
+	//Empilha o resultado.
+	int32_t sVal = pop_op();
+	
+	int32_t i = 0;
+	while(i < shift){
+		sVal = sVal / 2;
+		i += 1;
+	}
+
+	push(sVal);
+
+	atualizaPc();
 }
 void lshr(){
 
 }
+
+/**
+ * Desempilha quantidade a ser shiftada. Desempilha valor inteiro a ser shiftado
+ * shifta-o a direita e empilha o resultado.
+ * OBS: shifta no máximo 32 bits. Sem sinal -> operador >>
+ * @return void 
+ */
 void iushr(){
+	//Pega quantidade a ser shiftada e limita em 32 bits (0x1f)
+	int32_t shift = pop_op();
+	shift = shift & 0x1f;
 
+	//Obtem valor da pilha e shifta a esquerda. Empilha o resultado.
+	int32_t sVal = pop_op();
+	sVal = sVal >> shift;
+	push(sVal);
+
+	atualizaPc();
 }
-void lushr(){
 
+/**
+ * Desempilha quantidade a ser shiftada. Desempilha valor long a ser shiftado
+ * shifta-o a direita e empilha o resultado.
+ * OBS: shifta no máximo 64 bits. Sem sinal -> operador >>
+ * @return void 
+ */
+void lushr(){
+	//Desempilha a quantidade a ser shiftada e limita em 64 bits
+	int32_t shift = pop_op();
+	shift = shift & 0x3f;
+
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	lVal = lVal >> shift;
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = lVal >> 32;
+	baixa = lVal & 0xffffffff;
+
+	//finalmente empilha.
+	push(alta);
+	push(baixa);
+
+	atualizaPc();
 }
 
 /**
@@ -3350,14 +3525,32 @@ void lxor(){
 	push(alta);
 	push(baixa);
 
-	//atualiza pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
 	atualizaPc();
 }
-void iinc(){
 
+/**
+ * Funcao incrementa um valor do array de variaveis locais por uma constante.
+ * @param void
+ * @return void
+ */
+void iinc(){
+	//Pega posição no array de var local.
+	int8_t field = frameCorrente->code[frameCorrente->pc + 1];
+
+	//Pega valor a ser incrementado do array de var local.
+	int32_t value = frameCorrente->fields[field];
+
+	//Pega a constante a ser somada.
+	int8_t constant = frameCorrente->code[frameCorrente->pc + 2];
+
+	//Faz o cast para 8bits.
+	int8_t sumVal = (int8_t) value;
+	sumVal = sumVal + constant;
+
+	//Atualiza o valor somado no array;
+	frameCorrente->fields[field] = (int32_t) sumVal;
+
+	atualizaPc();
 }
 void i2l(){
 
@@ -3419,20 +3612,136 @@ void i2d(){
 
 	atualizaPc();
 }
+
+/**
+ * Desempilha um long converte para int e empilha
+ * @param void
+ * @return void 
+ */
 void l2i(){
+	int32_t alta,baixa;
 
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Empilha somente a parte baixa - 32 bits perdendo precisao.
+	push(baixa);
+	atualizaPc();
 }
+
+/**
+ * Desempilha um long converte para float e empilha
+ * @param void
+ * @return void 
+ */
 void l2f(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
 
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	float fVal;
+	memcpy(&fVal, &lVal, sizeof(float));
+
+	int32_t valPilha;
+	memcpy(&valPilha, &fVal, sizeof(int32_t));
+
+	push(valPilha);
+
+	atualizaPc();
 }
+
+/**
+ * Desempilha um long converte para double e empilha
+ * @param void
+ * @return void 
+ */
 void l2d(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
 
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	double dVal;
+	memcpy(&dVal, &lVal, sizeof(double));
+
+	//Necessario converter mais uma vez o double para int64 para 
+	//empilhar corretamente.
+	int64_t valorPilha;
+	memcpy(&valorPilha, &dVal, sizeof(int64_t));
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = valorPilha >> 32;
+	baixa = valorPilha & 0xffffffff;
+
+	//finalmente empilha.
+	push(alta);
+	push(baixa);
+
+	atualizaPc();
 }
+
+/**
+ * Desempilha um float converte para int e empilha
+ * @param void
+ * @return void 
+ */
 void f2i(){
+	int32_t retPilha = pop_op();
 
+	float fVal;
+	memcpy(&fVal, &retPilha, sizeof(int32_t));
+	push((int32_t)fVal);
+	atualizaPc();
 }
-void f2l(){
 
+/**
+ * Desempilha um float converte para long e empilha
+ * @param void
+ * @return void 
+ */
+void f2l(){
+	//Desempilha valor da pilha
+	int32_t retPilha = pop_op();
+	float fVal;
+	//Copia os bytes do retPilha para uma var float -> Nao perder precisao
+	memcpy(&fVal, &retPilha, sizeof(int32_t));
+
+	int64_t lVal = (int64_t) fVal;
+
+	//Parte alta e parte baixa do double.
+	int32_t alta;
+	int32_t baixa;
+
+	//Shifta 32 bits para pegar somente a parte alta
+	alta = lVal >> 32;
+
+	//Realiza um and bit a bit para zerar a parte alta e obter somente a parte baixa.
+	baixa = lVal & 0xffffffff;
+
+	//Empilha parte alta e baixa.
+	push(alta);
+	push(baixa);
+
+	atualizaPc();
 }
 
 /**
@@ -3471,11 +3780,60 @@ void f2d(){
 	atualizaPc();
 }
 
+/**
+ * Desempilha um double converte para integer e empilha.
+ * @param void
+ * @return void 
+ */
 void d2i(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
 
+	//Atribui parte alta primeiro
+	int64_t dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble1. -> Não perder a
+	//Precisão. Alternativa UNION!!
+	double v1;
+	memcpy(&v1, &dVal, sizeof(double));
+
+	push((int32_t)v1);
+	atualizaPc();
 }
-void d2l(){
 
+/**
+ * Desempilha um double converte para long(64bits) e empilha.
+ * @param void
+ * @return void 
+ */
+void d2l(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Atribui parte alta primeiro
+	int64_t dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble1. -> Não perder a
+	//Precisão. Alternativa UNION!!
+	double v1;
+	memcpy(&v1, &dVal, sizeof(double));
+
+	push((int64_t)v1);
+	atualizaPc();
 }
 
 /**
@@ -3513,17 +3871,99 @@ void d2f(){
 
 	atualizaPc();
 }
+
+/**
+ * Desempilha um inteiro converte para byte e empilha.
+ * pode perder precisão. 32bits -> 8bits
+ * @param void
+ * @return void 
+ */
 void i2b(){
-
+	//Obtem valor de 32 bits da pilha
+	int32_t valPilha = pop_op();
+	//Converte para byte (pode perder precisao)
+	int8_t bVal = (int8_t) valPilha;
+	//Empilha novamente fazendo cast para 32bits para se adequar a pilha.
+	push((int32_t) bVal);
+	atualizaPc();
 }
+
+/**
+ * Desempilha um inteiro converte para char e empilha.
+ * pode perder precisão. 32bits -> 16bits
+ * @param void
+ * @return void 
+ */
 void i2c(){
-
+	//Obtem valor de 32 bits da pilha
+	int32_t valPilha = pop_op();
+	//Converte para char (pode perder precisao)
+	int16_t cVal = (int16_t) valPilha;
+	//Empilha novamente fazendo cast para 32bits para se adequar a pilha.
+	push((int32_t) cVal);
+	atualizaPc();
 }
+
+/**
+ * Desempilha um inteiro converte para short e empilha.
+ * pode perder precisão. 32bits -> 16bits
+ * @param void
+ * @return void 
+ */
 void i2s(){
-
+	//Obtem valor de 32 bits da pilha
+	int32_t valPilha = pop_op();
+	//Converte para char (pode perder precisao)
+	int16_t cVal = (int16_t) valPilha;
+	//Empilha novamente fazendo cast para 32bits para se adequar a pilha.
+	push((int32_t) cVal);
+	atualizaPc();
 }
-void lcmp(){
 
+/**
+ * Função que desempilha dois longs da pilha e compara.
+ * Se primeiro maior que segundo -> empilha 1
+ * Se forem iguais -> empilha 0
+ * Se primeiro menor que segundo -> empilha -1
+ * @param void
+ * @return void 
+ */
+void lcmp(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Atribui parte alta primeiro
+	int64_t lVal2 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal2 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal2 = lVal2 + baixa;
+
+	//Compara os dois longs e seta o resultado.
+	if(lVal2 == lVal){
+		push((int32_t)0);
+	}
+	else if(lVal2 > lVal){
+		push((int32_t)1);
+	}
+	else if(lVal2 < lVal){
+		push((int32_t)-1);
+	}
+
+	atualizaPc();
 }
 
 /**
@@ -3531,6 +3971,7 @@ void lcmp(){
  * Se primeiro maior que segundo -> empilha 1
  * Se forem iguais -> empilha 0
  * Se primeiro menor que segundo -> empilha -1
+ * OBS: Difere do fcmpg somente no tratamento do caso NaN!
  * @param void
  * @return void 
  */
@@ -3555,23 +3996,176 @@ void fcmpl(){
 	if(val1 == val2){
 		push((int32_t)0);
 	}
-	if(val1 > val2){
+	else if(val1 > val2){
 		push((int32_t)1);
 	}
-	if(val1 < val2){
+	else if(val1 < val2){
+		push((int32_t)-1);
+	}
+	else{
+		printf("NaN!!\n");
 		push((int32_t)-1);
 	}
 
 	atualizaPc();
 }
+
+/**
+ * Função que desempilha dois floats da pilha e compara.
+ * Se primeiro maior que segundo -> empilha 1
+ * Se forem iguais -> empilha 0
+ * Se primeiro menor que segundo -> empilha -1
+ * OBS: Difere do fcmpl somente no tratamento do caso NaN!
+ * @param void
+ * @return void 
+ */
 void fcmpg(){
+	//Valores a serem comparadas.
+	float val1,val2;
+	//Valor para receber o pop da pilha e realizar a copia dos bytes para 
+	//os floats.
+	int32_t retPilha;
 
+	//Desempilha o segundo valor(topo).
+	retPilha = pop_op();
+	//Copia os bytes do int32 para uma var do tipo float para nao perder precisão.
+	memcpy(&val2,&retPilha,sizeof(float));
+
+	//Desempilha o primeiro valor(topo).
+	retPilha = pop_op();
+	//Copia os bytes do int32 para uma var do tipo float para nao perder precisão.
+	memcpy(&val1,&retPilha,sizeof(float));
+
+	//Compara os dois floats e seta o resultado.
+	if(val1 == val2){
+		push((int32_t)0);
+	}
+	else if(val1 > val2){
+		push((int32_t)1);
+	}
+	else if(val1 < val2){
+		push((int32_t)-1);
+	}
+	else{
+		printf("NaN!!\n");
+		push((int32_t)1);
+	}
+
+	atualizaPc();
 }
+
+/**
+ * Função que desempilha dois double da pilha e compara.
+ * Se primeiro maior que segundo -> empilha 1
+ * Se forem iguais -> empilha 0
+ * Se primeiro menor que segundo -> empilha -1
+ * OBS: Difere do dcmpg somente no tratamento do caso NaN!
+ * @param void
+ * @return void 
+ */
 void dcmpl(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
 
+	//Atribui parte alta primeiro
+	int64_t dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	double doubleCmpl;
+	memcpy(&doubleCmpl, &dVal, sizeof(double));
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Atribui parte alta primeiro
+	int64_t dVal2 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal2 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal2 = dVal2 + baixa;
+
+	double doubleCmpl2;
+	memcpy(&doubleCmpl2, &dVal2, sizeof(double));
+
+	//Compara os dois longs e seta o resultado.
+	if(doubleCmpl2 > doubleCmpl){
+		push((int32_t)1);
+	}
+	else if(doubleCmpl2 == doubleCmpl){
+		push((int32_t)0);
+	}
+	else if(doubleCmpl2 < doubleCmpl){
+		push((int32_t)-1);
+	}
+	else{
+		printf("NaN!\n");
+		push((int32_t) -1);
+	}
+
+	atualizaPc();
 }
-void dcmpg(){
 
+/**
+ * Função que desempilha dois double da pilha e compara.
+ * Se primeiro maior que segundo -> empilha 1
+ * Se forem iguais -> empilha 0
+ * Se primeiro menor que segundo -> empilha -1
+ * OBS: Difere do dcmpl somente no tratamento do caso NaN!
+ * @param void
+ * @return void 
+ */
+void dcmpg(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Atribui parte alta primeiro
+	int64_t dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	double doubleCmpl;
+	memcpy(&doubleCmpl, &dVal, sizeof(double));
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Atribui parte alta primeiro
+	int64_t dVal2 = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal2 <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal2 = dVal2 + baixa;
+
+	double doubleCmpl2;
+	memcpy(&doubleCmpl2, &dVal2, sizeof(double));
+
+	//Compara os dois longs e seta o resultado.
+	if(doubleCmpl2 > doubleCmpl){
+		push((int32_t)1);
+	}
+	else if(doubleCmpl2 == doubleCmpl){
+		push((int32_t)0);
+	}
+	else if(doubleCmpl2 < doubleCmpl){
+		push((int32_t)-1);
+	}
+	else{
+		printf("NaN!\n");
+		push((int32_t) 1);
+	}
+
+	atualizaPc();
 }
 
 /**
@@ -3741,29 +4335,237 @@ void ifle(){
 		frameCorrente->pc += 3;
 	}
 }
+
+/**
+ * Funcao que realiza um jump se os dois valores da pilha de operandos
+ * forem iguais.
+ * @param void
+ * @return void 
+ */
 void if_icmpeq(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha1 == retPilha2){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
+
+/**
+ * Funcao que realiza um jump se os dois valores da pilha de operandos
+ * não forem iguais.
+ * @param void
+ * @return void 
+ */
 void if_icmpne(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha1 != retPilha2){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
+
+/**
+ * Funcao que realiza um jump se um valor da pilha for menor que o outro
+ * .
+ * @param void
+ * @return void 
+ */
 void if_icmplt(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha2 < retPilha1){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
+
+/**
+ * Funcao que realiza um jump se um valor da pilha for maior ou igual
+ * que o outro.
+ * @param void
+ * @return void 
+ */
 void if_icmpge(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha2 >= retPilha1){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
+
+/**
+ * Funcao que realiza um jump se um valor da pilha for maior
+ * que o outro.
+ * @param void
+ * @return void 
+ */
 void if_icmpgt(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha2 > retPilha1){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
+
+/**
+ * Funcao que realiza um jump se um valor da pilha for menor ou igual
+ * que o outro.
+ * @param void
+ * @return void 
+ */
 void if_icmple(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha2 <= retPilha1){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
+
+/**
+ * Funcao que realiza um jump se um valor da pilha for igual
+ * que o outro.
+ * @param void
+ * @return void 
+ */
 void if_acmpeq(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha2 == retPilha1){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
-void if_acmpne(){
 
+/**
+ * Funcao que realiza um jump se um valor da pilha for diferente
+ * do outro.
+ * @param void
+ * @return void 
+ */
+void if_acmpne(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
+
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha2 != retPilha1){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
 
 /**
@@ -3773,9 +4575,17 @@ void if_acmpne(){
  */
 void ins_goto(){
 	//obtém offset que vem da instruçao.
-	int8_t offset = frameCorrente->code[frameCorrente->pc + 2];
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
-	//TODO pc = pc + offset
+	//Jump
 	frameCorrente->pc += offset;
 }
 void jsr(){
@@ -4039,8 +4849,17 @@ void dreturn(){
 
 	atualizaPc();
 }
-void areturn(){
 
+/**
+ * Retira uma referencia da pilha e empilha na pilha do chamador.
+ * @param void
+ * @return void 
+ */
+void areturn(){
+	int32_t retorno = pop_op();
+	flagRet = 1;
+
+	atualizaPc();
 }
 
 /**
@@ -4300,12 +5119,14 @@ void invokevirtual(){
             {
                 resultado2 = pop_op();
                 int64_t long_num; 
+                long long result;
 
                 long_num= resultado2;
                 long_num <<= 32;
                 long_num += resultado; 
 
-                printf("%" PRIu64 "\n", long_num);
+                memcpy(&result, &long_num, sizeof(long));
+                printf("%lld" PRIu64 "\n", result);
             }
 
             else if (strcmp(tipoGlobal, "I") == 0)
@@ -4621,23 +5442,68 @@ void checkcast(){
 void instanceof(){
 
 }
-void monitorenter(){
 
-}
-void monitorexit(){
-
-}
 void wide(){
 
 }
 void multianewarray(){
 
 }
+
+/**
+ * Função que pega dois bytes da instrução se operando for null realiza jump.
+ * @param void
+ * @return void 
+ */
 void ifnull(){
+	uint8_t offset1,offset2;
+	int16_t offset;
 
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
+
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha = pop_op();
+
+	//Se val igual a null atualiza pc com offset se não soma 3 para ir 
+	//Para proxima instrução.
+	if(retPilha == 0){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
-void ifnonnull(){
 
+/**
+ * Função que pega dois bytes da instrução se operando for diferente de null realiza jump.
+ * @param void
+ * @return void 
+ */
+void ifnonnull(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
+
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha = pop_op();
+
+	//Se val igual a null atualiza pc com offset se não soma 3 para ir 
+	//Para proxima instrução.
+	if(retPilha != 0){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
 void goto_w(){
 

@@ -1999,21 +1999,20 @@ void pop2(){
  * @return void 
  */
 void dup(){
-	int32_t aux;
+	int32_t retPilha;
 
 	//Desempilha
-	aux = pop_op();
+	retPilha = pop_op();
 
 	//Duplica
-	push(aux);
-	push(aux);
+	push(retPilha);
+	push(retPilha);
 	
 	atualizaPc();
 }
 
 /**
  * Instrução que duplica valor da pilha e adiciona de volta de forma que se repita de forma nao ordenada.
->>>>>>> 958259ee88e6febbadd8b9de952f74bfa7df0287
  * @param void
  * @return void
  */
@@ -2021,9 +2020,9 @@ void dup_x1(){
 	int32_t aux1, aux2;
 
 	//Desempilha
-	aux2 = pop_op();
-
 	aux1 = pop_op();
+
+	aux2 = pop_op();
 
 	//Duplica
 	push(aux1);
@@ -2045,15 +2044,14 @@ void dup_x2(){
 
 	//forma 1
 
-	printf("Entrei no dup\n");
 	int32_t aux1, aux2, aux3;
 
 	//Desempilha
-	aux3 = pop_op();
+	aux1 = pop_op();
 
 	aux2 = pop_op();
 
-	aux1 = pop_op();
+	aux3 = pop_op();
 
 	//Duplica
 	push(aux1);
@@ -2074,14 +2072,12 @@ void dup2(){
 	//TODO : fazer para a forma 2
 
 	//forma 1
-
-	printf("Entrei no dup\n");
 	int32_t aux1, aux2, aux3;
 
 	//Desempilha
-	aux2 = pop_op();
-
 	aux1 = pop_op();
+
+	aux2 = pop_op();
 
 	//Duplica
 
@@ -2102,16 +2098,14 @@ void dup2_x1(){
 	//TODO : fazer para a forma 2
 
 	//forma 1
-
-	printf("Entrei no dup\n");
 	int32_t aux1, aux2, aux3;
 
 	//Desempilha
-	aux3 = pop_op();
+	aux1 = pop_op();
 
 	aux2 = pop_op();
 
-	aux1 = pop_op();
+	aux3 = pop_op();
 
 	//Duplica
 	push(aux2);
@@ -2134,18 +2128,16 @@ void dup2_x2(){
 	//TODO : fazer para a forma 2
 
 	//forma 1
-
-	printf("Entrei no dup\n");
 	int32_t aux1, aux2, aux3, aux4;
 
 	//Desempilha
-	aux4 = pop_op();
-
-	aux3 = pop_op();
+	aux1 = pop_op();
 
 	aux2 = pop_op();
 
-	aux1 = pop_op();
+	aux3 = pop_op();
+
+	aux4 = pop_op();
 
 	//Duplica
 	push(aux2);

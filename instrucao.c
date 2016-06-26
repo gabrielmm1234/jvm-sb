@@ -829,8 +829,6 @@ void lload(){
 
     int32_t indice;
     int32_t parte_alta, parte_baixa;
-    char* tipo = "L";
-    tipoGlobal = tipo;
 
     // pega indice
     indice = frameCorrente->code[frameCorrente->pc + 1];
@@ -874,9 +872,6 @@ void fload(){
  * @return void
  */
 void dload(){
-
-	char* tipo = "D";
-    tipoGlobal = tipo;
 
     int32_t indice;
     int32_t parte_alta, parte_baixa;
@@ -928,8 +923,6 @@ void iload_0(){
     tipoGlobal = tipo;
 
     int32_t valor;
-    char* tipo = "I";
-    tipoGlobal = tipo;
 
     // pega valor do array de var local na posicao 2
     valor = frameCorrente->fields[0];
@@ -951,8 +944,6 @@ void iload_1(){
     tipoGlobal = tipo;
 
     int32_t valor;
-    char* tipo = "I";
-    tipoGlobal = tipo;
 
     // pega valor do array de var local na posicao 1
     valor = frameCorrente->fields[1];
@@ -974,8 +965,6 @@ void iload_2(){
     tipoGlobal = tipo;
 
     int32_t valor;
-    char* tipo = "I";
-    tipoGlobal = tipo;
 
     // pega valor do array de var local na posicao 2
     valor = frameCorrente->fields[2];
@@ -995,7 +984,6 @@ void iload_3(){
 
     int32_t valor;
     char* tipo = "I";
-
     tipoGlobal = tipo;
 
 
@@ -1021,8 +1009,6 @@ void lload_0(){
 
     int32_t indice;
     int32_t parte_alta, parte_baixa;
-    char* tipo = "L";
-    tipoGlobal = tipo;
 
     // pega indice
     indice = 0;
@@ -1078,8 +1064,6 @@ void lload_2(){
 
     int32_t indice;
     int32_t parte_alta, parte_baixa;
-    char* tipo = "L";
-    tipoGlobal = tipo;
 
     // pega indice
     indice = 2;
@@ -1108,8 +1092,6 @@ void lload_3(){
 
     int32_t indice;
     int32_t parte_alta, parte_baixa;
-    char* tipo = "L";
-    tipoGlobal = tipo;
 
     // pega indice
     indice = 3;
@@ -1230,8 +1212,6 @@ void dload_0(){
 
     int32_t indice;
     int32_t parte_alta, parte_baixa;
-    char* tipo = "D";
-    tipoGlobal = tipo;
 
     // pega indice
     indice = 0; 
@@ -1286,8 +1266,6 @@ void dload_2(){
     char* tipo = "D";
     tipoGlobal = tipo;
 
-    char* tipo = "D";
-    tipoGlobal = tipo;
 
     // pega indice
     indice = 2; 

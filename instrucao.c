@@ -299,8 +299,6 @@ void newInstrucoes(){
 	instrucao[191] = athrow;
 	instrucao[192] = checkcast;
 	instrucao[193] = instanceof;
-	instrucao[194] = monitorenter;
-	instrucao[195] = monitorexit;
 	instrucao[196] = wide;
 	instrucao[197] = multianewarray;
 	instrucao[198] = ifnull;
@@ -3328,10 +3326,6 @@ void lxor(){
 	push(alta);
 	push(baixa);
 
-	//atualiza pc
-	inicializa_decodificador(dec);
-	int num_bytes = dec[frameCorrente->code[frameCorrente->pc]].bytes;
-
 	atualizaPc();
 }
 void iinc(){
@@ -3397,8 +3391,21 @@ void i2d(){
 
 	atualizaPc();
 }
-void l2i(){
 
+/**
+ * Desempilha um long converte para int e empilha
+ * @param void
+ * @return void 
+ */
+void l2i(){
+	int32_t alta,baixa;
+
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Empilha somente a parte baixa - 32 bits perdendo precisao.
+	push(baixa);
+	atualizaPc();
 }
 void l2f(){
 
@@ -3406,11 +3413,50 @@ void l2f(){
 void l2d(){
 
 }
+
+/**
+ * Desempilha um float converte para int e empilha
+ * @param void
+ * @return void 
+ */
 void f2i(){
+	int32_t retPilha = pop_op();
 
+	float fVal;
+	memcpy(&fVal, &retPilha, sizeof(int32_t));
+	push((int32_t)fVal);
+	atualizaPc();
 }
-void f2l(){
 
+/**
+ * Desempilha um float converte para long e empilha
+ * @param void
+ * @return void 
+ */
+void f2l(){
+	//Desempilha valor da pilha
+	int32_t retPilha = pop_op();
+	float fVal;
+	//Copia os bytes do retPilha para uma var float -> Nao perder precisao
+	memcpy(&fVal, &retPilha, sizeof(int32_t));
+
+	int64_t lVal = (int64_t) fVal;
+
+	//Parte alta e parte baixa do double.
+	int32_t alta;
+	int32_t baixa;
+
+	//Shifta 32 bits para pegar somente a parte alta
+	alta = lVal >> 32;
+
+	//Realiza um and bit a bit para zerar a parte alta e obter somente a parte baixa.
+	baixa = lVal & 0xffffffff;
+
+	//Empilha parte alta e baixa.
+	push(alta);
+	push(baixa);
+
+	atualizaPc();
 }
 
 /**
@@ -3449,11 +3495,60 @@ void f2d(){
 	atualizaPc();
 }
 
+/**
+ * Desempilha um double converte para integer e empilha.
+ * @param void
+ * @return void 
+ */
 void d2i(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
 
+	//Atribui parte alta primeiro
+	int64_t dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble1. -> Não perder a
+	//Precisão. Alternativa UNION!!
+	double v1;
+	memcpy(&v1, &dVal, sizeof(double));
+
+	push((int32_t)v1);
+	atualizaPc();
 }
-void d2l(){
 
+/**
+ * Desempilha um double converte para long(64bits) e empilha.
+ * @param void
+ * @return void 
+ */
+void d2l(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Atribui parte alta primeiro
+	int64_t dVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	dVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	dVal = dVal + baixa;
+
+	//Finalmente copio os bytes do int64_t para um double.
+	//memcpy copia 64 bits de dVal para valorDouble1. -> Não perder a
+	//Precisão. Alternativa UNION!!
+	double v1;
+	memcpy(&v1, &dVal, sizeof(double));
+
+	push((int64_t)v1);
+	atualizaPc();
 }
 
 /**
@@ -3719,29 +3814,237 @@ void ifle(){
 		frameCorrente->pc += 3;
 	}
 }
+
+/**
+ * Funcao que realiza um jump se os dois valores da pilha de operandos
+ * forem iguais.
+ * @param void
+ * @return void 
+ */
 void if_icmpeq(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha1 == retPilha2){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
+
+/**
+ * Funcao que realiza um jump se os dois valores da pilha de operandos
+ * não forem iguais.
+ * @param void
+ * @return void 
+ */
 void if_icmpne(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha1 != retPilha2){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
+
+/**
+ * Funcao que realiza um jump se um valor da pilha for menor que o outro
+ * .
+ * @param void
+ * @return void 
+ */
 void if_icmplt(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha2 < retPilha1){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
+
+/**
+ * Funcao que realiza um jump se um valor da pilha for maior ou igual
+ * que o outro.
+ * @param void
+ * @return void 
+ */
 void if_icmpge(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha2 >= retPilha1){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
+
+/**
+ * Funcao que realiza um jump se um valor da pilha for maior
+ * que o outro.
+ * @param void
+ * @return void 
+ */
 void if_icmpgt(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha2 > retPilha1){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
+
+/**
+ * Funcao que realiza um jump se um valor da pilha for menor ou igual
+ * que o outro.
+ * @param void
+ * @return void 
+ */
 void if_icmple(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha2 <= retPilha1){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
+
+/**
+ * Funcao que realiza um jump se um valor da pilha for igual
+ * que o outro.
+ * @param void
+ * @return void 
+ */
 void if_acmpeq(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha2 == retPilha1){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
-void if_acmpne(){
 
+/**
+ * Funcao que realiza um jump se um valor da pilha for diferente
+ * do outro.
+ * @param void
+ * @return void 
+ */
+void if_acmpne(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
+
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha1 = pop_op();
+	int32_t retPilha2 = pop_op();
+
+	//Se val menor ou igual que zero atualiza pc com offset
+	if(retPilha2 != retPilha1){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
 
 /**
@@ -3751,9 +4054,17 @@ void if_acmpne(){
  */
 void ins_goto(){
 	//obtém offset que vem da instruçao.
-	int8_t offset = frameCorrente->code[frameCorrente->pc + 2];
+	uint8_t offset1,offset2;
+	int16_t offset;
+	
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
 
-	//TODO pc = pc + offset
+	//Jump
 	frameCorrente->pc += offset;
 }
 void jsr(){
@@ -4017,8 +4328,17 @@ void dreturn(){
 
 	atualizaPc();
 }
-void areturn(){
 
+/**
+ * Retira uma referencia da pilha e empilha na pilha do chamador.
+ * @param void
+ * @return void 
+ */
+void areturn(){
+	int32_t retorno = pop_op();
+	flagRet = 1;
+
+	atualizaPc();
 }
 
 /**
@@ -4271,12 +4591,14 @@ void invokevirtual(){
             {
                 resultado2 = pop_op();
                 int64_t long_num; 
+                long long result;
 
                 long_num= resultado2;
                 long_num <<= 32;
                 long_num += resultado; 
 
-                printf("%" PRIu64 "\n", long_num);
+                memcpy(&result, &long_num, sizeof(long));
+                printf("%lld" PRIu64 "\n", result);
             }
 
             else if (strcmp(tipoGlobal, "I") == 0)
@@ -4591,23 +4913,68 @@ void checkcast(){
 void instanceof(){
 
 }
-void monitorenter(){
 
-}
-void monitorexit(){
-
-}
 void wide(){
 
 }
 void multianewarray(){
 
 }
+
+/**
+ * Função que pega dois bytes da instrução se operando for null realiza jump.
+ * @param void
+ * @return void 
+ */
 void ifnull(){
+	uint8_t offset1,offset2;
+	int16_t offset;
 
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
+
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha = pop_op();
+
+	//Se val igual a null atualiza pc com offset se não soma 3 para ir 
+	//Para proxima instrução.
+	if(retPilha == 0){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
-void ifnonnull(){
 
+/**
+ * Função que pega dois bytes da instrução se operando for diferente de null realiza jump.
+ * @param void
+ * @return void 
+ */
+void ifnonnull(){
+	uint8_t offset1,offset2;
+	int16_t offset;
+
+	//Pega offset para salto.
+	offset1 = frameCorrente->code[frameCorrente->pc + 1];
+	offset2 = frameCorrente->code[frameCorrente->pc + 2];
+	offset = offset1;
+	offset <<= 8;
+	offset |= offset2;
+
+	//Pega valor a ser comparado na pilha.
+	int32_t retPilha = pop_op();
+
+	//Se val igual a null atualiza pc com offset se não soma 3 para ir 
+	//Para proxima instrução.
+	if(retPilha != 0){
+		frameCorrente->pc += offset;
+	}else{
+		frameCorrente->pc += 3;
+	}
 }
 void goto_w(){
 

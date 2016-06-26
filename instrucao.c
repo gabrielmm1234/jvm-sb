@@ -310,7 +310,8 @@ void newInstrucoes(){
 //Implementação de cada instrução.
 
 /**
- * funcao que nao realiza nada na pilha de operandos nem no array de var local 
+ * funcao que nao realiza nada na pilha de operandos nem no array de var local
+ * Somente pula para a proxima instruçao.
  * @param void 
  * @return void 
  */
@@ -821,6 +822,9 @@ void iload(){
  */
 void lload(){
 
+	char* tipo = "L";
+    tipoGlobal = tipo;
+
     // TODO pq ta diferente do iload na parte de conseguir os bytes
     int32_t indice;
     int32_t parte_alta, parte_baixa;
@@ -846,6 +850,9 @@ void lload(){
  */
 void fload(){
 
+	char* tipo = "F";
+    tipoGlobal = tipo;
+
     int32_t indice, valor; 
 
     // pega indice 
@@ -864,6 +871,10 @@ void fload(){
  * @return void
  */
 void dload(){
+
+	char* tipo = "D";
+    tipoGlobal = tipo;
+
     // TODO pq ta diferente do iload na parte de conseguir os bytes
     int32_t indice;
     int32_t parte_alta, parte_baixa;
@@ -909,6 +920,9 @@ void aload(){
  */
 void iload_0(){
 
+	char* tipo = "I";
+    tipoGlobal = tipo;
+
     int32_t valor;
 
     // pega valor do array de var local na posicao 2
@@ -926,6 +940,9 @@ void iload_0(){
  * @return void
  */
 void iload_1(){
+
+	char* tipo = "I";
+    tipoGlobal = tipo;
 
     int32_t valor;
 
@@ -945,6 +962,9 @@ void iload_1(){
  */
 void iload_2(){
 
+	char* tipo = "I";
+    tipoGlobal = tipo;
+
     int32_t valor;
 
     // pega valor do array de var local na posicao 2
@@ -962,8 +982,10 @@ void iload_2(){
  * @return void
  */
 void iload_3(){
+
     int32_t valor;
     char* tipo = "I";
+
     tipoGlobal = tipo;
 
 
@@ -983,6 +1005,9 @@ void iload_3(){
  * @return void
  **/
 void lload_0(){
+
+	char* tipo = "L";
+    tipoGlobal = tipo;
 
     int32_t indice;
     int32_t parte_alta, parte_baixa;
@@ -1010,6 +1035,7 @@ void lload_0(){
 void lload_1(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+
     char* tipo = "L";
     tipoGlobal = tipo;
 
@@ -1034,6 +1060,10 @@ void lload_1(){
  * @return void
  */
 void lload_2(){
+
+	char* tipo = "L";
+    tipoGlobal = tipo;
+
     int32_t indice;
     int32_t parte_alta, parte_baixa;
 
@@ -1058,6 +1088,10 @@ void lload_2(){
  * @return void
  */
 void lload_3(){
+
+	char* tipo = "L";
+    tipoGlobal = tipo;
+
     int32_t indice;
     int32_t parte_alta, parte_baixa;
 
@@ -1083,6 +1117,9 @@ void lload_3(){
  */
 void fload_0(){
 
+	char* tipo = "F";
+    tipoGlobal = tipo;
+
     int32_t indice, valor; 
 
     // pega indice 
@@ -1102,6 +1139,10 @@ void fload_0(){
  * @return void
  */
 void fload_1(){
+
+	char* tipo = "F";
+    tipoGlobal = tipo;
+
     int32_t indice, valor; 
 
     // pega indice 
@@ -1121,6 +1162,10 @@ void fload_1(){
  * @return void
  */
 void fload_2(){
+
+	char* tipo = "F";
+    tipoGlobal = tipo;
+
     int32_t indice, valor; 
 
     // pega indice 
@@ -1140,6 +1185,10 @@ void fload_2(){
  * @return void
  */
 void fload_3(){
+
+	char* tipo = "F";
+    tipoGlobal = tipo;
+
     int32_t indice, valor; 
 
     // pega indice 
@@ -1159,6 +1208,10 @@ void fload_3(){
  * @return void
  */
 void dload_0(){
+
+	char* tipo = "D";
+    tipoGlobal = tipo;
+
     int32_t indice;
     int32_t parte_alta, parte_baixa;
 
@@ -1185,6 +1238,7 @@ void dload_0(){
 void dload_1(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+
     char* tipo = "D";
     tipoGlobal = tipo;
 
@@ -1212,6 +1266,9 @@ void dload_2(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
 
+    char* tipo = "D";
+    tipoGlobal = tipo;
+
     // pega indice
     indice = 2; 
 
@@ -1235,6 +1292,7 @@ void dload_2(){
 void dload_3(){
     int32_t indice;
     int32_t parte_alta, parte_baixa;
+
     char* tipo = "D";
     tipoGlobal = tipo;
 
@@ -3093,23 +3151,151 @@ void dneg(){
 	atualizaPc();
 }
 
+/**
+ * Desempilha quantidade a ser shiftada. Desempilha valor inteiro a ser shiftado
+ * shifta-o a esquerda e empilha o resultado.
+ * OBS: shifta no máximo 32 bits. Com sinal.
+ * @param void
+ * @return void 
+ */
 void ishl(){
+	//Pega quantidade a ser shiftada e limita em 32 bits (0x1f)
+	int32_t shift = pop_op();
+	shift = shift & 0x1f;
 
+	//Obtem valor da pilha e shifta a esquerda. Empilha o resultado.
+	int32_t sVal = pop_op();
+	sVal = sVal << shift;
+	push(sVal);
+
+	atualizaPc();
 }
+
+/**
+ * Desempilha quantidade a ser shiftada. Desempilha valor long a ser shiftado
+ * shifta-o a esquerda e empilha o resultado.
+ * OBS: shifta no máximo 64 bits. Com sinal.
+ * @param void
+ * @return void 
+ */
 void lshl(){
 
-}
-void ishr(){
+	//Desempilha a quantidade a ser shiftada e limita em 64 bits
+	int32_t shift = pop_op();
+	shift = shift & 0x3f;
 
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	lVal = lVal << shift;
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = lVal >> 32;
+	baixa = lVal & 0xffffffff;
+
+	//finalmente empilha.
+	push(alta);
+	push(baixa);
+
+	atualizaPc();
+}
+
+/**
+ * Desempilha quantidade a ser shiftada. Desempilha valor inteiro a ser shiftado
+ * shifta-o a direita e empilha o resultado.
+ * OBS: shifta no máximo 32 bits. Com sinal -> é equivalente a dividir o valor por 2.
+ * @param void
+ * @return void 
+ */
+void ishr(){
+	//Pega quantidade a ser shiftada e limita em 32 bits (0x1f)
+	int32_t shift = pop_op();
+	shift = shift & 0x1f;
+
+	//Obtem valor da pilha e shifta a direita(divide n vezes por 2). 
+	//Empilha o resultado.
+	int32_t sVal = pop_op();
+	
+	int32_t i = 0;
+	while(i < shift){
+		sVal = sVal / 2;
+		i += 1;
+	}
+
+	push(sVal);
+
+	atualizaPc();
 }
 void lshr(){
 
 }
+
+/**
+ * Desempilha quantidade a ser shiftada. Desempilha valor inteiro a ser shiftado
+ * shifta-o a direita e empilha o resultado.
+ * OBS: shifta no máximo 32 bits. Sem sinal -> operador >>
+ * @return void 
+ */
 void iushr(){
+	//Pega quantidade a ser shiftada e limita em 32 bits (0x1f)
+	int32_t shift = pop_op();
+	shift = shift & 0x1f;
 
+	//Obtem valor da pilha e shifta a esquerda. Empilha o resultado.
+	int32_t sVal = pop_op();
+	sVal = sVal >> shift;
+	push(sVal);
+
+	atualizaPc();
 }
-void lushr(){
 
+/**
+ * Desempilha quantidade a ser shiftada. Desempilha valor long a ser shiftado
+ * shifta-o a direita e empilha o resultado.
+ * OBS: shifta no máximo 64 bits. Sem sinal -> operador >>
+ * @return void 
+ */
+void lushr(){
+	//Desempilha a quantidade a ser shiftada e limita em 64 bits
+	int32_t shift = pop_op();
+	shift = shift & 0x3f;
+
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	lVal = lVal >> shift;
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = lVal >> 32;
+	baixa = lVal & 0xffffffff;
+
+	//finalmente empilha.
+	push(alta);
+	push(baixa);
+
+	atualizaPc();
 }
 
 /**
@@ -3320,8 +3506,30 @@ void lxor(){
 
 	atualizaPc();
 }
-void iinc(){
 
+/**
+ * Funcao incrementa um valor do array de variaveis locais por uma constante.
+ * @param void
+ * @return void
+ */
+void iinc(){
+	//Pega posição no array de var local.
+	int8_t field = frameCorrente->code[frameCorrente->pc + 1];
+
+	//Pega valor a ser incrementado do array de var local.
+	int32_t value = frameCorrente->fields[field];
+
+	//Pega a constante a ser somada.
+	int8_t constant = frameCorrente->code[frameCorrente->pc + 2];
+
+	//Faz o cast para 8bits.
+	int8_t sumVal = (int8_t) value;
+	sumVal = sumVal + constant;
+
+	//Atualiza o valor somado no array;
+	frameCorrente->fields[field] = (int32_t) sumVal;
+
+	atualizaPc();
 }
 void i2l(){
 
@@ -3399,11 +3607,75 @@ void l2i(){
 	push(baixa);
 	atualizaPc();
 }
+
+/**
+ * Desempilha um long converte para float e empilha
+ * @param void
+ * @return void 
+ */
 void l2f(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
 
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	float fVal;
+	memcpy(&fVal, &lVal, sizeof(float));
+
+	int32_t valPilha;
+	memcpy(&valPilha, &fVal, sizeof(int32_t));
+
+	push(valPilha);
+
+	atualizaPc();
 }
-void l2d(){
 
+/**
+ * Desempilha um long converte para double e empilha
+ * @param void
+ * @return void 
+ */
+void l2d(){
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Converter os numeros 32 bits para 64 bits(long)
+
+	//Atribui parte alta primeiro
+	int64_t lVal = alta;
+	//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+	lVal <<= 32;
+	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+	//os 32 bits da parte baixa estão zerados.
+	lVal = lVal + baixa;
+
+	double dVal;
+	memcpy(&dVal, &lVal, sizeof(double));
+
+	//Necessario converter mais uma vez o double para int64 para 
+	//empilhar corretamente.
+	int64_t valorPilha;
+	memcpy(&valorPilha, &dVal, sizeof(int64_t));
+
+	//Converte para parte alta e baixa novamente :) kk para empilhar
+	alta = valorPilha >> 32;
+	baixa = valorPilha & 0xffffffff;
+
+	//finalmente empilha.
+	push(alta);
+	push(baixa);
+
+	atualizaPc();
 }
 
 /**

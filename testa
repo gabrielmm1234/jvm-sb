@@ -4,7 +4,7 @@ rm jvm.exe
 make 
 echo "finished building"
 #clear
-#./compila 
+./compila 
 #echo "finished compiling"
 
 #./jvm.exe < testes/hello.txt

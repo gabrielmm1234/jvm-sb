@@ -2721,8 +2721,9 @@ void dmul(){
  * @return void 
  */
 void idiv(){
-	int32_t v1 = pop_op();
+    // v2 vem primeiro na pilha de op
 	int32_t v2 = pop_op();
+	int32_t v1 = pop_op();
 
 	push((int32_t)(v1 / v2));
 	 
@@ -2788,8 +2789,8 @@ void fdiv(){
 	float fVal1,fVal2;
 
 	//Desempilha os dois valores
-	int32_t aux1 = pop_op();
 	int32_t aux2 = pop_op();
+	int32_t aux1 = pop_op();
 
 	//Converte para float e nao perde precisao
 	memcpy(&fVal1, &aux1, sizeof(int32_t));
@@ -2877,8 +2878,9 @@ void ddiv(){
  * @return void 
  */
 void irem(){
-	int32_t v1 = pop_op();
+    // operando v2 esta primeiro na pilha
 	int32_t v2 = pop_op();
+	int32_t v1 = pop_op();
 
 	push((int32_t)(v1 % v2));
 
@@ -2943,8 +2945,9 @@ void frem(){
 	float fVal1,fVal2;
 
 	//Desempilha os dois valores
-	int32_t aux1 = pop_op();
+    // aux 2 sai primeiro da pilha de operandos
 	int32_t aux2 = pop_op();
+	int32_t aux1 = pop_op();
 
 	//Converte para float e nao perde precisao
 	memcpy(&fVal1, &aux1, sizeof(int32_t));

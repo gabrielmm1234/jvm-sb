@@ -125,6 +125,7 @@ void constantPool(classFile* cf, FILE* file){
 				break;
 			case CONSTANT_Integer:
 				cp->info.Integer.bytes = le4Bytes(file);
+                break;
 			case CONSTANT_Float:
 				cp->info.Float.bytes = le4Bytes(file);
 				break;

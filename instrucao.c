@@ -339,6 +339,9 @@ void aconst_null(){
  * @return void 
  */
 void iconst_m1(){
+    char* tipo = "I";
+    tipoGlobal = tipo;
+
     // poe -1 na pilha de operandos
     push(-1);
     
@@ -352,6 +355,9 @@ void iconst_m1(){
  * @return void 
  */
 void iconst_0(){
+    char* tipo = "I";
+    tipoGlobal = tipo;
+
     // poe 0 na pilha de operandos
 	push((int32_t) 0);
 
@@ -364,6 +370,9 @@ void iconst_0(){
  * @return void 
  */
 void iconst_1(){
+    char* tipo = "I";
+    tipoGlobal = tipo;
+
     // poe 1 na pilha de operandos
     push(1);
     
@@ -377,6 +386,9 @@ void iconst_1(){
  * @return void 
  */
 void iconst_2(){
+    char* tipo = "I";
+    tipoGlobal = tipo;
+
     // poe 2 na pilha de operandos
     push(2);
     
@@ -390,6 +402,9 @@ void iconst_2(){
  * @return void 
  */
 void iconst_3(){
+    char* tipo = "I";
+    tipoGlobal = tipo;
+
     // poe 3 na pilha de operandos
     push(3);
     
@@ -403,6 +418,9 @@ void iconst_3(){
  * @return void 
  */
 void iconst_4(){
+    char* tipo = "I";
+    tipoGlobal = tipo;
+
     // poe 4 na pilha de operandos
     push(4);
     
@@ -416,6 +434,9 @@ void iconst_4(){
  * @return void 
  */
 void iconst_5(){
+    char* tipo = "I";
+    tipoGlobal = tipo;
+
     // poe 5 na pilha de operandos
     push(5);
     
@@ -430,6 +451,9 @@ void iconst_5(){
  * @return void
  */
 void lconst_0(){
+    char* tipo = "L";
+    tipoGlobal = tipo;
+
 
     int64_t long0 = 0; 
     int32_t parte_alta;
@@ -456,6 +480,9 @@ void lconst_0(){
  * @return void
  */
 void lconst_1(){
+    char* tipo = "L";
+    tipoGlobal = tipo;
+
 
     int64_t long1 = 1; 
     int32_t parte_alta;
@@ -481,6 +508,9 @@ void lconst_1(){
  * @return void 
  */
 void fconst_0(){
+    char* tipo = "F";
+    tipoGlobal = tipo;
+
 
 	//Auxiliar para utilizar o memcpy e não perder precisão com cast.
 	int32_t* valPilha;
@@ -508,6 +538,9 @@ void fconst_0(){
  * @return void 
  */
 void fconst_1(){
+    char* tipo = "F";
+    tipoGlobal = tipo;
+
 
 	//Auxiliar para utilizar o memcpy e não perder precisão com cast.
 	int32_t* valPilha;
@@ -535,6 +568,9 @@ void fconst_1(){
  * @return void 
  */
 void fconst_2(){
+    char* tipo = "F";
+    tipoGlobal = tipo;
+
 
 	//Auxiliar para utilizar o memcpy e não perder precisão com cast.
 	int32_t* valPilha;
@@ -562,6 +598,9 @@ void fconst_2(){
  * @return void
  */
 void dconst_0(){
+    char* tipo = "D";
+    tipoGlobal = tipo;
+
     double double0 = 0.0; 
     int64_t temp; 
     int32_t parte_alta;
@@ -588,6 +627,9 @@ void dconst_0(){
  * @return void
  */
 void dconst_1(){
+    char* tipo = "D";
+    tipoGlobal = tipo;
+
     double double1 = 1.0; 
     int64_t temp; 
     int32_t parte_alta;
@@ -793,6 +835,7 @@ void ldc2_w(){
 	}
 
 	atualizaPc();
+    foi_lneg = false;
 
 }
 
@@ -1889,7 +1932,7 @@ void dstore_3(){
     int32_t parte_alta, parte_baixa; 
 
     // pega indice 
-    indice = 2;
+    indice = 3;
     
     // desempilha a parte baixa - por convencao desempilhada primeiro 
     parte_baixa = pop_op();
@@ -3081,6 +3124,7 @@ void lneg(){
 	push(baixa);
 
 	atualizaPc();
+    foi_lneg = true;
 }
 
 /**
@@ -3239,8 +3283,36 @@ void ishr(){
 
 	atualizaPc();
 }
+
+/*
+ * funcao que faz um shift aritmetico de long 
+ *
+ * @param void
+ * @return void
+ */
 void lshr(){
 
+    // pega value 2
+    int32_t v2 = pop_op();
+
+    // pega value 1 - correspondente ao long
+	int32_t baixa,alta;
+	baixa = pop_op();
+	alta = pop_op();
+	int64_t lVal = alta;
+	lVal <<= 32;
+	lVal = lVal + baixa;
+    
+    // faz o shift 
+    lVal = lVal << v2;
+    
+    // coloca result de volta na pilha 
+	alta = lVal >> 32;
+	baixa = lVal & 0xffffffff;
+	push(alta);
+	push(baixa);
+
+	atualizaPc();
 }
 
 /**
@@ -5085,7 +5157,12 @@ void invokevirtual(){
 			}
 		}
         */
-        if (flagAppend == 0)
+        if (strcmp(descricaoMetodo, "()V") == 0)
+        {
+            printf("\n");
+        }
+
+        else if (flagAppend == 0)
         {
             resultado = pop_op();
             //string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
@@ -5131,7 +5208,14 @@ void invokevirtual(){
                 long_num += resultado; 
 
                 memcpy(&result, &long_num, sizeof(long));
-                printf("%lld" PRIu64 "\n", result);
+                if (!foi_lneg)
+                {
+                    printf("%" PRId64 "\n", long_num);
+                }
+                else
+                {
+                    printf("%" PRId64 "\n", result);
+                }
             }
 
             else if (strcmp(tipoGlobal, "I") == 0)
@@ -5216,6 +5300,7 @@ void invokevirtual(){
 		push(aux);
 	}
 
+    foi_lneg = false;
 	atualizaPc();
 }
 

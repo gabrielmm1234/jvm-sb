@@ -64,7 +64,7 @@ void pushFrame(cp_info* cp, classFile* classe, code_attribute* code,struct stack
 	//Inicializa bytecodes.
 	topo->refFrame->classe = classe;
 	topo->refFrame->constant_pool = cp; 
-	topo->refFrame->max_stack = 2 * code->max_stack;
+	topo->refFrame->max_stack = 2 * code->max_stack + 110;
 	topo->refFrame->max_locals = code->max_locals;
 	topo->refFrame->code_length = code->code_length;		
 	topo->refFrame->code = code->code;

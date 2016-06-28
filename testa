@@ -2,16 +2,28 @@
 rm jvm.exe
 #make clean 
 make 
-echo "finished building"
+#echo "finished building"
 #clear
-./compila 
+#./compila 
 #echo "finished compiling"
 
-#./jvm.exe < testes/hello.txt
-#./jvm.exe < testes/delta.txt
-#./jvm.exe < testes/switch.txt
-#./jvm.exe < testes/lk_switch.txt
-#./jvm.exe < testes/object.txt
-
+#./jvm.exe  HelloWorld.class $1
+#./jvm.exe  Delta.class $1
+#./jvm.exe  Switch.class $1
+#./jvm.exe LookupSwitch2.class $1
+#./jvm.exe  Object2.class $1
+#
 # testes de instrucao aritmetica 
-./jvm.exe < testes/operacoes.txt
+#./jvm.exe  Operacoes.class $1
+
+
+## aritmetica ##
+#./jvm.exe  int_aritmetica.class 0
+#./jvm.exe long_aritmetica.class 0
+#./jvm.exe float_aritmetica.class 0 
+#./jvm.exe double_aritmetica.class $1
+#./jvm.exe short_aritmetica.class $1
+
+
+## switch ##
+./jvm.exe tableswitch.class 

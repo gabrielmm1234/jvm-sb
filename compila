@@ -40,5 +40,5 @@
 #echo "terminei de compilar object 2"
 
 # Operacoes
-javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar Operacoes.java
-echo "finished compiling operacoes.class"
+#javac -source 1.2 -target 1.2 -bootclasspath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar Operacoes.java
+#echo "finished compiling operacoes.class"

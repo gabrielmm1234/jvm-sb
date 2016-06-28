@@ -2,6 +2,7 @@
 #define INSTRUCAO_H
 
 #include <stdint.h> 
+#include <stdbool.h>
 
 
 //Declaração do vetor de ponteiro para funções com as 256 instruções implementadas.
@@ -10,6 +11,8 @@ void (*instrucao[256]) ();
 
 //Usado para salvar o tipo do ultimo getfield feito para o println.
 char* tipoGlobal;
+
+bool foi_lneg;
 
 //Função que inicializa o vetor de ponteiro para funções
 //Com cada função sendo acessada pelo opcode correspondente.

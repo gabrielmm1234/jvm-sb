@@ -3110,7 +3110,7 @@ void lneg(){
 	lVal <<= 32;
 	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
 	//os 32 bits da parte baixa estão zerados.
-	lVal = lVal + baixa;
+	lVal = lVal | baixa;
 
 	//Negativa o valor
 	lVal = - lVal;
@@ -3606,7 +3606,24 @@ void iinc(){
 	atualizaPc();
 }
 void i2l(){
+    char* tipo = "L";
+    tipoGlobal = tipo;
+    int32_t alta, baixa;
 
+    // pega inteiro
+    int32_t val = pop_op();
+    
+    // transforma para long 
+    int64_t long_num = (int64_t) val;
+	alta = long_num >> 32;
+	baixa = long_num & 0xffffffff;
+   
+    // empilha long
+    push(alta);
+    push(baixa);
+
+    // arruma
+    atualizaPc();
 }
 
 /**
@@ -3616,6 +3633,9 @@ void i2l(){
  * @return void 
  */
 void i2f(){
+    char* tipo = "F";
+    tipoGlobal = tipo;
+
 	//Obtem valor da pilha
 	int32_t val = (int32_t) pop_op();
 	
@@ -3639,6 +3659,9 @@ void i2f(){
  * @return void 
  */
 void i2d(){
+    char* tipo = "D";
+    tipoGlobal = tipo;
+
 	//Desempilha valor da pilha
 	int32_t retPilha = pop_op();
 
@@ -3672,6 +3695,8 @@ void i2d(){
  * @return void 
  */
 void l2i(){
+    char* tipo = "I";
+    tipoGlobal = tipo;
 	int32_t alta,baixa;
 
 	baixa = pop_op();
@@ -3688,6 +3713,9 @@ void l2i(){
  * @return void 
  */
 void l2f(){
+    char* tipo = "F";
+    tipoGlobal = tipo;
+
 	int32_t baixa,alta;
 	baixa = pop_op();
 	alta = pop_op();
@@ -3700,10 +3728,11 @@ void l2f(){
 	lVal <<= 32;
 	//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
 	//os 32 bits da parte baixa estão zerados.
-	lVal = lVal + baixa;
+	lVal = lVal | baixa;
 
 	float fVal;
-	memcpy(&fVal, &lVal, sizeof(float));
+    fVal = (float) lVal; 
+	//memcpy(&fVal, &lVal, sizeof(float));
 
 	int32_t valPilha;
 	memcpy(&valPilha, &fVal, sizeof(int32_t));
@@ -3719,6 +3748,9 @@ void l2f(){
  * @return void 
  */
 void l2d(){
+    char* tipo = "D";
+    tipoGlobal = tipo;
+
 	int32_t baixa,alta;
 	baixa = pop_op();
 	alta = pop_op();
@@ -3758,6 +3790,9 @@ void l2d(){
  * @return void 
  */
 void f2i(){
+    char* tipo = "I";
+    tipoGlobal = tipo;
+
 	int32_t retPilha = pop_op();
 
 	float fVal;
@@ -3772,6 +3807,9 @@ void f2i(){
  * @return void 
  */
 void f2l(){
+    char* tipo = "L";
+    tipoGlobal = tipo;
+
 	//Desempilha valor da pilha
 	int32_t retPilha = pop_op();
 	float fVal;
@@ -3803,6 +3841,9 @@ void f2l(){
  * @return void 
  */
 void f2d(){
+    char* tipo = "D";
+    tipoGlobal = tipo;
+
 	//Desempilha valor da pilha
 	int32_t retPilha = pop_op();
 	float fVal;
@@ -3839,6 +3880,9 @@ void f2d(){
  * @return void 
  */
 void d2i(){
+    char* tipo = "I";
+    tipoGlobal = tipo;
+
 	int32_t baixa,alta;
 	baixa = pop_op();
 	alta = pop_op();
@@ -3867,6 +3911,9 @@ void d2i(){
  * @return void 
  */
 void d2l(){
+    char* tipo = "L";
+    tipoGlobal = tipo;
+
 	int32_t baixa,alta;
 	baixa = pop_op();
 	alta = pop_op();
@@ -3885,7 +3932,14 @@ void d2l(){
 	double v1;
 	memcpy(&v1, &dVal, sizeof(double));
 
-	push((int64_t)v1);
+    int64_t long_num = (int64_t) v1;
+	alta = long_num >> 32;
+	baixa = long_num & 0xffffffff;
+
+    // empilha
+    push(alta);
+    push(baixa);
+	//push((int64_t)v1);
 	atualizaPc();
 }
 
@@ -3895,6 +3949,9 @@ void d2l(){
  * @return void 
  */
 void d2f(){
+    char* tipo = "F";
+    tipoGlobal = tipo;
+
 	int32_t alta,baixa;
 	baixa = pop_op();
 	alta = pop_op();
@@ -3948,6 +4005,9 @@ void i2b(){
  * @return void 
  */
 void i2c(){
+    char* tipo = "C";
+    tipoGlobal = tipo;
+
 	//Obtem valor de 32 bits da pilha
 	int32_t valPilha = pop_op();
 	//Converte para char (pode perder precisao)
@@ -4871,10 +4931,11 @@ void lookupswitch(){
  * @return void 
  */
 void ireturn(){
-	int32_t retorno = pop_op();
+    retorno = pop_op();
 	flagRet = 1;
 
-	atualizaPc();
+	//atualizaPc();
+    frameCorrente->pc = frameCorrente->code_length + 1;
 }
 
 /**
@@ -4893,7 +4954,8 @@ void lreturn(){
 	retAlta = alta;
 	retBaixa = baixa;
 
-	atualizaPc();
+	//atualizaPc();
+    frameCorrente->pc = frameCorrente->code_length + 1;
 }
 
 /**
@@ -4902,10 +4964,11 @@ void lreturn(){
  * @return void 
  */
 void freturn(){
-	int32_t retorno = pop_op();
+	retorno = pop_op();
 	flagRet = 1;
 
-	atualizaPc();
+	//atualizaPc();
+    frameCorrente->pc = frameCorrente->code_length + 1;
 }
 
 /**
@@ -4924,7 +4987,8 @@ void dreturn(){
 	retAlta = alta;
 	retBaixa = baixa;
 
-	atualizaPc();
+	//atualizaPc();
+    frameCorrente->pc = frameCorrente->code_length + 1;
 }
 
 /**
@@ -4933,10 +4997,11 @@ void dreturn(){
  * @return void 
  */
 void areturn(){
-	int32_t retorno = pop_op();
+	retorno = pop_op();
 	flagRet = 1;
 
-	atualizaPc();
+	//atualizaPc();
+    frameCorrente->pc = frameCorrente->code_length + 1;
 }
 
 /**
@@ -5205,9 +5270,10 @@ void invokevirtual(){
 
                 long_num= resultado2;
                 long_num <<= 32;
-                long_num += resultado; 
+                long_num |= resultado; 
 
                 memcpy(&result, &long_num, sizeof(long));
+                foi_lneg = false;
                 if (!foi_lneg)
                 {
                     printf("%" PRId64 "\n", long_num);
@@ -5221,6 +5287,11 @@ void invokevirtual(){
             else if (strcmp(tipoGlobal, "I") == 0)
             {
                 printf("%d\n", resultado);
+            }
+
+            else if (strcmp(tipoGlobal, "C") == 0)
+            {
+                printf("%c\n", resultado);
             }
 
             else
@@ -5385,6 +5456,8 @@ void invokespecial(){
  */
 void invokestatic(){
 
+	method_info* metodoInvocado;
+
     char* nomeMetodo;
     char* descricaoMetodo;
     uint16_t nomeMetodoAux, descricaoMetodoAux,nomeTipoAux,stringAux;
@@ -5413,6 +5486,9 @@ void invokestatic(){
 		if(strstr(descricaoMetodo, "(I)V") != NULL) {
 			int32_t retPilha = pop_op();
 			exit(retPilha);
+            // acrescentei inspirado no invokestatic
+            atualizaPc();
+            return; 
 		}
 	}
 
@@ -5421,6 +5497,9 @@ void invokestatic(){
 			int32_t retPilha = pop_op();
 			pop_op();
 			push(retPilha);
+            // acrescentei inspirado no invokestatic
+            atualizaPc();
+            return; 
 	}
 
 	if((strcmp(nomeClasse, "java/lang/Math") == 0) && (strcmp(nomeMetodo,"sqrt") == 0)){
@@ -5454,9 +5533,46 @@ void invokestatic(){
 
 			push(alta);
 			push(baixa);
+
+            // acrescentei inspirado no invokestatic
+            atualizaPc();
+            return; 
 		}
 	}
 
+    //TODO Essa mudancao esta correta? eu copiei do invokespecial
+	//Pega posição da classe no array de classes
+	int32_t indexClasse = carregaMemClasse(nomeClasse);
+
+	//Pega referencia ao classFile pelo indice anterior.
+	classFile* classe = buscaClasseIndice(indexClasse);
+
+	//Pega o nome e tipo dó método pelo indice da instrução.
+	uint16_t nomeTipoIndice = frameCorrente->constant_pool[indice-1].info.Methodref.name_and_type_index;
+
+	//Busca método a ser invocado.
+	metodoInvocado = buscaMetodo(frameCorrente->classe,classe,nomeTipoIndice);
+
+	//Pega parametros da pilha pelo numero de fields
+	int32_t numeroParametros = retornaNumeroParametros(classe,metodoInvocado);
+
+	//Aloca espaço para os parametros do método
+	uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
+
+	//Desempilha os parametros da pilha.
+	for(int32_t i = 0; i <= numeroParametros; i++)
+		fields[i] = pop_op();
+
+	//inicia método
+	empilhaMetodo(metodoInvocado, classe);
+
+	//Preenche fields no frame novo (invoke).
+	for(int32_t i = 0; i <= numeroParametros; i++) {
+			frameCorrente->fields[i] = fields[i];
+	}
+
+	//Executa método.
+	executaFrameCorrente();
 	atualizaPc();
 }
 void invokeinterface(){
@@ -5515,6 +5631,11 @@ void ins_new(){
 }
 
 void newarray(){
+
+    pop_op();
+    push(43);
+    // atualiza PC
+    atualizaPc();
 
 }
 void anewarray(){

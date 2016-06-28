@@ -40,6 +40,7 @@ void imprimePrompt(classFile* cf){
         // pega tag
         int tag = cf->constant_pool[i].tag; 
 
+        //TODO case LONG
         // de acordo com a tag em que estamos, decide o que fazer   
         switch (tag)
         {

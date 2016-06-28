@@ -18,12 +18,35 @@ make
 
 
 ## aritmetica ##
-#./jvm.exe  int_aritmetica.class 0
-#./jvm.exe long_aritmetica.class 0
-#./jvm.exe float_aritmetica.class 0 
+#./jvm.exe int_aritmetica.class $1
+#./jvm.exe long_aritmetica.class $1
+#./jvm.exe float_aritmetica.class $1 
 #./jvm.exe double_aritmetica.class $1
 #./jvm.exe short_aritmetica.class $1
+## aritmetica
+#./jvm.exe testeLogArit.class $1
 
 
-## switch ##
-./jvm.exe tableswitch.class 
+## switch  - nao funciona##
+#./jvm.exe tableswitch.class $1
+
+## logicos ##
+## tem array no meio - ./jvm.exe int_logico.java $1
+## o short tb tem array no meio
+#./jvm.exe long_logico.class $1
+#./jvm.exe float_logico.class $1
+#./jvm.exe double_logico.class $1
+
+## while ##
+#./jvm.exe  Fibonacci.class $1
+#./jvm.exe CountWheat.class $1
+
+## casting
+#./jvm.exe int_cast.class $1
+#./jvm.exe float_cast.class $1
+#./jvm.exe long_cast.class $1
+#./jvm.exe double_cast.class $1
+
+
+## array 
+./jvm.exe vetor1.class $1

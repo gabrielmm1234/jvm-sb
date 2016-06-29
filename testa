@@ -7,11 +7,11 @@ make
 #./compila 
 #echo "finished compiling"
 
-./jvm.exe  HelloWorld.class $1
-./jvm.exe  Delta.class $1 
+#./jvm.exe  HelloWorld.class $1
+#./jvm.exe  Delta.class $1 
 #./jvm.exe  Switch.class $1
 #./jvm.exe LookupSwitch2.class $1
-./jvm.exe  Object2.class $1
+#./jvm.exe  Object2.class $1
 #
 # testes de instrucao aritmetica 
 #./jvm.exe  Operacoes.class $1
@@ -42,13 +42,13 @@ make
 #./jvm.exe CountWheat.class $1
 
 ## casting
-#./jvm.exe int_cast.class $1
-#./jvm.exe float_cast.class $1
-#./jvm.exe long_cast.class $1
-#./jvm.exe double_cast.class $1
+./jvm.exe int_cast.class $1
+./jvm.exe float_cast.class $1
+./jvm.exe long_cast.class $1
+./jvm.exe double_cast.class $1
 
 ## array 
 #./jvm.exe vetor1.class $1
 
 ## methods
-./jvm.exe method_test.class $1
+#./jvm.exe method_test.class $1

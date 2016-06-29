@@ -5457,7 +5457,7 @@ void invokespecial(){
 
 	//Preenche fields no frame novo (invoke).
 	for(int32_t i = 0; i <= numeroParametros; i++) {
-			frameCorrente->fields[i] = fields[i];
+			frameCorrente->fields[i] = fields[numeroParametros - i];
 	}
 
 	//Executa método.

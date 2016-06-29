@@ -8,7 +8,7 @@ make
 #echo "finished compiling"
 
 #./jvm.exe  HelloWorld.class $1
-#./jvm.exe  Delta.class $1
+./jvm.exe  Delta.class $1
 #./jvm.exe  Switch.class $1
 #./jvm.exe LookupSwitch2.class $1
 #./jvm.exe  Object2.class $1
@@ -27,7 +27,7 @@ make
 #./jvm.exe testeLogArit.class $1
 
 
-## switch  - nao funciona##
+## switch  - agora eh para ta funcionando##
 #./jvm.exe tableswitch.class $1
 
 ## logicos ##
@@ -47,6 +47,8 @@ make
 #./jvm.exe long_cast.class $1
 #./jvm.exe double_cast.class $1
 
-
 ## array 
-./jvm.exe vetor1.class $1
+#./jvm.exe vetor1.class $1
+
+## methods
+#./jvm.exe method_test.class $1

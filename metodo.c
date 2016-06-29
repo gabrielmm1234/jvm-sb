@@ -228,7 +228,7 @@ int32_t retornaNumeroParametros(classFile* classe, method_info* metodo) {
 	//Percorre até o ) que significa o fim do descriptor.
 	int i = 0; 
 	while(i < length) {
-		if(bytes[i] != ')')
+        if(bytes[i] == ')')
 			break;
 		if(bytes[i] == 'L') {
 			while(bytes[i] != ';') {

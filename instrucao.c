@@ -29,7 +29,9 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
- #define NULL_REF NULL
+#define NULL_REF NULL
+#define POS_BAIXA 1 
+#define POS_ALTA 0
 
 //OBS: Alternativa para memcpy no manipulação de ponto flutuante -> UNION.
 
@@ -839,6 +841,7 @@ void ldc2_w(){
 
 }
 
+/*** LOADS ***/
 /**
  * funcao carrega um inteira do array de variaveis locais na pilha de operandos
  * @param void
@@ -876,15 +879,16 @@ void lload(){
     // pega indice
     indice = frameCorrente->code[frameCorrente->pc + 1];
 
-    // empilha a parte alta - por convencao vem primeiro
-    parte_alta = frameCorrente->fields[indice];
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice + POS_ALTA];
     push(parte_alta);
 
-    // empilha a parte baixa
-    parte_baixa = frameCorrente->fields[indice + 1];
+    // empilha a parte baixa - por convencao eh emprilhada depois
+    parte_baixa = frameCorrente->fields[indice + POS_BAIXA];
     push(parte_baixa);
 
     atualizaPc();
+
 }
 
 /** 
@@ -925,12 +929,13 @@ void dload(){
     indice = frameCorrente->code[frameCorrente->pc + 1];
 
     // empilha a parte alta - por convencao eh empilhada primeiro
-    parte_alta = frameCorrente->fields[indice];
+    parte_alta = frameCorrente->fields[indice + POS_ALTA];
     push(parte_alta);
 
-    // empilha a parte baixa
-    parte_baixa = frameCorrente->fields[indice + 1];
+    // empilha a parte baixa - por convencao eh emprilhada depois
+    parte_baixa = frameCorrente->fields[indice + POS_BAIXA];
     push(parte_baixa);
+
 
     atualizaPc();
 }
@@ -1056,12 +1061,12 @@ void lload_0(){
     // pega indice
     indice = 0;
 
-    // empilha a parte alta - por convencao vem primeiro
-    parte_alta = frameCorrente->fields[indice];
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice + POS_ALTA];
     push(parte_alta);
 
-    // empilha a parte baixa
-    parte_baixa = frameCorrente->fields[indice + 1];
+    // empilha a parte baixa - por convencao eh emprilhada depois
+    parte_baixa = frameCorrente->fields[indice + POS_BAIXA];
     push(parte_baixa);
 
 	atualizaPc();
@@ -1083,12 +1088,12 @@ void lload_1(){
     // pega indice
     indice = 1;
 
-    // empilha a parte alta - por convencao vem primeiro
-    parte_alta = frameCorrente->fields[indice];
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice + POS_ALTA];
     push(parte_alta);
 
-    // empilha a parte baixa
-    parte_baixa = frameCorrente->fields[indice + 1];
+    // empilha a parte baixa - por convencao eh emprilhada depois
+    parte_baixa = frameCorrente->fields[indice + POS_BAIXA];
     push(parte_baixa);
 
     atualizaPc();
@@ -1111,15 +1116,15 @@ void lload_2(){
     // pega indice
     indice = 2;
 
-    // empilha a parte alta - por convencao vem primeiro
-    parte_alta = frameCorrente->fields[indice];
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice + POS_ALTA];
     push(parte_alta);
 
-    // empilha a parte baixa
-    parte_baixa = frameCorrente->fields[indice + 1];
+    // empilha a parte baixa - por convencao eh emprilhada depois
+    parte_baixa = frameCorrente->fields[indice + POS_BAIXA];
     push(parte_baixa);
 
-   atualizaPc();
+    atualizaPc();
 
 }
 
@@ -1139,12 +1144,12 @@ void lload_3(){
     // pega indice
     indice = 3;
 
-    // empilha a parte alta - por convencao vem primeiro
-    parte_alta = frameCorrente->fields[indice];
+    // empilha a parte alta - por convencao eh empilhada primeiro
+    parte_alta = frameCorrente->fields[indice + POS_ALTA];
     push(parte_alta);
 
-    // empilha a parte baixa
-    parte_baixa = frameCorrente->fields[indice + 1];
+    // empilha a parte baixa - por convencao eh emprilhada depois
+    parte_baixa = frameCorrente->fields[indice + POS_BAIXA];
     push(parte_baixa);
 
     atualizaPc();
@@ -1260,11 +1265,11 @@ void dload_0(){
     indice = 0; 
 
     // empilha a parte alta - por convencao eh empilhada primeiro
-    parte_alta = frameCorrente->fields[indice];
+    parte_alta = frameCorrente->fields[indice + POS_ALTA];
     push(parte_alta);
 
-    // empilha a parte baixa
-    parte_baixa = frameCorrente->fields[indice + 1];
+    // empilha a parte baixa - por convencao eh emprilhada depois
+    parte_baixa = frameCorrente->fields[indice + POS_BAIXA];
     push(parte_baixa);
 
     atualizaPc();
@@ -1287,14 +1292,15 @@ void dload_1(){
     indice = 1; 
 
     // empilha a parte alta - por convencao eh empilhada primeiro
-    parte_alta = frameCorrente->fields[indice];
+    parte_alta = frameCorrente->fields[indice + POS_ALTA];
     push(parte_alta);
 
-    // empilha a parte baixa
-    parte_baixa = frameCorrente->fields[indice + 1];
+    // empilha a parte baixa - por convencao eh emprilhada depois
+    parte_baixa = frameCorrente->fields[indice + POS_BAIXA];
     push(parte_baixa);
 
     atualizaPc();
+
 
 }
 
@@ -1314,11 +1320,11 @@ void dload_2(){
     indice = 2; 
 
     // empilha a parte alta - por convencao eh empilhada primeiro
-    parte_alta = frameCorrente->fields[indice];
+    parte_alta = frameCorrente->fields[indice + POS_ALTA];
     push(parte_alta);
 
-    // empilha a parte baixa
-    parte_baixa = frameCorrente->fields[indice + 1];
+    // empilha a parte baixa - por convencao eh emprilhada depois
+    parte_baixa = frameCorrente->fields[indice + POS_BAIXA];
     push(parte_baixa);
 
     atualizaPc();
@@ -1341,14 +1347,14 @@ void dload_3(){
     indice = 3; 
 
     // empilha a parte alta - por convencao eh empilhada primeiro
-    parte_alta = frameCorrente->fields[indice];
+    parte_alta = frameCorrente->fields[indice + POS_ALTA];
     push(parte_alta);
 
-    // empilha a parte baixa
-    parte_baixa = frameCorrente->fields[indice + 1];
+    // empilha a parte baixa - por convencao eh emprilhada depois
+    parte_baixa = frameCorrente->fields[indice + POS_BAIXA];
     push(parte_baixa);
 
-   atualizaPc();
+    atualizaPc();
 
 }
 
@@ -1442,6 +1448,7 @@ void saload(){
 
 }
 
+/*** STORES ***/
 /*
  * pega inteiro e coloca no array de variaveis locais, na posicao dada por indice
  * @param void
@@ -1484,9 +1491,10 @@ void lstore(){
     parte_alta = pop_op();
 
     // poe parte alta e baixa no array de var locais
-    // pela convencao a parte alta vem primeiro
-    frameCorrente->fields[indice] = parte_alta;
-    frameCorrente->fields[indice + 1] = parte_baixa;
+    // pela convencao a parte alta vem depois no array, i.e, 
+    // POS_ALTA = 1 e POS_BAIXA = 0
+    frameCorrente->fields[indice + POS_ALTA] = parte_alta;
+    frameCorrente->fields[indice + POS_BAIXA] = parte_baixa;
 
     atualizaPc();
 }
@@ -1532,9 +1540,10 @@ void dstore(){
     parte_alta = pop_op();
 
     // poe parte alta e baixa no array de var locais
-    // pela convencao a parte alta vem primeiro
-    frameCorrente->fields[indice] = parte_alta;
-    frameCorrente->fields[indice + 1] = parte_baixa;
+    // pela convencao a parte alta vem depois no array, i.e, 
+    // POS_ALTA = 1 e POS_BAIXA = 0
+    frameCorrente->fields[indice + POS_ALTA] = parte_alta;
+    frameCorrente->fields[indice + POS_BAIXA] = parte_baixa;
 
     atualizaPc();
 }
@@ -1662,9 +1671,10 @@ void lstore_0(){
     parte_alta = pop_op();
 
     // poe parte alta e baixa no array de var locais
-    // pela convencao a parte alta vem primeiro
-    frameCorrente->fields[indice] = parte_alta;
-    frameCorrente->fields[indice + 1] = parte_baixa;
+    // pela convencao a parte alta vem depois no array, i.e, 
+    // POS_ALTA = 1 e POS_BAIXA = 0
+    frameCorrente->fields[indice + POS_ALTA] = parte_alta;
+    frameCorrente->fields[indice + POS_BAIXA] = parte_baixa;
 
     atualizaPc();
 }
@@ -1688,9 +1698,10 @@ void lstore_1(){
     parte_alta = pop_op();
 
     // poe parte alta e baixa no array de var locais
-    // pela convencao a parte alta vem primeiro
-    frameCorrente->fields[indice] = parte_alta;
-    frameCorrente->fields[indice + 1] = parte_baixa;
+    // pela convencao a parte alta vem depois no array, i.e, 
+    // POS_ALTA = 1 e POS_BAIXA = 0
+    frameCorrente->fields[indice + POS_ALTA] = parte_alta;
+    frameCorrente->fields[indice + POS_BAIXA] = parte_baixa;
 
     atualizaPc();
 }
@@ -1714,9 +1725,10 @@ void lstore_2(){
     parte_alta = pop_op();
 
     // poe parte alta e baixa no array de var locais
-    // pela convencao a parte alta vem primeiro
-    frameCorrente->fields[indice] = parte_alta;
-    frameCorrente->fields[indice + 1] = parte_baixa;
+    // pela convencao a parte alta vem depois no array, i.e, 
+    // POS_ALTA = 1 e POS_BAIXA = 0
+    frameCorrente->fields[indice + POS_ALTA] = parte_alta;
+    frameCorrente->fields[indice + POS_BAIXA] = parte_baixa;
 
     atualizaPc();
 }
@@ -1740,9 +1752,10 @@ void lstore_3(){
     parte_alta = pop_op();
 
     // poe parte alta e baixa no array de var locais
-    // pela convencao a parte alta vem primeiro
-    frameCorrente->fields[indice] = parte_alta;
-    frameCorrente->fields[indice + 1] = parte_baixa;
+    // pela convencao a parte alta vem depois no array, i.e, 
+    // POS_ALTA = 1 e POS_BAIXA = 0
+    frameCorrente->fields[indice + POS_ALTA] = parte_alta;
+    frameCorrente->fields[indice + POS_BAIXA] = parte_baixa;
 
     atualizaPc();
 }
@@ -1858,9 +1871,10 @@ void dstore_0(){
     parte_alta = pop_op();
 
     // poe parte alta e baixa no array de var locais
-    // pela convencao a parte alta vem primeiro
-    frameCorrente->fields[indice] = parte_alta;
-    frameCorrente->fields[indice + 1] = parte_baixa;
+    // pela convencao a parte alta vem depois no array, i.e, 
+    // POS_ALTA = 1 e POS_BAIXA = 0
+    frameCorrente->fields[indice + POS_ALTA] = parte_alta;
+    frameCorrente->fields[indice + POS_BAIXA] = parte_baixa;
 
     // incrementa pc
     atualizaPc();
@@ -1885,9 +1899,10 @@ void dstore_1(){
     parte_alta = pop_op();
 
     // poe parte alta e baixa no array de var locais
-    // pela convencao a parte alta vem primeiro
-    frameCorrente->fields[indice] = parte_alta;
-    frameCorrente->fields[indice + 1] = parte_baixa;
+    // pela convencao a parte alta vem depois no array, i.e, 
+    // POS_ALTA = 1 e POS_BAIXA = 0
+    frameCorrente->fields[indice + POS_ALTA] = parte_alta;
+    frameCorrente->fields[indice + POS_BAIXA] = parte_baixa;
 
     // incrementa pc
     atualizaPc();
@@ -1913,9 +1928,10 @@ void dstore_2(){
     parte_alta = pop_op();
 
     // poe parte alta e baixa no array de var locais
-    // pela convencao a parte alta vem primeiro
-    frameCorrente->fields[indice] = parte_alta;
-    frameCorrente->fields[indice + 1] = parte_baixa;
+    // pela convencao a parte alta vem depois no array, i.e, 
+    // POS_ALTA = 1 e POS_BAIXA = 0
+    frameCorrente->fields[indice + POS_ALTA] = parte_alta;
+    frameCorrente->fields[indice + POS_BAIXA] = parte_baixa;
 
     // incrementa pc
     atualizaPc();
@@ -1941,9 +1957,10 @@ void dstore_3(){
     parte_alta = pop_op();
 
     // poe parte alta e baixa no array de var locais
-    // pela convencao a parte alta vem primeiro
-    frameCorrente->fields[indice] = parte_alta;
-    frameCorrente->fields[indice + 1] = parte_baixa;
+    // pela convencao a parte alta vem depois no array, i.e, 
+    // POS_ALTA = 1 e POS_BAIXA = 0
+    frameCorrente->fields[indice + POS_ALTA] = parte_alta;
+    frameCorrente->fields[indice + POS_BAIXA] = parte_baixa;
 
     // incrementa pc
     atualizaPc();
@@ -5432,14 +5449,14 @@ void invokespecial(){
 	uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
 
 	//Desempilha os parametros da pilha.
-	for(int32_t i = 0; i <= numeroParametros; i++)
+	for(int32_t i = 0; i < numeroParametros; i++)
 		fields[i] = pop_op();
 
 	//inicia método
 	empilhaMetodo(metodoInvocado, classe);
 
 	//Preenche fields no frame novo (invoke).
-	for(int32_t i = 0; i <= numeroParametros; i++) {
+	for(int32_t i = 0; i < numeroParametros; i++) {
 			frameCorrente->fields[i] = fields[i];
 	}
 
@@ -5560,14 +5577,14 @@ void invokestatic(){
 	uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
 
 	//Desempilha os parametros da pilha.
-	for(int32_t i = 0; i <= numeroParametros; i++)
+	for(int32_t i = 0; i < numeroParametros; i++)
 		fields[i] = pop_op();
 
 	//inicia método
 	empilhaMetodo(metodoInvocado, classe);
 
 	//Preenche fields no frame novo (invoke).
-	for(int32_t i = 0; i <= numeroParametros; i++) {
+	for(int32_t i = 0; i < numeroParametros; i++) {
 			frameCorrente->fields[i] = fields[i];
 	}
 

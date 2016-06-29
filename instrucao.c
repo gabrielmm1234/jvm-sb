@@ -5449,14 +5449,14 @@ void invokespecial(){
 	uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
 
 	//Desempilha os parametros da pilha.
-	for(int32_t i = 0; i < numeroParametros; i++)
+	for(int32_t i = 0; i <= numeroParametros; i++)
 		fields[i] = pop_op();
 
 	//inicia método
 	empilhaMetodo(metodoInvocado, classe);
 
 	//Preenche fields no frame novo (invoke).
-	for(int32_t i = 0; i < numeroParametros; i++) {
+	for(int32_t i = 0; i <= numeroParametros; i++) {
 			frameCorrente->fields[i] = fields[i];
 	}
 
@@ -5585,7 +5585,7 @@ void invokestatic(){
 
 	//Preenche fields no frame novo (invoke).
 	for(int32_t i = 0; i < numeroParametros; i++) {
-			frameCorrente->fields[i] = fields[i];
+			frameCorrente->fields[i] = fields[numeroParametros - i - 1];
 	}
 
 	//Executa método.

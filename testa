@@ -8,7 +8,7 @@ make
 #echo "finished compiling"
 
 #./jvm.exe  HelloWorld.class $1
-./jvm.exe  Delta.class $1
+#./jvm.exe  Delta.class $1 
 #./jvm.exe  Switch.class $1
 #./jvm.exe LookupSwitch2.class $1
 #./jvm.exe  Object2.class $1

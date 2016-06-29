@@ -204,6 +204,7 @@ void mostra_profundidade(int i)
  */
 void dumpStack(){
 	int i;
+    printf("\n");
 	for(i = 0; i < frameCorrente->pilha_op->depth; i++){
 		printf("valor: %d\n",frameCorrente->pilha_op->operandos[i]);
 	}

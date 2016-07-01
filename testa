@@ -41,7 +41,7 @@ make
 ## while ##
 #./jvm.exe  Fibonacci.class $1 && echo "" && java Fibonacci
 #./jvm.exe CountWheat.class $1 && echo "" && java CountWheat
-./jvm.exe HarmonicSeries.class $1 && echo "" && java HarmonicSeries
+#./jvm.exe HarmonicSeries.class $1 && echo "" && java HarmonicSeries
 
 ## casting
 #./jvm.exe int_cast.class $1 && echo "" && java int_cast
@@ -57,4 +57,7 @@ make
 #
 #
 # objects
-#./jvm.exe objeto_teste.class $1 ; echo "" ; java objeto_teste
+./jvm.exe objeto_teste.class $1 && echo "" && java objeto_teste
+
+# static
+#./jvm.exe static_test.class $1 && echo "" && java static_test

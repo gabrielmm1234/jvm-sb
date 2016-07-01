@@ -5223,6 +5223,24 @@ void invokevirtual(){
 
     if((strcmp(nomeClasse, "java/lang/StringBuffer") == 0) && (strcmp(nomeMetodo,"append") == 0)){
 			flagAppend++;
+		    foi_lneg = false;
+			atualizaPc();
+			return;
+	}
+
+	if((strcmp(nomeClasse, "java/lang/StringBuffer") == 0) && (strcmp(nomeMetodo,"toString") == 0)){
+		    foi_lneg = false;
+			atualizaPc();
+			return;
+	}
+
+	if((strcmp(nomeClasse, "java/util/Scanner") == 0) && (strcmp(nomeMetodo,"next") == 0)){
+		int32_t aux;
+		scanf("%d",&aux);
+		push(aux);
+		foi_lneg = false;
+		atualizaPc();
+		return;
 	}
 
 	if((strcmp(nomeClasse, "java/io/PrintStream") == 0) && (strcmp(nomeMetodo,"println") == 0)){
@@ -5306,7 +5324,7 @@ void invokevirtual(){
             }
         }
 
-        if (flagAppend == 2)
+        else if (flagAppend == 2)
         {
             if(strcmp(tipoGlobal, "F") == 0)
             {
@@ -5367,52 +5385,50 @@ void invokevirtual(){
 
             flagAppend = 0;
         }
+        else{
+        	return;
+        }
 
-	}
-	else{
-		classeIndice = carregaMemClasse(nomeClasse);
-		classFile* classe = buscaClasseIndice(classeIndice);
-
-		//Busca método a ser invocado.
-		metodoInvocado = buscaMetodo(frameCorrente->classe,classe,nomeTipoAux);
-		if(metodoInvocado == NULL){
-			printf("Método não Encontrado!\n");
-			exit(0);
-		}
-
-		//Pega parametros da pilha pelo numero de fields
-		int32_t numeroParametros = retornaNumeroParametros(classe,metodoInvocado);
-
-		//Aloca espaço para os parametros do método
-		uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
-
-		//Desempilha os parametros da pilha.
-		for(int32_t i = 0; i <= numeroParametros; i++){
-			fields[i] = pop_op();
-		}
-
-		//inicia método
-		empilhaMetodo(metodoInvocado, classe);
-
-		//Preenche fields no frame novo (invoke).
-		for(int32_t i = 0; i <= numeroParametros; i++) {
-				frameCorrente->fields[i] = fields[numeroParametros - i];
-		}
-
-		//Executa método.
-		executaFrameCorrente();
-	}	
-
-	if((strcmp(nomeClasse, "java/util/Scanner") == 0) && (strcmp(nomeMetodo,"next") == 0)){
-		int32_t aux;
-		scanf("%d",&aux);
-		push(aux);
+        foi_lneg = false;
+		atualizaPc();
+		return;
 	}
 
+	classeIndice = carregaMemClasse(nomeClasse);
+	classFile* classe = buscaClasseIndice(classeIndice);
 
+	//Busca método a ser invocado.
+	metodoInvocado = buscaMetodo(frameCorrente->classe,classe,nomeTipoAux);
+	if(metodoInvocado == NULL){
+		printf("Método não Encontrado!\n");
+		exit(0);
+	}
 
-    foi_lneg = false;
+	//Pega parametros da pilha pelo numero de fields
+	int32_t numeroParametros = retornaNumeroParametros(classe,metodoInvocado);
+
+	//Aloca espaço para os parametros do método
+	uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
+
+	//Desempilha os parametros da pilha.
+	for(int32_t i = 0; i <= numeroParametros; i++){
+		fields[i] = pop_op();
+	}
+
+	//inicia método
+	empilhaMetodo(metodoInvocado, classe);
+
+	//Preenche fields no frame novo (invoke).
+	for(int32_t i = 0; i <= numeroParametros; i++) {
+			frameCorrente->fields[i] = fields[numeroParametros - i];
+	}
+
+	//Executa método.
+	executaFrameCorrente();
+
+	foi_lneg = false;
 	atualizaPc();
+	return;
 }
 
 /**

@@ -5252,7 +5252,6 @@ void invokevirtual(){
         else if (flagAppend == 0)
         {
             resultado = pop_op();
-            printf("Resultado: %d\n",resultado);
             //string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
             if (tipoGlobal == NULL)
             {
@@ -5273,14 +5272,12 @@ void invokevirtual(){
             else if(strcmp(tipoGlobal, "D") == 0)
             {
                 resultado2 = pop_op();
-                printf("Resultado2: %d\n",resultado2);
                 double resultado_double; 
                 int64_t temp; 
 
-                temp = resultado2;
+                temp = resultado;
                 temp <<= 32;
-                temp += resultado; 
-                printf("temp: %ld\n", temp);
+                temp += resultado2; 
                 memcpy(&resultado_double, &temp, sizeof(int64_t));
                 printf("%f\n", resultado_double);
             }

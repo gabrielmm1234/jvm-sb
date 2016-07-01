@@ -5630,6 +5630,66 @@ void invokestatic(){
 	atualizaPc();
 }
 void invokeinterface(){
+	method_info* metodoInvocado;
+
+    char* nomeMetodo;
+    char* descricaoMetodo;
+    uint16_t nomeMetodoAux, descricaoMetodoAux,nomeTipoAux,stringAux;
+
+	//Pega indice no argumento da instrução.
+	uint32_t indice = frameCorrente->code[frameCorrente->pc + 2];
+
+	//Pega o indice do nome da classe na CP pelo indice anterior.
+	uint32_t indiceClasse = (frameCorrente->constant_pool[indice-1]).info.Methodref.class_index;
+
+	//Pega nome da classe.
+	char* nomeClasse = retornaNome(frameCorrente->classe,(frameCorrente->constant_pool[indiceClasse-1]).info.Class.name_index);
+
+	nomeTipoAux = frameCorrente->constant_pool[indice - 1].info.Methodref.name_and_type_index;
+
+    nomeMetodoAux = frameCorrente->constant_pool[nomeTipoAux - 1].info.NameAndType.name_index;
+
+	descricaoMetodoAux = frameCorrente->constant_pool[nomeTipoAux - 1].info.NameAndType.descriptor_index;
+	
+
+    nomeMetodo = retornaNome(frameCorrente->classe, nomeMetodoAux);
+
+    descricaoMetodo = retornaNome(frameCorrente->classe, descricaoMetodoAux);
+
+    //TODO Essa mudancao esta correta? eu copiei do invokespecial
+	//Pega posição da classe no array de classes
+	int32_t indexClasse = carregaMemClasse(nomeClasse);
+
+	//Pega referencia ao classFile pelo indice anterior.
+	classFile* classe = buscaClasseIndice(indexClasse);
+
+	//Pega o nome e tipo dó método pelo indice da instrução.
+	uint16_t nomeTipoIndice = frameCorrente->constant_pool[indice-1].info.Methodref.name_and_type_index;
+
+	//Busca método a ser invocado.
+	metodoInvocado = buscaMetodo(frameCorrente->classe,classe,nomeTipoIndice);
+
+	//Pega parametros da pilha pelo numero de fields
+	int32_t numeroParametros = retornaNumeroParametros(classe,metodoInvocado);
+
+	//Aloca espaço para os parametros do método
+	uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
+
+	//Desempilha os parametros da pilha.
+	for(int32_t i = 0; i < numeroParametros; i++)
+		fields[i] = pop_op();
+
+	//inicia método
+	empilhaMetodo(metodoInvocado, classe);
+
+	//Preenche fields no frame novo (invoke).
+	for(int32_t i = 0; i < numeroParametros; i++) {
+			frameCorrente->fields[i] = fields[numeroParametros - i - 1];
+	}
+
+	//Executa método.
+	executaFrameCorrente();
+	atualizaPc();
 
 }
 

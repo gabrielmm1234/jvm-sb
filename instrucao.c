@@ -33,6 +33,9 @@
 #define POS_BAIXA 1 
 #define POS_ALTA 0
 
+vector* arrayVetores = NULL;
+int32_t qtdArrays = 0;
+
 //OBS: Alternativa para memcpy no manipulação de ponto flutuante -> UNION.
 
 /**
@@ -1416,8 +1419,24 @@ void aload_3(){
 
 }
 
+/**
+ * Obtem da pilha o indice a ser acessado no vetor, obtem da pilha
+ * a referencia ao vetor previamente alocado. Acessa o vetor na
+ * posição do indice e empilha o valor correspondente
+ * @param void
+ * @return voi
+ */
 void iaload(){
+	//Referncia para o vetor obtida da pilha
+	int32_t* ref;
+	//Pega indice da pilha de operandos
+	int32_t indice = pop_op();
+	//Pega referencia para o array alocado
+	ref = (int32_t*)pop_op();
+	//Acessa o array no indice e empilha o valor
+	push(ref[indice]);
 
+	atualizaPc();
 }
 void laload(){
 
@@ -2050,8 +2069,27 @@ void astore_3(){
 
 }
 
+/* 
+ * Obtem da pilha o valor a ser atribuido, o indice a ser acessado
+ * e obtem uma referencia ao vetor previamente alocado.
+ * Acessa o vetor no indice obtido e atribui o valor
+ * @param void
+ * @return void
+ */
 void iastore(){
+	//Referencia pro array.
+	int32_t* ref;
+	int32_t indice,valor;
+	//Pega o valor a ser atribuido da pilha de operandos
+	valor = pop_op();
+	//Pega o indice do vetor a ser acessado
+	indice = pop_op();
+	//Pega referencia do array a ser acessado.
+	ref = (int32_t*)pop_op();
+	//Acessa o array no indice e atribui com o valor obtido da pilha.
+	ref[indice] = valor;
 
+	atualizaPc();
 }
 void lastore(){
 
@@ -5742,11 +5780,80 @@ void ins_new(){
 	atualizaPc();
 }
 
+/**
+ * Aloca um array simples e empilha uma referencia pra esse array.
+ * Desempilha o tamanho do array. Obtem tipo do array da instrução.
+ * @param void
+ * @return void 
+ */
 void newarray(){
+	//Descreve o tamanho em bytes de cada tipo. int -> 4 bytes por exemplo.
+	int32_t tamanhoBytes;
+	//Pega da pilha o tamanho do array
+	int32_t tamanhoArray = pop_op();
+	//Pega da instrução o tipo do array.
+	int8_t tipoArray = frameCorrente->code[(frameCorrente->pc)+1];
 
-    pop_op();
-    push(43);
-    // atualiza PC
+	//Necessario descobrir tipo para alocar a quantidade certa
+	//Atraves do tamanho em bits de cada tipo.
+
+	//Long
+	if(tipoArray == 11){
+		tamanhoBytes = 8;
+	}
+	//Double
+	if(tipoArray == 7){
+		tamanhoBytes = 8;
+	}
+
+
+	//Float
+	if(tipoArray == 6){
+		tamanhoBytes = 4;
+	}
+	//Referencia
+	if(tipoArray == 0){
+		tamanhoBytes = 4;
+	}
+	//Int
+	if(tipoArray == 10){
+		tamanhoBytes = 4;
+	}
+
+
+	//Char
+	if(tipoArray == 5){
+		tamanhoBytes = 2;
+	}
+	//short
+	if(tipoArray == 9){
+		tamanhoBytes = 2;
+	}
+
+	//Booleano
+	if(tipoArray == 4){
+		tamanhoBytes = 1;
+	}
+	//byte
+	if(tipoArray == 8){
+		tamanhoBytes = 1;
+	}
+
+	//Array como ponteiro pra void -> realiza cast futuramente.
+	//Aloca espaço de acordo com os tamanhos.
+	int32_t* vetor = calloc(tamanhoBytes,tamanhoArray);
+
+	//Necessario guardar as struct para o arrayLength.
+	//É feito um vetor de arrays para obter o tamanho dos arrays.
+	qtdArrays++;
+	arrayVetores = realloc (arrayVetores, sizeof(struct array)*qtdArrays);
+	arrayVetores[qtdArrays-1].tamanho = tamanhoArray;
+	arrayVetores[qtdArrays-1].referencia = (int32_t)vetor;
+
+	//Empilha referencia pro vetor
+	push((int32_t)vetor);
+	
+	//Atualiza pc
     atualizaPc();
 
 }

@@ -47,9 +47,22 @@ struct stackFrame{
 	struct stackFrame* next;
 };
 
+//Struct que representa nosso array.
+//Contem uma referencia ao array. E seu respectivo tamanho.
+typedef struct array{
+	int32_t referencia;
+	int32_t tamanho;
+}vector;
+
 
 //Salva o frame que está sendo executado.
-struct frame *frameCorrente;
+struct frame* frameCorrente;
+
+//Array de arrays :)
+vector* arrayVetores;
+
+//Var com a quantidade de arrays no arrayVetores.
+int32_t qtdArrays;
 
 //Var globar para guardar retorno de um metodo e empilhar no proximo metodo.
 int32_t retorno;

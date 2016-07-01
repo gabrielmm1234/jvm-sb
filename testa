@@ -7,48 +7,54 @@ make
 #./compila 
 #echo "finished compiling"
 
-#./jvm.exe  HelloWorld.class $1
-#./jvm.exe  Delta.class $1 
-#./jvm.exe  Switch.class $1
-#./jvm.exe LookupSwitch2.class $1
-#./jvm.exe  Object2.class $1
+#./jvm.exe  HelloWorld.class $1  && echo "" && java HelloWorld
+#./jvm.exe  Delta.class $1  && echo "" && java Delta
+#./jvm.exe  Switch.class $1 && echo "" && java Switch
+#./jvm.exe LookupSwitch2.class $1 && echo "" && java LookupSwitch2
+#./jvm.exe  Object2.class $1 && echo "" && java Object2
 #
 # testes de instrucao aritmetica 
-#./jvm.exe  Operacoes.class $1
+#./jvm.exe  Operacoes.class $1 && echo "" && java Operacoes
 
 
-## aritmetica ##
-#./jvm.exe int_aritmetica.class $1
-#./jvm.exe long_aritmetica.class $1
-#./jvm.exe float_aritmetica.class $1 
-#./jvm.exe double_aritmetica.class $1
-#./jvm.exe short_aritmetica.class $1
+## aritmetica  com tipos##
+#./jvm.exe int_aritmetica.class $1 && echo "" && java int_aritmetica
+#./jvm.exe long_aritmetica.class $1 && echo "" && java long_aritmetica
+#./jvm.exe float_aritmetica.class $1  && echo "" && java float_aritmetica
+#./jvm.exe double_aritmetica.class $1 && echo "" && java double_aritmetica
+#./jvm.exe short_aritmetica.class $1 && echo "" && java short_aritmetica
+
 ## aritmetica
-#./jvm.exe testeLogArit.class $1
+#./jvm.exe testeLogArit.class $1 && echo "" && java testeLogArit
 
 
 ## switch  - agora eh para ta funcionando##
-#./jvm.exe tableswitch.class $1
+#./jvm.exe tableswitch.class $1 && echo "" && java tableswitch
 
 ## logicos ##
-## tem array no meio - ./jvm.exe int_logico.java $1
+## tem array no meio - ./jvm.exe int_logico.java $1 && echo "" && java Operacoes
 ## o short tb tem array no meio
-#./jvm.exe long_logico.class $1
-#./jvm.exe float_logico.class $1
-#./jvm.exe double_logico.class $1
+#./jvm.exe long_logico.class $1 && echo "" && java long_logico
+#./jvm.exe float_logico.class $1 && echo "" && java float_logico
+#./jvm.exe double_logico.class $1 && echo "" && java double_logico
 
 ## while ##
-#./jvm.exe  Fibonacci.class $1
-#./jvm.exe CountWheat.class $1
+#./jvm.exe  Fibonacci.class $1 && echo "" && java Fibonacci
+#./jvm.exe CountWheat.class $1 && echo "" && java CountWheat
+./jvm.exe HarmonicSeries.class $1 && echo "" && java HarmonicSeries
 
 ## casting
-./jvm.exe int_cast.class $1
-./jvm.exe float_cast.class $1
-./jvm.exe long_cast.class $1
-./jvm.exe double_cast.class $1
+#./jvm.exe int_cast.class $1 && echo "" && java int_cast
+#./jvm.exe float_cast.class $1 && echo "" && java float_cast
+#./jvm.exe long_cast.class $1 && echo "" && java long_cast
+#./jvm.exe double_cast.class $1 && echo "" && java double_cast
 
 ## array 
-#./jvm.exe vetor1.class $1
+#./jvm.exe vetor1.class $1 && echo "" && java Operacoes
 
 ## methods
-#./jvm.exe method_test.class $1
+#./jvm.exe method_test.class $1 && echo "" && java Operacoes
+#
+#
+# objects
+#./jvm.exe objeto_teste.class $1 ; echo "" ; java objeto_teste

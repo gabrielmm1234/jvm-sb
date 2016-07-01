@@ -5096,8 +5096,8 @@ void getfield(){
 		int32_t baixa = obj->campos[i];
 		int32_t alta = obj->campos[i+1];
 
-		push(baixa);
 		push(alta);
+		push(baixa);
 		atualizaPc();
  	}
  	else{
@@ -5275,9 +5275,9 @@ void invokevirtual(){
                 double resultado_double; 
                 int64_t temp; 
 
-                temp = resultado;
+                temp = resultado2;
                 temp <<= 32;
-                temp += resultado2; 
+                temp += resultado; 
                 memcpy(&resultado_double, &temp, sizeof(int64_t));
                 printf("%f\n", resultado_double);
             }

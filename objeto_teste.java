@@ -1,8 +1,8 @@
-class objeto{
+class objeto_teste{
 	private int a;
 	private double c;
 	
-	public objeto(int a, double c){
+	public objeto_teste(int a, double c){
 		this.a = a;
 		this.c = c;
 	}
@@ -19,11 +19,12 @@ class objeto{
 	public double get_c(){
 		return c;
 	}
+
 		
 	public static void main(String argv[]){
-		objeto obj1, obj2;
-		obj1 = new objeto(3,5.0);
-		obj2 = new objeto(-30000, -51.54);
+		objeto_teste obj1, obj2;
+		obj1 = new objeto_teste(3,5.0);
+		obj2 = new objeto_teste(-300, -51.54);
 		
 		System.out.println(obj1.get_a());
 		System.out.println(obj1.get_c());

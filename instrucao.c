@@ -674,6 +674,7 @@ void bipush(){
 void sipush(){
     int32_t byte1, byte2;
     int32_t valor; 
+    int16_t short_temp;
 
     // pega primeiro byte
 	byte1 = frameCorrente->code[(frameCorrente->pc + 1)];
@@ -682,7 +683,10 @@ void sipush(){
 	byte2 = frameCorrente->code[(frameCorrente->pc + 2)];
     
     // obtem short 
-    valor = (byte1 << 8) + byte2;
+    //valor = (byte1 << 8) + byte2;
+    
+    short_temp = (byte1 << 8) + byte2;
+    valor = (int32_t) short_temp;
     
     // poe valor no stack de operandos
     push(valor);

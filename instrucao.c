@@ -409,7 +409,6 @@ void iconst_3(){
 
     // poe 3 na pilha de operandos
     push(3);
-    
     // atualiza pc 
     frameCorrente->pc++;
 }
@@ -685,7 +684,6 @@ void sipush(){
     
     // poe valor no stack de operandos
     push(valor);
-    
     atualizaPc();
 }
 
@@ -809,7 +807,6 @@ void ldc_w(){
  * @return void 
  */
 void ldc2_w(){
-
     //int32_t indice;
 
     //indice = (frameCorrente->code[frameCorrente->pc + 1] << 8 + frameCorrente->code[frameCorrente->pc + 2]);
@@ -987,7 +984,6 @@ void iload_0(){
  * @return void
  */
 void iload_1(){
-
 	char* tipo = "I";
     tipoGlobal = tipo;
 
@@ -998,7 +994,6 @@ void iload_1(){
 
     // poe valor na pilha de operandos
     push(valor);
-    
     atualizaPc();
 }
 
@@ -1383,7 +1378,6 @@ void aload_1(){
     // empilha 
     valor = frameCorrente->fields[indice];
     push(valor);
-    
     atualizaPc();
 }
 
@@ -2004,7 +1998,6 @@ void astore_1(){
     
     // desempilha 
     valor = pop_op(); 
-
     // poe o valor na posicao no array de var locais
     frameCorrente->fields[indice] = valor; 
 
@@ -2027,7 +2020,6 @@ void astore_2(){
     
     // desempilha 
     valor = pop_op(); 
-
     // poe o valor na posicao no array de var locais
     frameCorrente->fields[indice] = valor; 
 
@@ -2122,7 +2114,6 @@ void dup(){
 	//Duplica
 	push(retPilha);
 	push(retPilha);
-	
 	atualizaPc();
 }
 
@@ -5098,15 +5089,28 @@ void getfield(){
  	//obtem indice do nome do field (variavel)
  	uint32_t indiceNome = frameCorrente->classe->fields[indiceField].name_index;
 
+ 	if(tipo[0] == 'J' || tipo[0] == 'D') {
+ 		int32_t i;
+		for(i = 0;obj->indiceCampos[i] != indiceNome; i++);
 
- 	int32_t i;
-	for(i = 0;obj->indiceCampos[i] != indiceNome; i++);
- 	//Pega o field do objeto e empilha.
- 	uint32_t val = obj->campos[i];
- 
- 	push(val);
+		int32_t baixa = obj->campos[i];
+		int32_t alta = obj->campos[i+1];
 
-	atualizaPc();
+		push(baixa);
+		push(alta);
+		atualizaPc();
+ 	}
+ 	else{
+
+	 	int32_t i;
+		for(i = 0;obj->indiceCampos[i] != indiceNome; i++);
+	 	//Pega o field do objeto e empilha.
+	 	uint32_t val = obj->campos[i];
+	 
+	 	push(val);
+
+		atualizaPc();
+	}
 }
 
 /**
@@ -5138,13 +5142,48 @@ void putfield(){
  	uint32_t indiceNome = frameCorrente->classe->fields[indiceField].name_index;
 
  	//obtem valor e objeto da pilha e seta o valor no field do objeto.
- 	int32_t val = pop_op();
+ 	if(tipo[0] == 'J' || tipo[0] == 'D') {
+ 		int32_t alta,baixa;
+ 		int32_t val1 = pop_op();
+ 		int32_t val2 = pop_op();
+ 		objeto* obj = (objeto*)pop_op();
 
- 	objeto* obj = (objeto*)pop_op();
+ 		//Converter os numeros 32 bits para 64 bits(double)
 
- 	int i;
- 	for(i = 0; obj->indiceCampos[i] != indiceNome; i++);
-	obj->campos[i] = val;
+		//Atribui parte alta primeiro
+		int64_t dVal = val2;
+		//Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+		dVal <<= 32;
+		//Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+		//os 32 bits da parte baixa estão zerados.
+		dVal = dVal + val1;
+
+		//Finalmente copio os bytes do int64_t para um double.
+		//memcpy copia 64 bits de dVal para valorDouble1.
+		double valorDouble1;
+		memcpy(&valorDouble1, &dVal, sizeof(int64_t));
+
+		int i;
+		for(i = 0; obj->indiceCampos[i] != indiceNome; i++);
+
+		//Necessario converter mais uma vez o double somado para int64 para 
+		//empilhar corretamente.
+		int64_t valorPilha;
+		memcpy(&valorPilha, &valorDouble1, sizeof(int64_t));
+
+		//Converte para parte alta e baixa novamente :) kk para empilhar
+		alta = valorPilha >> 32;
+		baixa = valorPilha & 0xffffffff;
+		obj->campos[i] = baixa;
+		obj->campos[i+1] = alta;
+ 	}
+ 	else{
+	 	int32_t val = pop_op();
+	 	objeto* obj = (objeto*)pop_op();
+	 	int i;
+	 	for(i = 0; obj->indiceCampos[i] != indiceNome; i++);
+		obj->campos[i] = val;
+	}
 
 	atualizaPc();
 }
@@ -5156,7 +5195,7 @@ void putfield(){
  * @return void 
  */
 void invokevirtual(){
-
+	method_info* metodoInvocado;
     char* nomeClasse;
     char* nomeMetodo;
     char* descricaoMetodo;
@@ -5187,58 +5226,6 @@ void invokevirtual(){
 	}
 
 	if((strcmp(nomeClasse, "java/io/PrintStream") == 0) && (strcmp(nomeMetodo,"println") == 0)){
-        // esse if nao eh necessario, colocamos 1 == 1 pois sempre vai entrar
-		/*if(strstr(descricaoMetodo, "Ljava/lang/String") != NULL || 1 == 1) {
-			if(flagAppend == 0){
-                resultado = pop_op();
-                string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
-                if (string != NULL)
-                {
-                    printf("%s\n",string);
-                }
-
-                else// (strcmp(tipoGlobal, "I"))
-                {
-                    printf("%d\n", resultado);
-			    }
-
-                // estava comentadoif(strcmp(tipoGlobal, "F") == 0){
-                    float valDesemp;
-                    memcpy(&valDesemp,&resultado, sizeof(float));
-                    printf("%f\n",valDesemp);
-                }
-            }
-			else if(flagAppend == 2){
-				resultado = pop_op();
-				resultado2 = pop_op();
-
-				string = frameCorrente->constant_pool[resultado2].info.Utf8.bytes;
-				printf("%s",string);
-
-                if(strcmp(tipoGlobal, "F") == 0){
-                    float valDesemp;
-                    memcpy(&valDesemp,&resultado, sizeof(float));
-                    printf("%f\n",valDesemp);
-                }
-
-                if(strcmp(tipoGlobal, "I") == 0){
-                    printf("%d\n", resultado);
-                }
-
-                if(strcmp(tipoGlobal, "D") == 0){
-                    double resultado_double; 
-                    int64_t temp; 
-                    temp = resultado2;
-                    temp <<= 32;
-                    temp += resultado; 
-                    memcpy(&resultado_double, &temp, sizeof(int64_t));
-                    printf("%f\n", resultado_double);
-                }
-
-				flagAppend = 0;
-			}
-		}
-        */
         if (strcmp(descricaoMetodo, "()V") == 0)
         {
             printf("\n");
@@ -5247,6 +5234,7 @@ void invokevirtual(){
         else if (flagAppend == 0)
         {
             resultado = pop_op();
+            printf("Resultado: %d\n",resultado);
             //string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
             if (tipoGlobal == NULL)
             {
@@ -5267,16 +5255,16 @@ void invokevirtual(){
             else if(strcmp(tipoGlobal, "D") == 0)
             {
                 resultado2 = pop_op();
-
+                printf("Resultado2: %d\n",resultado2);
                 double resultado_double; 
                 int64_t temp; 
 
                 temp = resultado2;
                 temp <<= 32;
                 temp += resultado; 
-
+                printf("temp: %ld\n", temp);
                 memcpy(&resultado_double, &temp, sizeof(int64_t));
-                printf("%lf\n", resultado_double);
+                printf("%f\n", resultado_double);
             }
 
             else if(strcmp(tipoGlobal, "L") == 0)
@@ -5381,12 +5369,47 @@ void invokevirtual(){
         }
 
 	}
+	else{
+		classeIndice = carregaMemClasse(nomeClasse);
+		classFile* classe = buscaClasseIndice(classeIndice);
+
+		//Busca método a ser invocado.
+		metodoInvocado = buscaMetodo(frameCorrente->classe,classe,nomeTipoAux);
+		if(metodoInvocado == NULL){
+			printf("Método não Encontrado!\n");
+			exit(0);
+		}
+
+		//Pega parametros da pilha pelo numero de fields
+		int32_t numeroParametros = retornaNumeroParametros(classe,metodoInvocado);
+
+		//Aloca espaço para os parametros do método
+		uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
+
+		//Desempilha os parametros da pilha.
+		for(int32_t i = 0; i <= numeroParametros; i++){
+			fields[i] = pop_op();
+		}
+
+		//inicia método
+		empilhaMetodo(metodoInvocado, classe);
+
+		//Preenche fields no frame novo (invoke).
+		for(int32_t i = 0; i <= numeroParametros; i++) {
+				frameCorrente->fields[i] = fields[numeroParametros - i];
+		}
+
+		//Executa método.
+		executaFrameCorrente();
+	}	
 
 	if((strcmp(nomeClasse, "java/util/Scanner") == 0) && (strcmp(nomeMetodo,"next") == 0)){
 		int32_t aux;
 		scanf("%d",&aux);
 		push(aux);
 	}
+
+
 
     foi_lneg = false;
 	atualizaPc();
@@ -5449,8 +5472,9 @@ void invokespecial(){
 	uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
 
 	//Desempilha os parametros da pilha.
-	for(int32_t i = 0; i <= numeroParametros; i++)
+	for(int32_t i = 0; i <= numeroParametros; i++){
 		fields[i] = pop_op();
+	}
 
 	//inicia método
 	empilhaMetodo(metodoInvocado, classe);
@@ -5643,7 +5667,6 @@ void ins_new(){
 
 	//empilha objeto na pilha de operandos (push)
 	push((int32_t) objeto);
-	
 	atualizaPc();
 }
 

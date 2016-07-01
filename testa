@@ -21,7 +21,7 @@ make
 #./jvm.exe int_aritmetica.class $1 && echo "" && java int_aritmetica
 #./jvm.exe long_aritmetica.class $1 && echo "" && java long_aritmetica
 #./jvm.exe float_aritmetica.class $1  && echo "" && java float_aritmetica
-#./jvm.exe double_aritmetica.class $1 && echo "" && java double_aritmetica
+./jvm.exe double_aritmetica.class $1 && echo "" && java double_aritmetica
 #./jvm.exe short_aritmetica.class $1 && echo "" && java short_aritmetica
 
 ## aritmetica
@@ -41,6 +41,7 @@ make
 ## while ##
 #./jvm.exe  Fibonacci.class $1 && echo "" && java Fibonacci
 #./jvm.exe CountWheat.class $1 && echo "" && java CountWheat
+#./jvm.exe HarmonicSeries.class $1 && echo "" && java HarmonicSeries
 
 ## casting
 #./jvm.exe int_cast.class $1 && echo "" && java int_cast
@@ -56,4 +57,4 @@ make
 #
 #
 # objects
-#./jvm.exe objeto_teste.class $1 && echo "" && java objeto_teste
+#./jvm.exe objeto_teste.class $1 ; echo "" ; java objeto_teste

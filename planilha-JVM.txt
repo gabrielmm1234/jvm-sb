@@ -39,7 +39,7 @@ Resumo: 100
 (x) system.out.println (int, float, string e **booleano): somente constantes!
 (x) conversao de e para cat 2
 (?) strings
-() interfaces
+(x) interfaces
 () consistencia
 
 -- leitura do formato ponto class:

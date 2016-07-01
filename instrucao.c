@@ -5760,16 +5760,96 @@ void arraylength(){
 void athrow(){
 
 }
+
+/**
+ * Função que checa se o objeto retirado da pilha de operandos
+ * é do tipo fornecido por um indice pra constant pool.
+ * OBS: Parecida com a instanceof porém trata o null diferente.
+ * e o valor empilhado no final.
+ * @param void
+ * @return void 
+ */
 void checkcast(){
+	int16_t indice;
+	int8_t offset1,offset2;
 
+	//Pega os offsets da instrução para acesso a constant pool
+	offset1 =  frameCorrente->code[(frameCorrente->pc)+1];
+	offset2 =  frameCorrente->code[(frameCorrente->pc)+2];
+
+	//Concatena para formar indice de 16 bits
+	indice = (offset1 << 8) | offset2;
+
+	//Obtem referencia do objeto da pilha de operandos
+	objeto* objeto = (struct objeto*) pop_op();
+
+	//De acordo com a especificação se for nulo a pilha não se altera.
+	if(objeto == NULL){
+		printf("Objeto nulo!\n");
+	}
+
+	//Pega tipo da classe desempilhada
+	char* nomeClasse = retornaNomeClasse(objeto->classe);
+
+	//Pega na constant pool tipo fornecido pelo indice
+	char* nomeIndice = retornaNome(frameCorrente->classe,indice);
+
+	//Se for igual 
+	if(strcmp(nomeClasse,nomeIndice) == 0){
+		printf("Objeto é do tipo: %s\n",nomeIndice);
+	}
+
+	//Empilha referencia de volta.
+	push((int32_t)objeto);
+	atualizaPc();
 }
-void instanceof(){
 
+/**
+ * Função que checa se o objeto retirado da pilha de operandos
+ * é do tipo fornecido por um indice pra constant pool.
+ * OBS: Parecida com a checkcast porém trata o null diferente.
+ * e o valor empilhado no final.
+ * @param void
+ * @return void 
+ */
+void instanceof(){
+	int16_t indice;
+	int8_t offset1,offset2;
+
+	//Pega os offsets da instrução para acesso a constant pool
+	offset1 =  frameCorrente->code[(frameCorrente->pc)+1];
+	offset2 =  frameCorrente->code[(frameCorrente->pc)+2];
+
+	//Concatena para formar indice de 16 bits
+	indice = (offset1 << 8) | offset2;
+
+	//Obtem referencia do objeto da pilha de operandos
+	objeto* objeto = (struct objeto*) pop_op();
+
+	//De acordo com a especificação se for nulo empilha o valor 0.
+	if(objeto == NULL){
+		printf("Objeto nulo!\n");
+		push(0);
+	}
+
+	//Pega tipo da classe desempilhada
+	char* nomeClasse = retornaNomeClasse(objeto->classe);
+
+	//Pega na constant pool tipo fornecido pelo indice
+	char* nomeIndice = retornaNome(frameCorrente->classe,indice);
+
+	//Se for igual empilha 1.
+	if(strcmp(nomeClasse,nomeIndice) == 0){
+		printf("Objeto é do tipo: %s\n",nomeIndice);
+		push(1);
+	}
+	atualizaPc();
 }
 
 void wide(){
 
 }
+
 void multianewarray(){
 
 }

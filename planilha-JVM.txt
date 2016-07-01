@@ -40,7 +40,7 @@ Resumo: 100
 (x) conversao de e para cat 2
 (?) strings
 (x) interfaces
-() consistencia
+(?) consistencia
 
 -- leitura do formato ponto class:
 - Trata versões superiores? 
@@ -58,7 +58,7 @@ Todas as demais instruções. Também será considerada a simulação de operações que
 
 ( ) threads
 ( ) debug
-( ) chamadas às bibliotecas do Java
+( ) chamadas às bibliotecas do Java ? math(sqrt)
 ( ) tratamento de exceções
 ( ) checagem dinâmica de tipos
 ( ) coletor de lixo.

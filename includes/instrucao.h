@@ -212,7 +212,6 @@ void ins_new();
 void newarray();
 void anewarray();
 void arraylength();
-void athrow();
 void checkcast();
 void instanceof();
 void wide();

@@ -298,7 +298,6 @@ void newInstrucoes(){
 	instrucao[188] = newarray;
 	instrucao[189] = anewarray;
 	instrucao[190] = arraylength;
-	instrucao[191] = athrow;
 	instrucao[192] = checkcast;
 	instrucao[193] = instanceof;
 	instrucao[196] = wide;
@@ -5757,9 +5756,6 @@ void anewarray(){
 void arraylength(){
 
 }
-void athrow(){
-
-}
 
 /**
  * Função que checa se o objeto retirado da pilha de operandos
@@ -5925,7 +5921,7 @@ void goto_w(){
 	offset4 = frameCorrente->code[frameCorrente->pc + 4];
 
 	//Concatena para gerar o deslocamento.
-	deslocamento = (offset1 & 0xFF)<<24;
+	deslocamento  = (offset1 & 0xFF)<<24;
 	deslocamento |= (offset2 & 0xFF)<<16;
 	deslocamento |= (offset3 & 0xFF)<<8;
 	deslocamento |= (offset4 & 0xFF);

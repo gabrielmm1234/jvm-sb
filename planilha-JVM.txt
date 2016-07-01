@@ -18,27 +18,27 @@ Resumo: 100
 
 () arrays simples
 () array.length
-() inteiros  
-() floats
-() desvios com cat 1 
-() recursao
+(x) inteiros  
+(x) floats
+(x) desvios com cat 1 
+(x) recursao
 () metodos estaticos:  
-() operacoes de retorno
-() operacoes logicas com cat 1  
-() operacoes de deslocamento com cat 1 
-() operacoes de manipulacao de pilha
-() iteracao e case
+(x) operacoes de retorno
+(x) operacoes logicas com cat 1  
+(x) operacoes de deslocamento com cat 1 
+(x) operacoes de manipulacao de pilha
+(x) iteracao e case
 () arrays multidimensionais
 () arrays de referencia
-() objetos: 
-() metodos nao estaticos: 
-() longs
-() doubles
-() operacoes aritmeticas de cat 2 
-() operacoes de deslocamento de longs
-() system.out.println (int, float, string e booleano): somente constantes!
-() conversao de e para cat 2
-() strings
+(x) objetos: 
+(x) metodos nao estaticos: 
+(x) longs
+(x) doubles
+(x) operacoes aritmeticas de cat 2 
+(x) operacoes de deslocamento de longs
+(x) system.out.println (int, float, string e **booleano): somente constantes!
+(x) conversao de e para cat 2
+(?) strings
 () interfaces
 () consistencia
 

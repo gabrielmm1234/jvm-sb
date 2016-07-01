@@ -5223,6 +5223,24 @@ void invokevirtual(){
 
     if((strcmp(nomeClasse, "java/lang/StringBuffer") == 0) && (strcmp(nomeMetodo,"append") == 0)){
 			flagAppend++;
+		    foi_lneg = false;
+			atualizaPc();
+			return;
+	}
+
+	if((strcmp(nomeClasse, "java/lang/StringBuffer") == 0) && (strcmp(nomeMetodo,"toString") == 0)){
+		    foi_lneg = false;
+			atualizaPc();
+			return;
+	}
+
+	if((strcmp(nomeClasse, "java/util/Scanner") == 0) && (strcmp(nomeMetodo,"next") == 0)){
+		int32_t aux;
+		scanf("%d",&aux);
+		push(aux);
+		foi_lneg = false;
+		atualizaPc();
+		return;
 	}
 
 	if((strcmp(nomeClasse, "java/io/PrintStream") == 0) && (strcmp(nomeMetodo,"println") == 0)){
@@ -5234,7 +5252,6 @@ void invokevirtual(){
         else if (flagAppend == 0)
         {
             resultado = pop_op();
-            printf("Resultado: %d\n",resultado);
             //string = frameCorrente->constant_pool[resultado].info.Utf8.bytes;
             if (tipoGlobal == NULL)
             {
@@ -5255,14 +5272,12 @@ void invokevirtual(){
             else if(strcmp(tipoGlobal, "D") == 0)
             {
                 resultado2 = pop_op();
-                printf("Resultado2: %d\n",resultado2);
                 double resultado_double; 
                 int64_t temp; 
 
-                temp = resultado2;
+                temp = resultado;
                 temp <<= 32;
-                temp += resultado; 
-                printf("temp: %ld\n", temp);
+                temp += resultado2; 
                 memcpy(&resultado_double, &temp, sizeof(int64_t));
                 printf("%f\n", resultado_double);
             }
@@ -5306,7 +5321,7 @@ void invokevirtual(){
             }
         }
 
-        if (flagAppend == 2)
+        else if (flagAppend == 2)
         {
             if(strcmp(tipoGlobal, "F") == 0)
             {
@@ -5367,52 +5382,50 @@ void invokevirtual(){
 
             flagAppend = 0;
         }
+        else{
+        	return;
+        }
 
-	}
-	else{
-		classeIndice = carregaMemClasse(nomeClasse);
-		classFile* classe = buscaClasseIndice(classeIndice);
-
-		//Busca método a ser invocado.
-		metodoInvocado = buscaMetodo(frameCorrente->classe,classe,nomeTipoAux);
-		if(metodoInvocado == NULL){
-			printf("Método não Encontrado!\n");
-			exit(0);
-		}
-
-		//Pega parametros da pilha pelo numero de fields
-		int32_t numeroParametros = retornaNumeroParametros(classe,metodoInvocado);
-
-		//Aloca espaço para os parametros do método
-		uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
-
-		//Desempilha os parametros da pilha.
-		for(int32_t i = 0; i <= numeroParametros; i++){
-			fields[i] = pop_op();
-		}
-
-		//inicia método
-		empilhaMetodo(metodoInvocado, classe);
-
-		//Preenche fields no frame novo (invoke).
-		for(int32_t i = 0; i <= numeroParametros; i++) {
-				frameCorrente->fields[i] = fields[numeroParametros - i];
-		}
-
-		//Executa método.
-		executaFrameCorrente();
-	}	
-
-	if((strcmp(nomeClasse, "java/util/Scanner") == 0) && (strcmp(nomeMetodo,"next") == 0)){
-		int32_t aux;
-		scanf("%d",&aux);
-		push(aux);
+        foi_lneg = false;
+		atualizaPc();
+		return;
 	}
 
+	classeIndice = carregaMemClasse(nomeClasse);
+	classFile* classe = buscaClasseIndice(classeIndice);
 
+	//Busca método a ser invocado.
+	metodoInvocado = buscaMetodo(frameCorrente->classe,classe,nomeTipoAux);
+	if(metodoInvocado == NULL){
+		printf("Método não Encontrado!\n");
+		exit(0);
+	}
 
-    foi_lneg = false;
+	//Pega parametros da pilha pelo numero de fields
+	int32_t numeroParametros = retornaNumeroParametros(classe,metodoInvocado);
+
+	//Aloca espaço para os parametros do método
+	uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
+
+	//Desempilha os parametros da pilha.
+	for(int32_t i = 0; i <= numeroParametros; i++){
+		fields[i] = pop_op();
+	}
+
+	//inicia método
+	empilhaMetodo(metodoInvocado, classe);
+
+	//Preenche fields no frame novo (invoke).
+	for(int32_t i = 0; i <= numeroParametros; i++) {
+			frameCorrente->fields[i] = fields[numeroParametros - i];
+	}
+
+	//Executa método.
+	executaFrameCorrente();
+
+	foi_lneg = false;
 	atualizaPc();
+	return;
 }
 
 /**
@@ -5617,6 +5630,66 @@ void invokestatic(){
 	atualizaPc();
 }
 void invokeinterface(){
+	method_info* metodoInvocado;
+
+    char* nomeMetodo;
+    char* descricaoMetodo;
+    uint16_t nomeMetodoAux, descricaoMetodoAux,nomeTipoAux,stringAux;
+
+	//Pega indice no argumento da instrução.
+	uint32_t indice = frameCorrente->code[frameCorrente->pc + 2];
+
+	//Pega o indice do nome da classe na CP pelo indice anterior.
+	uint32_t indiceClasse = (frameCorrente->constant_pool[indice-1]).info.Methodref.class_index;
+
+	//Pega nome da classe.
+	char* nomeClasse = retornaNome(frameCorrente->classe,(frameCorrente->constant_pool[indiceClasse-1]).info.Class.name_index);
+
+	nomeTipoAux = frameCorrente->constant_pool[indice - 1].info.Methodref.name_and_type_index;
+
+    nomeMetodoAux = frameCorrente->constant_pool[nomeTipoAux - 1].info.NameAndType.name_index;
+
+	descricaoMetodoAux = frameCorrente->constant_pool[nomeTipoAux - 1].info.NameAndType.descriptor_index;
+	
+
+    nomeMetodo = retornaNome(frameCorrente->classe, nomeMetodoAux);
+
+    descricaoMetodo = retornaNome(frameCorrente->classe, descricaoMetodoAux);
+
+    //TODO Essa mudancao esta correta? eu copiei do invokespecial
+	//Pega posição da classe no array de classes
+	int32_t indexClasse = carregaMemClasse(nomeClasse);
+
+	//Pega referencia ao classFile pelo indice anterior.
+	classFile* classe = buscaClasseIndice(indexClasse);
+
+	//Pega o nome e tipo dó método pelo indice da instrução.
+	uint16_t nomeTipoIndice = frameCorrente->constant_pool[indice-1].info.Methodref.name_and_type_index;
+
+	//Busca método a ser invocado.
+	metodoInvocado = buscaMetodo(frameCorrente->classe,classe,nomeTipoIndice);
+
+	//Pega parametros da pilha pelo numero de fields
+	int32_t numeroParametros = retornaNumeroParametros(classe,metodoInvocado);
+
+	//Aloca espaço para os parametros do método
+	uint32_t* fields = calloc(sizeof(uint32_t),numeroParametros + 1);
+
+	//Desempilha os parametros da pilha.
+	for(int32_t i = 0; i < numeroParametros; i++)
+		fields[i] = pop_op();
+
+	//inicia método
+	empilhaMetodo(metodoInvocado, classe);
+
+	//Preenche fields no frame novo (invoke).
+	for(int32_t i = 0; i < numeroParametros; i++) {
+			frameCorrente->fields[i] = fields[numeroParametros - i - 1];
+	}
+
+	//Executa método.
+	executaFrameCorrente();
+	atualizaPc();
 
 }
 

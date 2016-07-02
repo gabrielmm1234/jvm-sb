@@ -479,6 +479,11 @@ void imprime_code(classFile* cf, code_attribute* cd_atrb)
          
 }
 
+/**
+ * Imprime no prompt as excpetions info.
+ * @param Referencia para um classFile que representa um .class carregado no array de classes.
+ * @param Referencia para uma estrutura de expection.
+ */
 void imprime_exc(classFile* cf, exceptions_attribute* exc_atrb)
 {
     printf("\n----Exception Info----\n");

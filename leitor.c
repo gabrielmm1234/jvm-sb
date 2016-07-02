@@ -294,6 +294,14 @@ void methodInfo(classFile* cf, FILE* file, uint16_t methods_count){
     }
 }
 
+/**
+ * Função que le as exceptions de um arquivo .class
+ * 
+ * @param referencia ao array de exceções
+ * @param indice do nome.
+ * @param tamanho do atributo.
+ * @param referência ao file .class.
+ */
 void le_exc(exceptions_attribute** exc_atrb, uint16_t name_ind, uint32_t att_len, FILE* file)
 {
     // transfere informacoes relacionadas ao atributo 
@@ -315,6 +323,14 @@ void le_exc(exceptions_attribute** exc_atrb, uint16_t name_ind, uint32_t att_len
     }
 }
 
+/**
+ * Função que le os bytecodes de um arquivo .class
+ * 
+ * @param referencia ao array de bytecodes
+ * @param indice do nome.
+ * @param tamanho do atributo.
+ * @param referência ao file .class.
+ */
 void le_code(code_attribute** cd_atrb, uint16_t name_ind, uint32_t att_len, FILE* file)
 {
     int posicao_inicial = ftell(file); 
@@ -361,6 +377,12 @@ void le_code(code_attribute** cd_atrb, uint16_t name_ind, uint32_t att_len, FILE
     }
 }
 
+/**
+ * Função que salva a instruções lidas do arquivo .class
+ * 
+ * @param referencia ao array de exceções
+ * @param referência ao file .class.
+ */
 void salva_instrucoes(code_attribute** cd_atrb, FILE* file)
 {
     int opcode, pos_referencia; 

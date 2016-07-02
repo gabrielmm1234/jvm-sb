@@ -22,8 +22,16 @@
 #include "./includes/instrucao.h"
 #include "./includes/area_metodos.h"
 
+
+/**
+ * referencia externa do frame corrente para acesso ao topo da stackFrame.
+ */
 extern struct frame* frameCorrente;
 
+
+/**
+ * Salva a quantidade de objetos alocados (new).
+ */
 uint32_t numObjetos = 0;
 
 

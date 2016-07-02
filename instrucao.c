@@ -33,8 +33,18 @@
 #define POS_BAIXA 1 
 #define POS_ALTA 0
 
+/**
+ * Similar ao nosso array de classes esse é o array
+ * que guarda as referencias aos vetores alocados.
+ * Necessario para a instrução arraylength.
+ */
 vector* arrayVetores = NULL;
+
+/**
+ * Guarda a quantidade de arrays alocados para realiar o realloc.
+ */
 int32_t qtdArrays = 0;
+
 
 //OBS: Alternativa para memcpy no manipulação de ponto flutuante -> UNION.
 
@@ -43,10 +53,13 @@ int32_t qtdArrays = 0;
  */
 extern struct frame* frameCorrente;
 
+/**
+ * Flag que controla o push na pilha de operandos.
+ */
 int naoEmpilhaFlag = 0;
 
 /**
- * o decodificador permite eh um array com informacoes das varias instrucoes\n
+ * o decodificador eh um array com informacoes das varias instrucoes\n
  * a partir do opcode da instrucao, pode-se pelo decodificador descobrir o nome e quantos bytes ele ocupa 
  */ 
 decodificador dec[NUM_INSTRUCAO];
@@ -67,7 +80,7 @@ void atualizaPc(){
 		frameCorrente->pc++;
 }
 
-/*
+/**
  * a funcao recebe uma referencia para a constant pool e a posicao que se deseja acessar
  * a funcao retorna o indice da CONSTANT_UTF8 associada a CONSTANT da posicao passada na constant pool 
  * @param cp_info* uma referencia a constant pool 
@@ -447,7 +460,7 @@ void iconst_5(){
     frameCorrente->pc++;
 }
 
-/*
+/**
  * a funcao coloca a constante long 0 na pilha de operandos
  * ocupa 2 espacos na pilha 
  * @param void 
@@ -476,7 +489,7 @@ void lconst_0(){
     frameCorrente->pc++; 
 }
 
-/*
+/**
  * a funcao coloca a constante long 1 na pilha de operandos
  * ocupa 2 espacos na pilha
  * @param void
@@ -595,7 +608,7 @@ void fconst_2(){
 	atualizaPc();
 }
 
-/*
+/**
  * funcao que empilha o double 0.0 na pilha
  * @param void
  * @return void
@@ -624,7 +637,7 @@ void dconst_0(){
     frameCorrente->pc++;
 }
 
-/*
+/**
  * funcao que empilha o double 1.0 na pilha
  * @param void
  * @return void
@@ -693,8 +706,9 @@ void sipush(){
     atualizaPc();
 }
 
-/*
- * a funcao coloca um item da run-time constan pool na pilha 
+/**
+ * a funcao coloca um item da run-time constant pool obtido
+ * a partir de um indice fornecido na instrução na pilha 
  * @param void
  * @return void
  */
@@ -1465,7 +1479,8 @@ void saload(){
 }
 
 /*** STORES ***/
-/*
+
+/**
  * pega inteiro e coloca no array de variaveis locais, na posicao dada por indice
  * @param void
  * @return void
@@ -1487,7 +1502,7 @@ void istore(){
     atualizaPc();
 }
 
-/* 
+/** 
  * pega long e coloca no array de variaveis locais, na posicao dada por indice e indice + 1
  * @param void
  * @return void
@@ -1515,7 +1530,7 @@ void lstore(){
     atualizaPc();
 }
 
-/* 
+/** 
  * pega float e coloca no array de variaveis locais, na posicao dada por indice
  * @param void
  * @return void
@@ -1537,7 +1552,7 @@ void fstore(){
     atualizaPc();
 }
 
-/* 
+/** 
  * pega double e coloca no array de variaveis locais, na posicao dada por indice e indice + 1
  * @param void
  * @return void
@@ -1564,7 +1579,7 @@ void dstore(){
     atualizaPc();
 }
 
-/* 
+/** 
  * pega referencia e coloca no array de variaveis locais, na posicao dada por indice
  * @param void
  * @return void
@@ -1586,7 +1601,7 @@ void astore(){
     atualizaPc();
 }
 
-/*
+/**
  * pega inteiro e coloca na posicao 0 do array de variaveis locais
  * @param void
  * @return void
@@ -1625,7 +1640,7 @@ void istore_1(){
     atualizaPc();
 }
 
-/*
+/**
  * pega inteiro e coloca na posicao 2 do array de variaveis locais
  * @param void
  * @return void
@@ -1646,7 +1661,7 @@ void istore_2(){
     atualizaPc();
 }
 
-/*
+/**
  * pega inteiro e coloca na posicao 3 do array de variaveis locais
  * @param void
  * @return void
@@ -1667,7 +1682,7 @@ void istore_3(){
     atualizaPc();
 }
 
-/* 
+/**
  * pega long e coloca no array de variaveis locais, na posicao 0 e 1
  * @param void
  * @return void
@@ -1695,7 +1710,7 @@ void lstore_0(){
     atualizaPc();
 }
 
-/* 
+/** 
  * pega long e coloca no array de variaveis locais, na posicao 1 e 2
  * @param void
  * @return void
@@ -1722,7 +1737,7 @@ void lstore_1(){
     atualizaPc();
 }
 
-/* 
+/** 
  * pega long e coloca no array de variaveis locais, na posicao 2 e 3
  * @param void
  * @return void
@@ -1749,7 +1764,7 @@ void lstore_2(){
     atualizaPc();
 }
 
-/* 
+/** 
  * pega long e coloca no array de variaveis locais, na posicao 3 e 4
  * @param void
  * @return void
@@ -1777,7 +1792,7 @@ void lstore_3(){
 }
 
 
-/* 
+/** 
  * pega float e coloca no array de variaveis locais na posicao 0
  * @param void
  * @return void
@@ -1800,7 +1815,7 @@ void fstore_0(){
 
 }
 
-/* 
+/** 
  * pega float e coloca no array de variaveis locais na posicao 1
  * @param void
  * @return void
@@ -1822,7 +1837,7 @@ void fstore_1(){
     atualizaPc();
 }
 
-/* 
+/** 
  * pega float e coloca no array de variaveis locais na posicao 2
  * @param void
  * @return void
@@ -1845,7 +1860,7 @@ void fstore_2(){
 
 }
 
-/* 
+/** 
  * pega float e coloca no array de variaveis locais na posicao 3
  * @param void
  * @return void
@@ -1868,7 +1883,7 @@ void fstore_3(){
 
 }
 
-/* 
+/** 
  * pega double e coloca no array de variaveis locais, na posicao iniciada em 0 
  * @param void
  * @return void
@@ -1896,7 +1911,7 @@ void dstore_0(){
     atualizaPc();
 }
 
-/* 
+/**
  * pega double e coloca no array de variaveis locais, na posicao iniciada em 1 
  * @param void
  * @return void
@@ -1925,7 +1940,7 @@ void dstore_1(){
 
 }
 
-/* 
+/** 
  * pega double e coloca no array de variaveis locais, na posicao iniciada em 2 
  * @param void
  * @return void
@@ -1954,7 +1969,7 @@ void dstore_2(){
 
 }
 
-/* 
+/** 
  * pega double e coloca no array de variaveis locais, na posicao iniciada em 3 
  * @param void
  * @return void
@@ -1984,7 +1999,7 @@ void dstore_3(){
 }
 
 
-/* 
+/**
  * pega referencia e coloca no array de variaveis locais, na posicao 0
  * @param void
  * @return void
@@ -2006,7 +2021,7 @@ void astore_0(){
 
 }
 
-/* 
+/** 
  * pega referencia e coloca no array de variaveis locais, na posicao dada por 1
  * @param void
  * @return void
@@ -2028,7 +2043,7 @@ void astore_1(){
 
 }
 
-/* 
+/** 
  * pega referencia e coloca no array de variaveis locais, na posicao dada por 2
  * @param void
  * @return void
@@ -2050,7 +2065,7 @@ void astore_2(){
 
 }
 
-/* 
+/**
  * pega referencia e coloca no array de variaveis locais, na posicao dada por 3
  * @param void
  * @return void
@@ -2073,7 +2088,7 @@ void astore_3(){
 
 }
 
-/* 
+/** 
  * Obtem da pilha o valor a ser atribuido, o indice a ser acessado
  * e obtem uma referencia ao vetor previamente alocado.
  * Acessa o vetor no indice obtido e atribui o valor
@@ -3333,7 +3348,7 @@ void ishr(){
 	atualizaPc();
 }
 
-/*
+/**
  * funcao que faz um shift aritmetico de long 
  *
  * @param void
@@ -3654,6 +3669,13 @@ void iinc(){
 
 	atualizaPc();
 }
+
+/**
+ * Funcao que desempilha um inteiro da pilha, converte para um longt e empilha
+ * o resultado.
+ * @param void
+ * @return void 
+ */
 void i2l(){
     char* tipo = "L";
     tipoGlobal = tipo;
@@ -4780,6 +4802,12 @@ void jsr(){
 void ret(){
 
 }
+
+/**
+ * Função que realiza a operação de switch. Com valores variados.
+ * @param void
+ * @return void 
+ */
 void tableswitch(){
     uint32_t bytes_preench; 
     int32_t indice;
@@ -4884,6 +4912,11 @@ void tableswitch(){
     frameCorrente->pc = pc_novo; 
 }
 
+/**
+ * Função que realiza a operação de switch. Com valores sequenciais.
+ * @param void
+ * @return void 
+ */
 void lookupswitch(){
     uint32_t pc_aux, pc_novo; 
     uint32_t bytes_preench;
@@ -5670,6 +5703,12 @@ void invokestatic(){
 	executaFrameCorrente();
 	atualizaPc();
 }
+
+/**
+ * Funcao que invoca métodos implementados de uma interface.
+ * @param void
+ * @return void 
+ */
 void invokeinterface(){
 	method_info* metodoInvocado;
 

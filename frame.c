@@ -86,6 +86,8 @@ void pushFrame(cp_info* cp, classFile* classe, code_attribute* code,struct stack
  * Função que desempilha na nossa pilha de frames o frame que terminou a execução.
  * desempilha e atualiza o estado da pilha. Se não tem mais frames na pilha garante
  * que a execução termine. 
+ * @param void
+ * @return void
  */
 void popFrame(){
 	struct stackFrame *anterior;
@@ -181,7 +183,14 @@ int32_t pop_op()
 
 }
 
+
 decodificador dec[NUM_INSTRUCAO];
+
+/**
+ * Função utilizada para debug, que mostra a profundidade da pilha de operandos.
+ * @param valor inteiro a ser atualizado na pilha de operandos. Para obter a profundidade.
+ * @return void
+ */
 void mostra_profundidade(int i)
 {
     // flag para debug
@@ -201,6 +210,8 @@ void mostra_profundidade(int i)
 /**
  * funcao criada para analisar o conteudo da pilha de operandos
  * foi usada mais para debug e problemas com stackOverflow 
+ * @param void
+ * @return void
  */
 void dumpStack(){
 	int i;
@@ -214,6 +225,8 @@ void dumpStack(){
 /**
  * funcao criada para analisar o conteudo do array de variaveis locais
  * foi usada mais para debug de alguns problemas. 
+ * @param void
+ * @return void
  */
 void dumpFields(){
 	int i;

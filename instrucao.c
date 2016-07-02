@@ -42,6 +42,7 @@ vector* arrayVetores = NULL;
 
 /**
  * Guarda a quantidade de arrays alocados para realiar o realloc.
+ * e necessario tambem para a instrução arraylength
  */
 int32_t qtdArrays = 0;
 
@@ -5903,8 +5904,32 @@ void newarray(){
 void anewarray(){
 
 }
-void arraylength(){
 
+/**
+ * Função que obtem uma referencia a um array alocado e 
+ * acessa sua struct para empilhar o tamanho (length) do array.
+ * @param void
+ * @return void 
+ */
+void arraylength(){
+	//Obtem referencia ao array alocado no newarray.
+	int32_t arrayRef = pop_op();
+	int i;
+	//Percore a quantidade de arrays alocados em busca do array correto.
+	while(i = 0 < qtdArrays){
+		//percorre o array de vetores em busca da referencia desempilhada
+		if(arrayVetores[i].referencia == arrayRef){
+			//Empilha o length do array
+			int32_t length = arrayVetores[i].tamanho;
+			push(length);
+			atualizaPc();
+			return;
+		}
+		i++;
+	}
+	//Não encontrou o array no vetor de arrays.
+	push(0);
+	atualizaPc();
 }
 
 /**

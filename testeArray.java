@@ -1,5 +1,5 @@
 class testeArray{
-	public void printint(int[] val){
+	static public void printint(int[] val){
 		int i;	
 		for(i=0;i<5; i++){
 			System.out.println(val[i]);
@@ -15,8 +15,7 @@ class testeArray{
 			vetint[i] = 10;
 		}
 
-		testeArray teste = new testeArray();
-		teste.printint(vetint);
+		testeArray.printint(vetint);
 
 		int array[] = new int[10];
 		for (i = 0; i < 10; i++){

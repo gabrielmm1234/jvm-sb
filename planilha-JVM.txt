@@ -22,13 +22,13 @@ Resumo: 100
 (x) floats
 (x) desvios com cat 1 
 (x) recursao
-() metodos estaticos:  
+(x) metodos estaticos:  
 (x) operacoes de retorno
 (x) operacoes logicas com cat 1  
 (x) operacoes de deslocamento com cat 1 
 (x) operacoes de manipulacao de pilha
 (x) iteracao e case
-() arrays multidimensionais
+(-) arrays multidimensionais
 () arrays de referencia
 (x) objetos: 
 (x) metodos nao estaticos: 

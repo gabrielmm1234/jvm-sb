@@ -143,7 +143,8 @@ void imprimePrompt(classFile* cf){
 	printf("----End Pool----\n\n");
 
 	printf("----Second General Info----\n");
-	printf("Access Flags: 0x%0x\n",cf->access_flags);
+	printf("Access Flags: 0x%0x ",cf->access_flags);
+    printAF(cf->access_flags);
 	printf("This Class: cp info #%d ",cf->this_class);
 	imprime_string_pool(cf->constant_pool, cf->this_class - 1);
     printf("\n");
@@ -176,7 +177,8 @@ void imprimePrompt(classFile* cf){
             printf("Descriptor: cp info #%d ", cf->fields[i].descriptor_index);
             imprime_string_pool(cf->constant_pool, cf->fields[i].descriptor_index - 1);
     		printf("\n");
-            printf("Access Flag: 0x%x\n", cf->fields[i].access_flags);
+            printf("Access Flag: 0x%x ", cf->fields[i].access_flags);
+            printAF(cf->fields[i].access_flags);
  
             for (int j = 0; j < cf->fields[i].attributes_count; j++)
             {
@@ -224,6 +226,34 @@ void imprimePrompt(classFile* cf){
 	printf("----End Second General----\n\n");
 }
 
+
+/**
+ * Imprime no prompt a string correspondente ao access flag.
+ * @param valor do access flag.
+ */
+void printAF(uint16_t access_flags){
+    if(access_flags == 0x0000)
+        printf("\n");
+    if(access_flags == 0x0001 ||access_flags == 0x0021)
+        printf("Public\n");
+    if(access_flags == 0x0009)
+        printf("Public Static\n");
+    if(access_flags == 0x0002)
+        printf("Private\n");
+    if(access_flags == 0x0004)
+        printf("Protected\n");
+    if(access_flags == 0x0008)
+        printf("Static\n");
+    if(access_flags == 0x0010)
+        printf("Final\n");
+    if(access_flags == 0x0020)
+        printf("Super\n");
+    if(access_flags == 0x0200)
+        printf("Interface\n");
+    if(access_flags == 0x0400)
+        printf("Abstract\n");
+}
+
 /**
  * Imprime no prompt a estrutura de métodos presente no classFile.
  * @param Referencia para um classFile que representa um .class carregado no array de classes.
@@ -240,7 +270,8 @@ void imprime_methods(classFile* cf)
 	else{
 		method_info* cp = cf->methods;
 		for(int i = 0; i < methods_count; cp++){
-			printf("access_flag: 0x%0x\n",cp->access_flags);
+			printf("access_flag: 0x%0x ",cp->access_flags);
+            printAF(cp->access_flags);
 			printf("name_index: cp info #%d ",cp->name_index);
 			imprime_string_pool(cf->constant_pool, cp->name_index - 1);
     		printf("\n");

@@ -23,6 +23,19 @@
 #define CONSTANT_NameAndType 12
 #define CONSTANT_Utf8 1
 
+#define Public    0x0001
+#define Private   0x0002
+#define Protected 0x0004
+#define Static    0x0008
+#define Final     0x0010
+#define Super     0x0020
+#define Volatile  0x0040
+#define Transient 0x0080
+#define Native    0x0100
+#define Interface 0x0200
+#define Abstract  0x0400
+#define Strict    0x0800
+
 #define NUM_INSTRUCAO 256
 
 // opcodes para instrucoes especiais

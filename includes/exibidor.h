@@ -18,4 +18,5 @@ void imprime_string_pool(cp_info* cp, int pos_pool);
 void imprime_methods(classFile* cf);
 void imprime_code(classFile* cf, code_attribute* cd_atrb);
 void imprime_exc(classFile* cf, exceptions_attribute* exc_atrb);
+void printAF(uint16_t access_flags);
 #endif

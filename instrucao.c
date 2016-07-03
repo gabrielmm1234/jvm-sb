@@ -1443,40 +1443,148 @@ void aload_3(){
  * a referencia ao vetor previamente alocado. Acessa o vetor na
  * posição do indice e empilha o valor correspondente
  * @param void
- * @return voi
+ * @return void
  */
 void iaload(){
 	//Referncia para o vetor obtida da pilha
-	int32_t* ref;
+	int32_t* referencia;
 	//Pega indice da pilha de operandos
 	int32_t indice = pop_op();
 	//Pega referencia para o array alocado
-	ref = (int32_t*)pop_op();
+	referencia = (int32_t*)pop_op();
 	//Acessa o array no indice e empilha o valor
-	push(ref[indice]);
+	push(referencia[indice]);
 
 	atualizaPc();
 }
+
+/**
+ * Obtem da pilha o indice a ser acessado no vetor, obtem da pilha
+ * a referencia ao vetor previamente alocado. Acessa o vetor na
+ * posição do indice e empilha o valor correspondente
+ * @param void
+ * @return void
+ */
 void laload(){
-
+	//Referncia para o vetor obtida da pilha
+	int32_t* referencia;
+	//Pega indice da pilha de operandos
+	int32_t indice = pop_op();
+	//Pega referencia para o array alocado
+	referencia = (int32_t*)pop_op();
+	//Acessa o array no indice e empilha o valor
 }
-void faload(){
 
+/**
+ * Obtem da pilha o indice a ser acessado no vetor, obtem da pilha
+ * a referencia ao vetor previamente alocado. Acessa o vetor na
+ * posição do indice e empilha o valor correspondente
+ * @param void
+ * @return void
+ */
+void faload(){
+	char* tipo = "F";
+    tipoGlobal = tipo;
+	//Referncia para o vetor obtida da pilha
+	int32_t* referencia;
+	//Pega indice da pilha de operandos
+	int32_t indice = pop_op();
+	//Pega referencia para o array alocado
+	referencia = (int32_t*)pop_op();
+	//Acessa o array no indice e empilha o valor
+	int32_t valPilha;
+	memcpy(&valPilha, &((float *)referencia)[indice], sizeof(int32_t));
+	push(valPilha);
+
+	atualizaPc();
 }
 void daload(){
 
 }
+
+/**
+ * Obtem da pilha o indice a ser acessado no vetor, obtem da pilha
+ * a referencia ao vetor previamente alocado. Acessa o vetor na
+ * posição do indice e empilha o valor correspondente
+ * @param void
+ * @return void
+ */
 void aaload(){
+	//Referncia para o vetor obtida da pilha
+	int32_t* referencia;
+	//Pega indice da pilha de operandos
+	int32_t indice = pop_op();
+	//Pega referencia para o array alocado
+	referencia = (int32_t*)pop_op();
+	//Acessa o array no indice e empilha o valor
+	push(referencia[indice]);
 
+	atualizaPc();
 }
+
+/**
+ * Obtem da pilha o indice a ser acessado no vetor, obtem da pilha
+ * a referencia ao vetor previamente alocado. Acessa o vetor na
+ * posição do indice e empilha o valor correspondente
+ * @param void
+ * @return void
+ */
 void baload(){
+	//Referncia para o vetor obtida da pilha
+	int32_t* referencia;
+	//Pega indice da pilha de operandos
+	int32_t indice = pop_op();
+	//Pega referencia para o array alocado
+	referencia = (int32_t*)pop_op();
+	int8_t* binary = (int8_t*)referencia[indice];
+	//Acessa o array no indice e empilha o valor
+	push((int32_t)binary);
 
+	atualizaPc();
 }
+
+/**
+ * Obtem da pilha o indice a ser acessado no vetor, obtem da pilha
+ * a referencia ao vetor previamente alocado. Acessa o vetor na
+ * posição do indice e empilha o valor correspondente
+ * @param void
+ * @return void
+ */
 void caload(){
+	char* tipo = "C";
+    tipoGlobal = tipo;
+	//Referncia para o vetor obtida da pilha
+	int32_t* referencia;
+	//Pega indice da pilha de operandos
+	int32_t indice = pop_op();
+	//Pega referencia para o array alocado
+	referencia = (int32_t*)pop_op();
+	int16_t* binary = (int16_t*)referencia[indice];
+	//Acessa o array no indice e empilha o valor
+	push((int32_t)binary);
 
+	atualizaPc();
 }
-void saload(){
 
+/**
+ * Obtem da pilha o indice a ser acessado no vetor, obtem da pilha
+ * a referencia ao vetor previamente alocado. Acessa o vetor na
+ * posição do indice e empilha o valor correspondente
+ * @param void
+ * @return void
+ */
+void saload(){
+		//Referncia para o vetor obtida da pilha
+	int32_t* referencia;
+	//Pega indice da pilha de operandos
+	int32_t indice = pop_op();
+	//Pega referencia para o array alocado
+	referencia = (int32_t*)pop_op();
+	int16_t* binary = (int16_t*)referencia[indice];
+	//Acessa o array no indice e empilha o valor
+	push((int32_t)binary);
+
+	atualizaPc();
 }
 
 /*** STORES ***/
@@ -2114,23 +2222,125 @@ void iastore(){
 void lastore(){
 
 }
-void fastore(){
 
+/** 
+ * Obtem da pilha o valor a ser atribuido, o indice a ser acessado
+ * e obtem uma referencia ao vetor previamente alocado.
+ * Acessa o vetor no indice obtido e atribui o valor
+ * @param void
+ * @return void
+ */
+void fastore(){
+	char* tipo = "F";
+    tipoGlobal = tipo;
+	//Referencia pro array.
+	int32_t* ref;
+	int32_t indice,valor;
+	//Pega o valor a ser atribuido da pilha de operandos
+	valor = pop_op();
+	//Pega o indice do vetor a ser acessado
+	indice = pop_op();
+	//Pega referencia do array a ser acessado.
+	ref = (int32_t*)pop_op();
+	//Acessa o array no indice e atribui com o valor obtido da pilha.
+	ref[indice] = valor;
+
+	atualizaPc();
 }
 void dastore(){
 
 }
+
+/** 
+ * Obtem da pilha o valor a ser atribuido, o indice a ser acessado
+ * e obtem uma referencia ao vetor previamente alocado.
+ * Acessa o vetor no indice obtido e atribui o valor
+ * @param void
+ * @return void
+ */
 void aastore(){
+	//Referencia pro array.
+	int32_t* ref;
+	int32_t indice,valor;
+	//Pega o valor a ser atribuido da pilha de operandos
+	valor = pop_op();
+	//Pega o indice do vetor a ser acessado
+	indice = pop_op();
+	//Pega referencia do array a ser acessado.
+	ref = (int32_t*)pop_op();
+	//Acessa o array no indice e atribui com o valor obtido da pilha.
+	ref[indice] = valor;
 
+	atualizaPc();
 }
+
+/** 
+ * Obtem da pilha o valor a ser atribuido, o indice a ser acessado
+ * e obtem uma referencia ao vetor previamente alocado.
+ * Acessa o vetor no indice obtido e atribui o valor
+ * @param void
+ * @return void
+ */
 void bastore(){
+	//Referencia pro array.
+	int32_t* ref;
+	int32_t indice,valor;
+	//Pega o valor a ser atribuido da pilha de operandos
+	valor = pop_op();
+	//Pega o indice do vetor a ser acessado
+	indice = pop_op();
+	//Pega referencia do array a ser acessado.
+	ref = (int32_t*)pop_op();
+	//Acessa o array no indice e atribui com o valor obtido da pilha.
+	ref[indice] = (int8_t)valor;
 
+	atualizaPc();
 }
+
+/** 
+ * Obtem da pilha o valor a ser atribuido, o indice a ser acessado
+ * e obtem uma referencia ao vetor previamente alocado.
+ * Acessa o vetor no indice obtido e atribui o valor
+ * @param void
+ * @return void
+ */
 void castore(){
+	//Referencia pro array.
+	int32_t* ref;
+	int32_t indice,valor;
+	//Pega o valor a ser atribuido da pilha de operandos
+	valor = pop_op();
+	//Pega o indice do vetor a ser acessado
+	indice = pop_op();
+	//Pega referencia do array a ser acessado.
+	ref = (int32_t*)pop_op();
+	//Acessa o array no indice e atribui com o valor obtido da pilha.
+	ref[indice] = (int16_t)valor;
 
+	atualizaPc();
 }
-void sastore(){
 
+/** 
+ * Obtem da pilha o valor a ser atribuido, o indice a ser acessado
+ * e obtem uma referencia ao vetor previamente alocado.
+ * Acessa o vetor no indice obtido e atribui o valor
+ * @param void
+ * @return void
+ */
+void sastore(){
+	//Referencia pro array.
+	int32_t* ref;
+	int32_t indice,valor;
+	//Pega o valor a ser atribuido da pilha de operandos
+	valor = pop_op();
+	//Pega o indice do vetor a ser acessado
+	indice = pop_op();
+	//Pega referencia do array a ser acessado.
+	ref = (int32_t*)pop_op();
+	//Acessa o array no indice e atribui com o valor obtido da pilha.
+	ref[indice] = (int16_t)valor;
+
+	atualizaPc();
 }
 
 /**
@@ -5901,8 +6111,82 @@ void newarray(){
     atualizaPc();
 
 }
-void anewarray(){
 
+/**
+ * Aloca um array de objetos e empilha uma referencia pra esse array.
+ * Desempilha o tamanho do array.
+ * @param void
+ * @return void 
+ */
+void anewarray(){
+	//Descreve o tamanho em bytes de cada tipo. int -> 4 bytes por exemplo.
+	int32_t tamanhoBytes;
+	//Pega da pilha o tamanho do array
+	int32_t tamanhoArray = pop_op();
+	//Pega da instrução o tipo do array.
+	int8_t tipoArray = frameCorrente->code[(frameCorrente->pc)+1];
+
+	//Necessario descobrir tipo para alocar a quantidade certa
+	//Atraves do tamanho em bits de cada tipo.
+
+	//Long
+	if(tipoArray == 11){
+		tamanhoBytes = 8;
+	}
+	//Double
+	if(tipoArray == 7){
+		tamanhoBytes = 8;
+	}
+
+
+	//Float
+	if(tipoArray == 6){
+		tamanhoBytes = 4;
+	}
+	//Referencia
+	if(tipoArray == 0){
+		tamanhoBytes = 4;
+	}
+	//Int
+	if(tipoArray == 10){
+		tamanhoBytes = 4;
+	}
+
+
+	//Char
+	if(tipoArray == 5){
+		tamanhoBytes = 2;
+	}
+	//short
+	if(tipoArray == 9){
+		tamanhoBytes = 2;
+	}
+
+	//Booleano
+	if(tipoArray == 4){
+		tamanhoBytes = 1;
+	}
+	//byte
+	if(tipoArray == 8){
+		tamanhoBytes = 1;
+	}
+
+	//Array como ponteiro pra void -> realiza cast futuramente.
+	//Aloca espaço de acordo com os tamanhos.
+	int32_t* vetor = calloc(tamanhoBytes,tamanhoArray);
+
+	//Necessario guardar as struct para o arrayLength.
+	//É feito um vetor de arrays para obter o tamanho dos arrays.
+	qtdArrays++;
+	arrayVetores = realloc (arrayVetores, sizeof(struct array)*qtdArrays);
+	arrayVetores[qtdArrays-1].tamanho = tamanhoArray;
+	arrayVetores[qtdArrays-1].referencia = (int32_t)vetor;
+
+	//Empilha referencia pro vetor
+	push((int32_t)vetor);
+	
+	//Atualiza pc
+    atualizaPc();
 }
 
 /**
@@ -5914,9 +6198,9 @@ void anewarray(){
 void arraylength(){
 	//Obtem referencia ao array alocado no newarray.
 	int32_t arrayRef = pop_op();
-	int i;
+	int i = 0;
 	//Percore a quantidade de arrays alocados em busca do array correto.
-	while(i = 0 < qtdArrays){
+	while(i  < qtdArrays){
 		//percorre o array de vetores em busca da referencia desempilhada
 		if(arrayVetores[i].referencia == arrayRef){
 			//Empilha o length do array

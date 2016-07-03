@@ -17,7 +17,7 @@ Grupo:
 Resumo: 100
 
 () arrays simples
-() array.length
+(x) array.length
 (x) inteiros  
 (x) floats
 (x) desvios com cat 1 
@@ -29,7 +29,7 @@ Resumo: 100
 (x) operacoes de manipulacao de pilha
 (x) iteracao e case
 (-) arrays multidimensionais
-() arrays de referencia
+(x) arrays de referencia
 (x) objetos: 
 (x) metodos nao estaticos: 
 (x) longs

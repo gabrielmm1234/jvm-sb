@@ -52,6 +52,7 @@ struct stackFrame{
 typedef struct array{
 	int32_t referencia;
 	int32_t tamanho;
+	int8_t tipo;
 }vector;
 
 

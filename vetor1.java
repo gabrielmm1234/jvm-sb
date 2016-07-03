@@ -38,6 +38,8 @@ class vetor1{
 		byte array5[] = {-2, 4, 0};
 		short array7[] = {15, 1000, -2};
 		char array6[] = {'a', '0', ')'};
+		double array2[] = {2.0,3.0,-5.0};
+		long array3[] = {-5, 3, 6426246, -433242};
 
 		vetor1 vet = new vetor1();
 		vet.a = 20;
@@ -73,6 +75,17 @@ class vetor1{
 
 		for (int i = 0; i < 3; i++){
 			System.out.println(array7[i]);
+		}
+		System.out.println();
+
+		for (int i = 0; i < 3; i++){
+			System.out.println(array2[i]);
+		}
+		System.out.println();
+
+		
+		for (int i = 0; i < 4; i++){
+			System.out.println(array3[i]);
 		}
 		System.out.println();
 	}

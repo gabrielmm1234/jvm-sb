@@ -1466,13 +1466,20 @@ void iaload(){
  * @return void
  */
 void laload(){
-	//Referncia para o vetor obtida da pilha
-	int32_t* referencia;
-	//Pega indice da pilha de operandos
+	static int16_t countPos = 0;
+	char* tipo = "L";
+    tipoGlobal = tipo;
+	//Obtem indice de acesso ao array
 	int32_t indice = pop_op();
-	//Pega referencia para o array alocado
+	//Referencia para o vetor obtida da pilha
+	int32_t* referencia;
 	referencia = (int32_t*)pop_op();
-	//Acessa o array no indice e empilha o valor
+
+	//Empilha parte alta e baixa
+	push(referencia[countPos + indice+1]);
+	push(referencia[countPos + indice]);
+	countPos += 2;
+	atualizaPc();
 }
 
 /**
@@ -1498,8 +1505,29 @@ void faload(){
 
 	atualizaPc();
 }
-void daload(){
 
+/**
+ * Obtem da pilha o indice a ser acessado no vetor, obtem da pilha
+ * a referencia ao vetor previamente alocado. Acessa o vetor na
+ * posição do indice e empilha o valor correspondente
+ * @param void
+ * @return void
+ */
+void daload(){
+	static int16_t countPos = 0;
+	char* tipo = "D";
+    tipoGlobal = tipo;
+	//Obtem indice de acesso ao array
+	int32_t indice = pop_op();
+	//Referencia para o vetor obtida da pilha
+	int32_t* referencia;
+	referencia = (int32_t*)pop_op();
+
+	//Empilha parte alta e baixa
+	push(referencia[countPos + indice+1]);
+	push(referencia[countPos + indice]);
+	countPos += 2;
+	atualizaPc();
 }
 
 /**
@@ -2219,8 +2247,33 @@ void iastore(){
 
 	atualizaPc();
 }
-void lastore(){
 
+/** 
+ * Obtem da pilha o valor a ser atribuido, o indice a ser acessado
+ * e obtem uma referencia ao vetor previamente alocado.
+ * Acessa o vetor no indice obtido e atribui o valor
+ * @param void
+ * @return void
+ */
+void lastore(){
+	static int16_t countPos = 0;
+	int32_t alta,baixa;
+
+	//Obtem parte alta e baixa.
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Obtem indice de acesso ao array
+	int32_t indice = pop_op();
+
+	//Referencia pro array.
+	int32_t* referencia;
+	referencia = (int32_t*) pop_op();
+
+	referencia[countPos + indice] = baixa;
+	referencia[countPos + indice + 1] = alta;
+	countPos += 2;
+	atualizaPc();
 }
 
 /** 
@@ -2247,8 +2300,33 @@ void fastore(){
 
 	atualizaPc();
 }
-void dastore(){
 
+/** 
+ * Obtem da pilha o valor a ser atribuido, o indice a ser acessado
+ * e obtem uma referencia ao vetor previamente alocado.
+ * Acessa o vetor no indice obtido e atribui o valor
+ * @param void
+ * @return void
+ */
+void dastore(){
+	static int16_t countPos = 0;
+	int32_t alta,baixa;
+
+	//Obtem parte alta e baixa.
+	baixa = pop_op();
+	alta = pop_op();
+
+	//Obtem indice de acesso ao array
+	int32_t indice = pop_op();
+
+	//Referencia pro array.
+	int32_t* referencia;
+	referencia = (int32_t*) pop_op();
+
+	referencia[countPos + indice] = baixa;
+	referencia[countPos + indice + 1] = alta;
+	countPos += 2;
+	atualizaPc();
 }
 
 /** 
@@ -6103,6 +6181,7 @@ void newarray(){
 	arrayVetores = realloc (arrayVetores, sizeof(struct array)*qtdArrays);
 	arrayVetores[qtdArrays-1].tamanho = tamanhoArray;
 	arrayVetores[qtdArrays-1].referencia = (int32_t)vetor;
+	arrayVetores[qtdArrays-1].tipo = tipoArray;
 
 	//Empilha referencia pro vetor
 	push((int32_t)vetor);
@@ -6181,6 +6260,7 @@ void anewarray(){
 	arrayVetores = realloc (arrayVetores, sizeof(struct array)*qtdArrays);
 	arrayVetores[qtdArrays-1].tamanho = tamanhoArray;
 	arrayVetores[qtdArrays-1].referencia = (int32_t)vetor;
+	arrayVetores[qtdArrays-1].tipo = tipoArray;
 
 	//Empilha referencia pro vetor
 	push((int32_t)vetor);

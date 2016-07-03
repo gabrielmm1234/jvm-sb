@@ -16,7 +16,7 @@ Grupo:
 
 Resumo: 100
 
-() arrays simples
+(x) arrays simples
 (x) array.length
 (x) inteiros  
 (x) floats

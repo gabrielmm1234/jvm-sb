@@ -112,10 +112,29 @@ void imprimePrompt(classFile* cf){
 
 			case CONSTANT_Float:
 				printf("[%d] CONSTANT_Float_info - bytes:%d\n",i+1,cf->constant_pool[i].info.Float.bytes);
+                //Converte para float e nao perde precisao
+                float fVal1;
+                memcpy(&fVal1, &cf->constant_pool[i].info.Float.bytes, sizeof(int32_t));
+                printf("[%d] CONSTANT_Float_info - valor:%f\n",i+1,fVal1);
 				break;
 			case CONSTANT_Double:
 				printf("[%d] CONSTANT_Double_info - high-bytes: 0x%0x\n",i+1,cf->constant_pool[i].info.Double.high_bytes);
 				printf("[%d] CONSTANT_Double_info - low-bytes: 0x%0x\n",i+1,cf->constant_pool[i].info.Double.low_bytes);
+
+                //Atribui parte alta primeiro
+                int64_t dVal = cf->constant_pool[i].info.Double.high_bytes;
+                //Shifta 32 pra esquerda abrindo espaço para a parte baixa a direita.
+                dVal <<= 32;
+                //Preenche os 32 bits inferiores com a parte baixa. -> Basta somar pois
+                //os 32 bits da parte baixa estão zerados.
+                dVal = dVal + cf->constant_pool[i].info.Double.low_bytes;
+
+                //Finalmente copio os bytes do int64_t para um double.
+                //memcpy copia 64 bits de dVal para valorDouble1.
+                double valorDouble1;
+                memcpy(&valorDouble1, &dVal, sizeof(int64_t));
+
+                printf("[%d] CONSTANT_Double_info - valor: %f\n",i+1,valorDouble1);
 				break;
 			default:
 				break;

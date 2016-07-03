@@ -43,12 +43,12 @@ Resumo: 100
 (?) consistencia
 
 -- leitura do formato ponto class:
-- Trata versões superiores? 
-- Despreza silenciosamente atributos não tratados?
-- Consistência?
-- Corretude.
-- Exibe mnemônicos?
-- Apresenta reindireção das entradas no Constant Pool?
+- Trata versões superiores? SIM
+- Despreza silenciosamente atributos não tratados? 		SIM
+- Consistência? 	?
+- Corretude. 		?
+- Exibe mnemônicos? SIM
+- Apresenta reindireção das entradas no Constant Pool? 	SIM
 
 resumo: 100
 
@@ -56,12 +56,12 @@ resumo: 100
 Todas as demais instruções. Também será considerada a simulação de operações que envolvam chamada aos recursos do sistema operacional, tais como impressão, etc.
 
 
-( ) threads
-( ) debug
-( ) chamadas às bibliotecas do Java ? math(sqrt)
-( ) tratamento de exceções
-( ) checagem dinâmica de tipos
-( ) coletor de lixo.
+(-) threads
+(-) debug
+(-) chamadas às bibliotecas do Java ? math(sqrt)/printstream/scanf
+(-) tratamento de exceções
+(-) checagem dinâmica de tipos
+(-) coletor de lixo.
 
 ---------
 
@@ -71,7 +71,7 @@ Atribuição de nota para o interpretador
 
 Site: 100 
 
-- Apresenta o DCM e a descrição de cada função?
-- Contem a relação das estruturas de dados e os arquivos?
-- Está atualizado?
-- Corretude
+- Apresenta o DCM e a descrição de cada função?		NAO/SIM
+- Contem a relação das estruturas de dados e os arquivos?	SIM
+- Está atualizado?	SIM
+- corretude 		?

@@ -5624,7 +5624,14 @@ void invokevirtual(){
             if (string != NULL) {
                 printf("%s\n",string);
             }
-
+            else if(strcmp(tipoGlobal, "Z") == 0)
+            {
+                if(resultado){
+                	printf("TRUE\n");
+                }else{
+                	printf("FALSE\n");
+                }
+            }
             else if(strcmp(tipoGlobal, "F") == 0)
             {
                 float valDesemp;
